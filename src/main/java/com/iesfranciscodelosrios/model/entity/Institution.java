@@ -4,7 +4,7 @@ package com.iesfranciscodelosrios.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+ import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -20,12 +20,12 @@ public class Institution {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @OneToMany(mappedBy = "institution")
-    private List<UserEntity> userList;
+    private Set<UserEntity> userList;
 
     @OneToMany(mappedBy = "institution")
-    private List<SchoolYear> schoolYearList;
+    private Set<SchoolYear> schoolYearList;
 }
