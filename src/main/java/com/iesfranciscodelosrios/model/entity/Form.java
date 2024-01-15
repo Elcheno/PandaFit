@@ -27,7 +27,7 @@ public class Form {
 
     @ManyToOne
     @JoinColumn(name = "userEntity_id")
-    private UserEntity admin;
+    private UserEntity userOwner;
 
 
     @OneToMany(mappedBy = "form")
