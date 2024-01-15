@@ -1,9 +1,10 @@
 package com.iesfranciscodelosrios.model.entity;
 
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+ import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -11,9 +12,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
+@Entity
+@Table(name = "institution")
 public class Institution {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(name = "name", unique = true)
     private String name;
-    private List<UserEntity> userList;
-    private List<SchoolYear> schoolYearList;
+
+    @OneToMany(mappedBy = "institution")
+    private Set<UserEntity> userList;
+
+    @OneToMany(mappedBy = "institution")
+    private Set<SchoolYear> schoolYearList;
 }
