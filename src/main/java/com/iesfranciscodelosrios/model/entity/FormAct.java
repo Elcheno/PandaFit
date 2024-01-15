@@ -35,5 +35,5 @@ public class FormAct {
     private SchoolYear schoolYear;
 
     @OneToMany(mappedBy = "formAct")
-    private Set<Answer> answers;
+    private Set<Answer> answersList;
 }
