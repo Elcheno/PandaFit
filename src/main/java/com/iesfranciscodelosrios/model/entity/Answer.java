@@ -19,14 +19,14 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "date")
+    @Column(name = "date", unique = true)
     private LocalDate date;
 
     @ManyToOne
-    @JoinColumn(name = "formaAct_id", nullable = false)
+    @JoinColumn(name = "formaAct_id", nullable = false, unique = true)
     private FormAct formAct;
 
-    @Column(name = "uuid")
+    @Column(name = "uuid", unique = true)
     private String uuid;
 
 }
