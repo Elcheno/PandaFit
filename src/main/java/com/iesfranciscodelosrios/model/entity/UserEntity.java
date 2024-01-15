@@ -39,4 +39,13 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<RoleType> role;
+
+    @OneToMany(mappedBy = "userOwner")
+    private Set<Input> inputList;
+
+    @OneToMany(mappedBy = "userOwner")
+    private Set<Output> outputList;
+
+    @OneToMany(mappedBy = "userOwner")
+    private Set<Form> formList;
 }
