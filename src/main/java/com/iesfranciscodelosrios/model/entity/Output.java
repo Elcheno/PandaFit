@@ -1,13 +1,11 @@
 package com.iesfranciscodelosrios.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class Output {
     private int id;
