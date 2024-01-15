@@ -1,5 +1,7 @@
 package com.iesfranciscodelosrios.model.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
@@ -10,12 +12,25 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
+@Entity
+@Table(name = "form")
 public class Form {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-private UUID id;
-private String name;
-private String description;
-private UserEntity admin;
-private List<Answer> answers;
+    @Column(name = "name", unique = true)
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "userEntity_id")
+    private UserEntity admin;
+
+
+    @OneToMany(mappedBy = "form")
+    private List<FormAct> answers;
 
 }
