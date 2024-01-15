@@ -31,6 +31,6 @@ public class Form {
 
 
     @OneToMany(mappedBy = "form")
-    private List<FormAct> answers;
+    private List<FormAct> formActList;
 
 }
