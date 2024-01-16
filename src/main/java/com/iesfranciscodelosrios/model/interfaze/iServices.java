@@ -8,6 +8,4 @@ public interface iServices <T> {
     public T save(T t);
 
     public T delete(T t);
-
-
 }
