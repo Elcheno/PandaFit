@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -31,6 +32,6 @@ public class Form {
 
 
     @OneToMany(mappedBy = "form")
-    private List<FormAct> formActList;
+    private Set<FormAct> formActList;
 
 }
