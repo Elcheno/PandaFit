@@ -11,6 +11,4 @@ import java.util.UUID;
 public interface OutputRepository extends CrudRepository<Output, UUID> {
 
     Optional<Output> findByName(String name);
-
-    Optional<Output> findByFormula(String formula);
 }
