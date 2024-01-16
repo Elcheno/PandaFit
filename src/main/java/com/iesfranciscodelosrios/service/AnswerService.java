@@ -6,7 +6,7 @@ import com.iesfranciscodelosrios.repository.AnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,13 +15,9 @@ public class AnswerService implements iServices<Answer> {
     @Autowired
     AnswerRepository answerRepository;
 
-    public Answer loadAnswerByDate(LocalDate date) {
+    public Answer loadAnswerByDate(LocalDateTime date) {
         Optional<Answer> answer = answerRepository.findAnswerByDate(date);
         return answer.orElse(null);
-    }
-
-    public void deleteAnswer(Answer answer) {
-
     }
 
     @Override
