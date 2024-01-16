@@ -19,9 +19,6 @@ public class InputService implements iServices<Input> {
     public Input findById(UUID id) {
         return inputRepository.findById(id).orElse(null);
     }
-    public Input findByName(String name) {
-        return inputRepository.findByName(name).orElse(null);
-    }
 
     @Override
     public Input save(Input input) {
@@ -35,6 +32,7 @@ public class InputService implements iServices<Input> {
         return input;
     }
 
-
-
+    public Input findByName(String name) {
+        return inputRepository.findByName(name).orElse(null);
+    }
 }
