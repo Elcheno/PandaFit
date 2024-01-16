@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface AnswerRepository extends CrudRepository<Answer, UUID> {
 
-    Optional<Answer> findAnswerById(UUID id);
+    Optional<Answer> findAnswerByDate(UUID id);
 }

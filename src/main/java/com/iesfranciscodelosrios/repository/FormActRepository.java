@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface FormActRepository extends CrudRepository <FormAct, UUID> {
 
-    Optional<FormAct> findFormActById(UUID id);
+    Optional<FormAct> findFormActByStartDate(UUID id);
 }
