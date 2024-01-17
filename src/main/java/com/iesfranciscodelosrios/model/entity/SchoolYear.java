@@ -28,4 +28,13 @@ public class SchoolYear {
 
     @OneToMany(mappedBy = "schoolYear")
     private Set<FormAct> formActList;
+
+    @Override
+    public String toString() {
+        return "SchoolYear{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", institution=" + (institution != null ? institution.getName() : null) +
+                '}';
+    }
 }
