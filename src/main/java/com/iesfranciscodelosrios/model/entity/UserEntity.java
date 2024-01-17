@@ -48,4 +48,14 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userOwner")
     private Set<Form> formList;
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", institution=" + (institution != null ? institution.getName() : null) +
+                '}';
+    }
 }
