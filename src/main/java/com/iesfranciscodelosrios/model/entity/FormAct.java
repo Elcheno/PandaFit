@@ -2,6 +2,8 @@ package com.iesfranciscodelosrios.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +36,6 @@ public class FormAct {
     @JoinColumn(name = "schoolYear_id", nullable = false)
     private SchoolYear schoolYear;
 
-    @OneToMany(mappedBy = "formAct")
+    @OneToMany(mappedBy = "formAct", fetch = FetchType.EAGER)
     private Set<Answer> answersList;
 }

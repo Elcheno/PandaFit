@@ -34,4 +34,14 @@ public class Form {
     @OneToMany(mappedBy = "form")
     private Set<FormAct> formActList;
 
+    @Override
+    public String toString() {
+        return "Form{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", userOwner=" + (userOwner != null ? userOwner.getEmail() : null) +
+                '}';
+    }
+
 }
