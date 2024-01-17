@@ -1,12 +1,11 @@
 package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.entity.Input;
-import com.iesfranciscodelosrios.model.interfaze.iServices;
+import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.InputRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

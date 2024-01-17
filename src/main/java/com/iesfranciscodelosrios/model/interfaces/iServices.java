@@ -1,4 +1,4 @@
-package com.iesfranciscodelosrios.model.interfaze;
+package com.iesfranciscodelosrios.model.interfaces;
 
 import java.util.UUID;
 
