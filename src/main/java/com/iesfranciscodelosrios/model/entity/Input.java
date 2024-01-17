@@ -13,7 +13,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "input")
 public class Input {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
