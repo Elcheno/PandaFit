@@ -1,7 +1,7 @@
 package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.entity.Form;
-import com.iesfranciscodelosrios.model.interfaze.iServices;
+import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.FormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
