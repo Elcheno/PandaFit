@@ -11,13 +11,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "institution")
 public class Institution {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @Column(name = "name", unique = true)
@@ -27,6 +28,7 @@ public class Institution {
     private Set<UserEntity> userList;
 
     @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
     private Set<SchoolYear> schoolYearList;
 
     /*@Override

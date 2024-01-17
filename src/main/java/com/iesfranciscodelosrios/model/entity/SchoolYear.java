@@ -10,13 +10,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "school_year")
 public class SchoolYear {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @Column(name = "name", unique = true)
@@ -24,9 +25,11 @@ public class SchoolYear {
 
     @ManyToOne
     @JoinColumn(name = "institution_id", nullable = false, unique = true)
+    @EqualsAndHashCode.Exclude
     private Institution institution;
 
     @OneToMany(mappedBy = "schoolYear")
+    @EqualsAndHashCode.Exclude
     private Set<FormAct> formActList;
 
     @Override
