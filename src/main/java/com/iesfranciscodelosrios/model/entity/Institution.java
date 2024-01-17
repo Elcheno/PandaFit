@@ -23,9 +23,17 @@ public class Institution {
     @Column(name = "name", unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "institution")
+    @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
     private Set<UserEntity> userList;
 
-    @OneToMany(mappedBy = "institution")
+    @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
     private Set<SchoolYear> schoolYearList;
+
+    /*@Override
+    public String toString() {
+        return "Institution{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }*/
 }
