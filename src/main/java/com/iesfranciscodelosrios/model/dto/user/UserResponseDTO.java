@@ -1,4 +1,4 @@
-package com.iesfranciscodelosrios.model.dto.UserEntity;
+package com.iesfranciscodelosrios.model.dto.user;
 
 import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.type.RoleType;
