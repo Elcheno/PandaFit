@@ -112,19 +112,19 @@ public class OutputController {
 
     /**
      * Delete an output
-     * @param outputUpdateDTO the output to delete
+     * @param outputResponseDTO the output to delete
      * @return the deleted output
      */
     @DeleteMapping("/output")
-    public ResponseEntity<OutputResponseDTO> delete(@RequestBody OutputUpdateDTO outputUpdateDTO) {
+    public ResponseEntity<OutputResponseDTO> delete(@RequestBody OutputResponseDTO outputResponseDTO) {
         Output output = OutputService.save(Output.builder()
-                .id(outputUpdateDTO.getId())
-                .name(outputUpdateDTO.getName())
-                .description(outputUpdateDTO.getDescription())
-                .formula(outputUpdateDTO.getFormula())
-                .userOwner(outputUpdateDTO.getUserOwner())
+                .id(outputResponseDTO.getId())
+                .name(outputResponseDTO.getName())
+                .description(outputResponseDTO.getDescription())
+                .formula(outputResponseDTO.getFormula())
+                .userOwner(outputResponseDTO.getUserOwner())
                 .build());
-        OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
+        OutputResponseDTO response = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
                 .description(output.getDescription())
@@ -132,6 +132,6 @@ public class OutputController {
                 .userOwner(output.getUserOwner())
                 .result(output.getResult())
                 .build();
-        return ResponseEntity.ok(outputResponseDTO);
+        return ResponseEntity.ok(response);
     }
 }
