@@ -5,21 +5,19 @@ import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/answers")
+@RequestMapping("/form/?/formActive/?")
 public class AnswerController {
 
     @Autowired
     private AnswerService answerService;
 
-    @GetMapping(":date")
+    @GetMapping("/response/:date")
     public ResponseEntity<AnswerResponseDTO> getAnswerById(@PathVariable("date") LocalDateTime answerDate) {
         Answer answerEntity = answerService.loadAnswerByDate(answerDate);
 
@@ -37,7 +35,7 @@ public class AnswerController {
 
 
     //Rehacer bien hecho para tenerlo de ejemplo
-    @GetMapping(":id")
+    @GetMapping("/response:id")
     public ResponseEntity<AnswerResponseDTO> getAnswerById(@PathVariable("id") String answerId) {
         Answer answerEntity = answerService.findById(UUID.fromString(answerId));
 
@@ -53,7 +51,7 @@ public class AnswerController {
         return ResponseEntity.ok(answerResponseDTO);
     }
 
-    @PostMapping()
+    @PostMapping("/response")
     public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody AnswerCreateDTO answerCreateDTO) {
 
         Answer answerEntity = answerService.save(Answer.builder()
@@ -74,7 +72,7 @@ public class AnswerController {
         return ResponseEntity.ok(answerResponseDTO);
     }
 
-    @DeleteMapping(":id")
+    @DeleteMapping("/response/:id")
     public ResponseEntity<AnswerResponseDTO> deleteUser(@RequestParam("id") String answerId) {
 
         Answer answerEntity = answerService.delete(Answer.builder()
