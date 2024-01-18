@@ -1,8 +1,8 @@
 package com.iesfranciscodelosrios.controller;
 
-import com.iesfranciscodelosrios.model.dto.UserEntity.UserCreateDTO;
-import com.iesfranciscodelosrios.model.dto.UserEntity.UserResponseDTO;
-import com.iesfranciscodelosrios.model.dto.UserEntity.UserUpdateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserResponseDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

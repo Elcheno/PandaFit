@@ -1,4 +1,4 @@
-package com.iesfranciscodelosrios.model.dto.UserEntity;
+package com.iesfranciscodelosrios.model.dto.user;
 
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.Input;
@@ -8,16 +8,13 @@ import com.iesfranciscodelosrios.model.type.RoleType;
 import lombok.*;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class UserUpdateDTO {
-    private UUID id;
-
+public class UserCreateDTO {
     private String email;
 
     private String password;
