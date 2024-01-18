@@ -3,6 +3,7 @@ package com.iesfranciscodelosrios.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -27,7 +28,12 @@ public class Input {
     @Column(name = "validator")
     private String validator;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_owner_id", nullable = false)
     private UserEntity userOwner;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
