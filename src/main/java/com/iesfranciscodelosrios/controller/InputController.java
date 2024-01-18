@@ -87,21 +87,21 @@ public class InputController {
     }
 
     @DeleteMapping("/input")
-    public ResponseEntity<InputResponseDTO> delete(@RequestBody InputUpdateDTO inputUpdateDTO) {
+    public ResponseEntity<InputResponseDTO> delete(@RequestBody InputResponseDTO inputResponseDTO) {
         Input input = InputService.delete(Input.builder()
-                .id(inputUpdateDTO.getId())
-                .name(inputUpdateDTO.getName())
-                .description(inputUpdateDTO.getDescription())
-                .validator(inputUpdateDTO.getValidator())
-                .userOwner(inputUpdateDTO.getUserOwner())
+                .id(inputResponseDTO.getId())
+                .name(inputResponseDTO.getName())
+                .description(inputResponseDTO.getDescription())
+                .validator(inputResponseDTO.getValidator())
+                .userOwner(inputResponseDTO.getUserOwner())
                 .build());
-        InputResponseDTO inputResponseDTO = InputResponseDTO.builder()
+        InputResponseDTO response = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
                 .description(input.getDescription())
                 .validator(input.getValidator())
                 .userOwner(input.getUserOwner())
                 .build();
-        return ResponseEntity.ok(inputResponseDTO);
+        return ResponseEntity.ok(response);
     }
 }
