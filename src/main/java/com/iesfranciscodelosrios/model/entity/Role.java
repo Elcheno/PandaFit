@@ -2,6 +2,7 @@ package com.iesfranciscodelosrios.model.entity;
 
 import com.iesfranciscodelosrios.model.type.RoleType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Set;
@@ -20,6 +21,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotNull(message = "El tipo de rol no puede ser nulo")
     @Enumerated(EnumType.STRING)
     private RoleType role;
 }
