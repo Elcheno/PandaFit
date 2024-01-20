@@ -2,6 +2,7 @@ package com.iesfranciscodelosrios.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class Form {
     private UUID id;
 
     @Column(name = "name", unique = true)
+    @NotBlank(message = "El nombre del formulario no puede estar en blanco")
     private String name;
 
     @Column(name = "description")
@@ -29,6 +31,7 @@ public class Form {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userEntity_id")
+    @NotNull(message = "El propietario del formulario no puede ser nulo")
     private UserEntity userOwner;
 
 
