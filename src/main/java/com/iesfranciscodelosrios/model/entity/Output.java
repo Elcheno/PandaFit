@@ -3,6 +3,7 @@ package com.iesfranciscodelosrios.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -27,10 +28,16 @@ public class Output {
     @Column(name = "formula")
     private String formula;
 
-    @ManyToOne
-    @JoinColumn(name = "output_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_owner_id")
     private UserEntity userOwner;
 
     @Column(name = "result")
     private String result;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 }

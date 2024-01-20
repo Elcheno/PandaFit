@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,13 +27,18 @@ public class Form {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userEntity_id")
     private UserEntity userOwner;
 
 
-    @OneToMany(mappedBy = "form")
+    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL)
     private Set<FormAct> formActList;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @Override
     public String toString() {

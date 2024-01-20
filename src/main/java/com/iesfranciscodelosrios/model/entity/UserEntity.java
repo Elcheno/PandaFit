@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -40,14 +41,19 @@ public class UserEntity {
     )
     private Set<RoleType> role;
 
-    @OneToMany(mappedBy = "userOwner")
+    @OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
     private Set<Input> inputList;
 
-    @OneToMany(mappedBy = "userOwner")
+    @OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
     private Set<Output> outputList;
 
-    @OneToMany(mappedBy = "userOwner")
+    @OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
     private Set<Form> formList;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Usar solo la id para hashCode
+    }
 
     @Override
     public String toString() {

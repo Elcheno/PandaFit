@@ -36,6 +36,6 @@ public class FormAct {
     @JoinColumn(name = "schoolYear_id", nullable = false)
     private SchoolYear schoolYear;
 
-    @OneToMany(mappedBy = "formAct", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "formAct", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Answer> answersList;
 }

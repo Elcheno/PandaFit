@@ -1,8 +1,8 @@
 package com.iesfranciscodelosrios.controller;
 
-import com.iesfranciscodelosrios.model.dto.UserEntity.UserCreateDTO;
-import com.iesfranciscodelosrios.model.dto.UserEntity.UserResponseDTO;
-import com.iesfranciscodelosrios.model.dto.UserEntity.UserUpdateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserResponseDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,24 +95,20 @@ public class UserController {
         return ResponseEntity.ok(userResponseDTO);
     }
 
-    @DeleteMapping(":id")
-    public ResponseEntity<UserResponseDTO> deleteUser(@RequestParam("id") String userId) {
+    @DeleteMapping()
+    public ResponseEntity<UserResponseDTO> deleteUser(@RequestBody() UserResponseDTO userResponseDTO) {
         UserEntity userEntity = userService.delete(UserEntity.builder()
-                .id(UUID.fromString(userId))
-                .build());
+                        .id(userResponseDTO.getId())
+                        .email(userResponseDTO.getEmail())
+                        .password(userResponseDTO.getPassword())
+                        .role(userResponseDTO.getRole())
+                        .institution(userResponseDTO.getInstitution())
+                        .formList(userResponseDTO.getFormList())
+                        .inputList(userResponseDTO.getInputList())
+                        .outputList(userResponseDTO.getOutputList())
+                        .build());
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
-
-        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-                .id(userEntity.getId())
-                .email(userEntity.getEmail())
-                .password(userEntity.getPassword())
-                .institution(userEntity.getInstitution())
-                .role(userEntity.getRole())
-                .formList(userEntity.getFormList())
-                .inputList(userEntity.getInputList())
-                .outputList(userEntity.getOutputList())
-                .build();
 
         return ResponseEntity.ok(userResponseDTO);
     }
