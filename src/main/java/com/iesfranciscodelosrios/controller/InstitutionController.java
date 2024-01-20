@@ -13,13 +13,13 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/institutions")
+@RequestMapping("/institution")
 public class InstitutionController {
 
     @Autowired
     private InstitutionService institutionService;
 
-    @GetMapping(":id")
+    @GetMapping()
     public ResponseEntity<InstitutionResponseDTO> getInstitutionById(@RequestParam("id") String id) {
         Institution institution = institutionService.findById(UUID.fromString(id));
 

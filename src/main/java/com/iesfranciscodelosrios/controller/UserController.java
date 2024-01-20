@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/institution/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping(":id")
+    @GetMapping()
     public ResponseEntity<UserResponseDTO> getUserById(@RequestParam("id") String userId) {
         UserEntity userEntity = userService.findById(UUID.fromString(userId));
 
