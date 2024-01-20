@@ -2,6 +2,8 @@ package com.iesfranciscodelosrios.model.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
  import java.util.Set;
@@ -22,6 +24,8 @@ public class Institution {
     private UUID id;
 
     @Column(name = "name", unique = true)
+    @NotBlank(message = "El nombre no puede estar vacío")
+    @Size(min = 2, message = "El nombre debe tener al menos 2 caracteres")
     private String name;
 
     @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
