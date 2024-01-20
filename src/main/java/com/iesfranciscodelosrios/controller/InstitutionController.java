@@ -13,7 +13,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/institutions")
+@RequestMapping("/institution")
 public class InstitutionController {
 
     @Autowired
