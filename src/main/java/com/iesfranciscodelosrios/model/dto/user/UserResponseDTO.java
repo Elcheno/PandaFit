@@ -22,7 +22,7 @@ public class UserResponseDTO {
 
     private Institution institution;
 
-    private Set<RoleType> role;
+    private Set<Role> role;
 
     private Set<Input> inputList;
 
