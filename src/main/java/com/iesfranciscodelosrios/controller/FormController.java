@@ -20,7 +20,7 @@ public class FormController {
     private FormService formService;
 
     @GetMapping("name")
-    public ResponseEntity<FormResponseDTO> getFormByName(@PathVariable("name") String name){
+    public ResponseEntity<FormResponseDTO> getFormByName(@RequestParam("name") String name){
         Form formEntity = formService.loadFormByName(name);
 
         if (formEntity == null) return ResponseEntity.notFound().build();

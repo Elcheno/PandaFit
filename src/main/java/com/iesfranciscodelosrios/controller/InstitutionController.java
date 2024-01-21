@@ -21,7 +21,7 @@ public class InstitutionController {
     private InstitutionService institutionService;
 
     @GetMapping("{id}")
-    public ResponseEntity<InstitutionResponseDTO> getInstitutionById(@RequestParam("id") String id) {
+    public ResponseEntity<InstitutionResponseDTO> getInstitutionById(@PathVariable("id") String id) {
         Institution institution = institutionService.findById(UUID.fromString(id));
 
         if (institution == null) return ResponseEntity.notFound().build();

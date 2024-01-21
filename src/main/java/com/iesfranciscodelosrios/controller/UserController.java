@@ -20,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@RequestParam("id") String userId) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") String userId) {
         UserEntity userEntity = userService.findById(UUID.fromString(userId));
 
         if (userEntity == null) return ResponseEntity.notFound().build();
