@@ -19,7 +19,7 @@ public class FormController {
     @Autowired
     private FormService formService;
 
-    @GetMapping()
+    @GetMapping("name")
     public ResponseEntity<FormResponseDTO> getFormByName(@PathVariable("name") String name){
         Form formEntity = formService.loadFormByName(name);
 
@@ -36,7 +36,7 @@ public class FormController {
         return ResponseEntity.ok(formResponseDTO);
     }
 
-    @GetMapping()
+    @GetMapping("{id}")
     public ResponseEntity<FormResponseDTO> getFormById(@PathVariable("id") UUID id){
         Form formEntity = formService.findById(id);
 
@@ -78,6 +78,7 @@ public class FormController {
     @PutMapping()
     public ResponseEntity<FormResponseDTO> updateForm(@RequestBody FormUpdateDTO formUpdateDTO){
         Form formEntity = formService.save(Form.builder()
+                .id(formUpdateDTO.getId())
                 .name(formUpdateDTO.getName())
                 .description(formUpdateDTO.getDescription())
                 .userOwner(formUpdateDTO.getUserOwner())
@@ -98,9 +99,7 @@ public class FormController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<Void> deleteForm(@RequestBody FormDeleteDTO formDeleteDTO){
-
-        if (formDeleteDTO == null) return ResponseEntity.badRequest().build();
+    public ResponseEntity<FormResponseDTO> deleteForm(@RequestBody() FormDeleteDTO formDeleteDTO){
 
         Form formEntity = formService.delete(Form.builder()
                 .name(formDeleteDTO.getName())
@@ -109,10 +108,16 @@ public class FormController {
                 .formActList(formDeleteDTO.getFormActList())
                 .build());
 
-        if (formEntity != null) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        if (formEntity == null) return ResponseEntity.badRequest().build();
+
+        FormResponseDTO formResponseDTO = FormResponseDTO.builder()
+                .id(formEntity.getId())
+                .name(formEntity.getName())
+                .description(formEntity.getDescription())
+                .userOwner(formEntity.getUserOwner())
+                .formActList(formEntity.getFormActList())
+                .build();
+
+        return ResponseEntity.ok(formResponseDTO);
     }
 }

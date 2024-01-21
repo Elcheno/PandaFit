@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class FormUpdateDTO {
+    private UUID id;
     private String name;
     private String description;
     private UserEntity userOwner;
