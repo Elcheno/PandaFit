@@ -19,7 +19,7 @@ public class SchoolYearController {
     @Autowired
     private SchoolYearService schoolYearService;
 
-    @GetMapping(":id")
+    @GetMapping()
     public ResponseEntity<SchoolYearResponseDTO> getSchoolYearById(@RequestParam("id") String id) {
         SchoolYear schoolYear = schoolYearService.findById(UUID.fromString(id));
 
@@ -36,7 +36,7 @@ public class SchoolYearController {
     }
 
     //findById
-    @GetMapping(":name")
+    @GetMapping()
     public ResponseEntity<SchoolYearResponseDTO> getSchoolYearByName(@RequestParam("name") String name) {
         SchoolYear schoolYear = schoolYearService.findByName(name);
 
