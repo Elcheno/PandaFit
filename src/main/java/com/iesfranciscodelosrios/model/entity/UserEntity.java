@@ -51,7 +51,7 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<RoleType> role;
+    private Set<Role> role;
 
     @OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
     private Set<Input> inputList;
