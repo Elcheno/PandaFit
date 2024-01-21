@@ -19,7 +19,7 @@ public class AnswerController {
     private AnswerService answerService;
 
     @GetMapping("date")
-    public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@PathVariable("date") String answerDate) {
+    public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("date") String answerDate) {
         LocalDateTime date = LocalDateTime.parse(answerDate);
         Answer answerEntity = answerService.loadAnswerByDate(date);
 
