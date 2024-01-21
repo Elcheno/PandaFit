@@ -1,6 +1,9 @@
 package com.iesfranciscodelosrios.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Objects;
@@ -19,15 +22,19 @@ public class Output {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotBlank(message = "El nombre no puede estar en blanco")
+    @Size(min = 2, message = "El nombre debe tener al menos 2 caracteres")
     @Column(name = "name")
     private String name;
 
     @Column(name = "description")
     private String description;
 
+    @NotBlank(message = "La fórmula no puede estar en blanco")
     @Column(name = "formula")
     private String formula;
 
+    @NotNull(message = "El usuario propietario no puede ser nulo")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_owner_id")
     private UserEntity userOwner;

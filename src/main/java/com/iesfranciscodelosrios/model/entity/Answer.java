@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -32,6 +33,7 @@ public class Answer {
     private FormAct formAct;
 
     @Column(name = "uuid", unique = true)
+    @NotBlank(message = "El campo UUID no puede estar en blanco")
     private String uuid;
 
     @Override
