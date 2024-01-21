@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.controller;
 
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionCreateDTO;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
@@ -19,7 +20,7 @@ public class InstitutionController {
     @Autowired
     private InstitutionService institutionService;
 
-    @GetMapping()
+    @GetMapping("{id}")
     public ResponseEntity<InstitutionResponseDTO> getInstitutionById(@RequestParam("id") String id) {
         Institution institution = institutionService.findById(UUID.fromString(id));
 
@@ -70,12 +71,12 @@ public class InstitutionController {
     }
 
     @PutMapping()
-    public ResponseEntity<InstitutionResponseDTO> updateInstitution(@RequestBody InstitutionUpdateDTO institutionUpdateDTO) {
+    public ResponseEntity<InstitutionResponseDTO> updateInstitution(@RequestBody InstitutionDeleteDTO institutionDeleteDTO) {
         Institution institution = institutionService.save(Institution.builder()
-                        .id(institutionUpdateDTO.getId())
-                        .name(institutionUpdateDTO.getName())
-                        .userList(institutionUpdateDTO.getUserList())
-                        .schoolYearList(institutionUpdateDTO.getSchoolYearList())
+                        .id(institutionDeleteDTO.getId())
+                        .name(institutionDeleteDTO.getName())
+                        .userList(institutionDeleteDTO.getUserList())
+                        .schoolYearList(institutionDeleteDTO.getSchoolYearList())
                         .build());
 
         if (institution == null) return ResponseEntity.badRequest().build();
@@ -89,6 +90,5 @@ public class InstitutionController {
 
         return ResponseEntity.ok(institutionResponseDTO);
     }
-
 
 }
