@@ -14,7 +14,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/active/{id}")
+@RequestMapping("/active")
 public class FormActController {
 
     @Autowired
