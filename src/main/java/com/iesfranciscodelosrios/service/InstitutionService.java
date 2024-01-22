@@ -27,6 +27,7 @@ public class InstitutionService implements iServices<Institution> {
 
     @Override
     public Institution delete(Institution institution) {
+        if (institution == null) return null;
         institutionRepository.delete(institution);
         return institution;
     }

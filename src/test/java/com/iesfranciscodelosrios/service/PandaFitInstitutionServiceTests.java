@@ -21,6 +21,11 @@ public class PandaFitInstitutionServiceTests {
     }
 
     @Test
+    public void testFindById() {
+        System.out.println(institutionService.findById(institutionService.findByName("global").getId()));
+    }
+
+    @Test
     public void testFindByName() {
         Institution result = institutionService.findByName("global");
         System.out.println(result);
@@ -35,5 +40,10 @@ public class PandaFitInstitutionServiceTests {
     @Test
     public void testDeleteInstitution() {
         institutionService.delete(institutionService.findByName("global"));
+    }
+
+    @Test
+    public void testDeleteInstitutionError() {
+        institutionService.delete(institutionService.findByName("error"));
     }
 }
