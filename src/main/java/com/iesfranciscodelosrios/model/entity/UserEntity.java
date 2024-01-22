@@ -32,9 +32,9 @@ public class UserEntity {
 
     @NotBlank(message = "La contraseña no puede estar en blanco")
     @Pattern(
-            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,}$",
+            regexp = "^[a-zA-ZÁáÀàÉéÈèÍíÌìÓóÒòÚúÙùÑñüÜ0-9!@#\\$%\\^&\\*\\?_~\\/]{8,20}$",
             message = "La contraseña no es lo suficientemente segura"
-    ) // 8 caracteres, una letra mayúscula, una letra minúscula, un número y un caracter especial
+    ) // 8-20 caracteres alfanúmericos
     @Column(name = "password")
     private String password;
 
