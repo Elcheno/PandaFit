@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Set;
+
 @SpringBootTest
 public class PandafitInstitutionServiceTests {
 
@@ -28,6 +30,14 @@ public class PandafitInstitutionServiceTests {
     public void testFindByName() {
         Institution result = institutionService.findByName("global");
         System.out.println(result);
+    }
+
+    @Test
+    public void testFindByAll() {
+        Set<Institution> result = institutionService.findAll();
+        for(Institution institution : result) {
+            System.out.println(institution);
+        }
     }
 
     @Test
