@@ -5,6 +5,8 @@ import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.SchoolYearRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -36,5 +38,10 @@ public class SchoolYearService implements iServices<SchoolYear> {
     public SchoolYear findByNameAndInstitution(String name, Institution institution) {
         return schoolYearRepository.findByNameAndAndInstitution(name, institution)
                 .orElse(null);
+    }
+
+    public Page<SchoolYear> findAllByInstitution(Institution institution, Pageable pageable) {
+        if (institution == null) return null;
+        return schoolYearRepository.findAllByInstitution(institution, pageable);
     }
 }
