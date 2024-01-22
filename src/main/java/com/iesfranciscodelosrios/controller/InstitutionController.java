@@ -7,6 +7,9 @@ import com.iesfranciscodelosrios.model.dto.institution.InstitutionUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.service.InstitutionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +37,22 @@ public class InstitutionController {
                 .build();
 
         return ResponseEntity.ok(institutionResponseDTO);
+    }
+
+    @GetMapping("page")
+    public ResponseEntity<Page<InstitutionResponseDTO>> getAllInstitutions(@PageableDefault() Pageable pageable) {
+        Page<Institution> result = institutionService.findAll(pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<InstitutionResponseDTO> response = result.map(institution -> {
+            return InstitutionResponseDTO.builder()
+                    .id(institution.getId())
+                    .name(institution.getName())
+                    .build();
+        });
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping()
