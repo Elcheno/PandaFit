@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.UUID;
+
 @SpringBootTest
 public class PandafitSchoolYearServiceTests {
 
@@ -20,23 +22,28 @@ public class PandafitSchoolYearServiceTests {
     @Test
     public void testCreateSchoolYear() {
         schoolYearService.save(SchoolYear.builder()
-                .name("1o ESO C")
+                .name("1 ESO C")
                 .institution(institutionService.findByName("global"))
                 .build());
     }
 
     @Test
+    public void testFindByIdSchoolYear() {
+        System.out.println(schoolYearService.findById(UUID.fromString("dccdfd35-e2b1-4073-b931-06c929914041")));
+    }
+
+    @Test
     public void testFindByNameSchoolYear() {
-        System.out.println(schoolYearService.findByName("1o ESO C"));
+        System.out.println(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("global")));
     }
 
     @Test
     public void testFindByNameSchoolYearError() {
-        System.out.println(schoolYearService.findByName("error"));
+        System.out.println(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("error")));
     }
 
     @Test
     public void testDeleteSchoolYear() {
-        schoolYearService.delete(schoolYearService.findByName("1o ESO C"));
+        schoolYearService.delete(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("global")));
     }
 }
