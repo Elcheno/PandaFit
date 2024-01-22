@@ -63,7 +63,7 @@ public class SchoolYearController {
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
-    @GetMapping("/institution/{institutionId}/schoolYear")
+    @GetMapping("/institution/{institutionId}/schoolYear/page")
     public ResponseEntity<Page<SchoolYearResponseDTO>> getAllSchoolYears(
             @PathVariable("institutionId") String institutionId,
             @PageableDefault() Pageable pageable) {
@@ -76,14 +76,13 @@ public class SchoolYearController {
 
         if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<SchoolYearResponseDTO> response = result.map(schoolYear -> {
-            return SchoolYearResponseDTO.builder()
-                    .id(schoolYear.getId())
-                    .name(schoolYear.getName())
-                    .institution(schoolYear.getInstitution())
-                    .formActList(schoolYear.getFormActList())
-                    .build();
-        });
+        Page<SchoolYearResponseDTO> response = result.map(schoolYear -> SchoolYearResponseDTO.builder()
+                .id(schoolYear.getId())
+                .name(schoolYear.getName())
+//                .institution(schoolYear.getInstitution())
+//                .formActList(schoolYear.getFormActList())
+                .build()
+        );
 
         return ResponseEntity.ok(response);
     }
