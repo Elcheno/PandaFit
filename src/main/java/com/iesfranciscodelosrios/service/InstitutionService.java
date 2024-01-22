@@ -3,11 +3,12 @@ package com.iesfranciscodelosrios.service;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.interfaze.iServices;
 import com.iesfranciscodelosrios.repository.InstitutionRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -38,13 +39,13 @@ public class InstitutionService implements iServices<Institution> {
                 .orElse(null);
     }
 
-    public Set<Institution> findAll() {
-        Set<Institution> result = new HashSet<>();
-
-        institutionRepository.findAll().forEach(institution -> {
-            result.add(institution);
-        });
-
-        return result;
+    public Page<Institution> findAll() {
+        return institutionRepository.findAll(
+                PageRequest.of(
+                        0,
+                        10,
+                        Sort.by(Sort.Direction.DESC, "name")
+                )
+        );
     }
 }
