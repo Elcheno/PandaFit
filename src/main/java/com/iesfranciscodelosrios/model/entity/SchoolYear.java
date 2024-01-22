@@ -33,7 +33,7 @@ public class SchoolYear {
 
     @NotNull(message = "La institución no puede ser nula")
     @ManyToOne
-    @JoinColumn(name = "institution_id", nullable = false, unique = true)
+    @JoinColumn(name = "institution_id", nullable = false)
     @EqualsAndHashCode.Exclude
     private Institution institution;
 
