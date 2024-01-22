@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.SchoolYearRepository;
@@ -31,8 +32,8 @@ public class SchoolYearService implements iServices<SchoolYear> {
         return schoolYear;
     }
 
-    public SchoolYear findByName(String name) {
-        return schoolYearRepository.findByName(name)
+    public SchoolYear findByNameAndInstitution(String name, Institution institution) {
+        return schoolYearRepository.findByNameAndAndInstitution(name, institution)
                 .orElse(null);
     }
 }

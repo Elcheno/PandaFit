@@ -1,10 +1,10 @@
 package com.iesfranciscodelosrios.controller;
 
-
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearCreateDTO;
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearResponseDTO;
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
+import com.iesfranciscodelosrios.service.InstitutionService;
 import com.iesfranciscodelosrios.service.SchoolYearService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/institution/schoolYear")
 public class SchoolYearController {
 
     @Autowired
     private SchoolYearService schoolYearService;
 
-    @GetMapping("{id}")
+    @Autowired
+    private InstitutionService institutionService;
+
+    @GetMapping("/institution/schoolYear/{id}")
     public ResponseEntity<SchoolYearResponseDTO> getSchoolYearById(@PathVariable("id") String id) {
         SchoolYear schoolYear = schoolYearService.findById(UUID.fromString(id));
 
@@ -36,9 +38,15 @@ public class SchoolYearController {
     }
 
     //findById
-    @GetMapping("name")
-    public ResponseEntity<SchoolYearResponseDTO> getSchoolYearByName(@RequestParam("name") String name) {
-        SchoolYear schoolYear = schoolYearService.findByName(name);
+    @GetMapping("/institution/{institutionId}/schoolYear/name")
+    public ResponseEntity<SchoolYearResponseDTO> getSchoolYearByName(
+            @PathVariable("institutionId") String institutionId,
+            @RequestParam("name") String name) {
+
+        SchoolYear schoolYear = schoolYearService.findByNameAndInstitution(
+                name,
+                institutionService.findById(UUID.fromString(institutionId)
+        ));
 
         if (schoolYear == null) return ResponseEntity.notFound().build();
 
@@ -52,7 +60,7 @@ public class SchoolYearController {
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
-    @PostMapping()
+    @PostMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> createSchoolYear(@RequestBody SchoolYearCreateDTO schoolYearCreateDTO) {
         SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
                         .name(schoolYearCreateDTO.getName())
@@ -72,7 +80,7 @@ public class SchoolYearController {
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> deleteSchoolYear(@RequestBody SchoolYearResponseDTO schoolYearResponseDTO) {
         SchoolYear schoolYear = schoolYearService.delete(SchoolYear.builder()
                         .id(UUID.fromString(String.valueOf(schoolYearResponseDTO.getId())))
@@ -86,7 +94,7 @@ public class SchoolYearController {
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
-    @PutMapping()
+    @PutMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> updateSchoolYear(@RequestBody SchoolYearUpdateDTO schoolYearUpdateDTO) {
         SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
                         .id(schoolYearUpdateDTO.getId())
