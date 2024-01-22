@@ -28,6 +28,7 @@ public class SchoolYearService implements iServices<SchoolYear> {
 
     @Override
     public SchoolYear delete(SchoolYear schoolYear) {
+        if (schoolYear == null) return null;
         schoolYearRepository.delete(schoolYear);
         return schoolYear;
     }
