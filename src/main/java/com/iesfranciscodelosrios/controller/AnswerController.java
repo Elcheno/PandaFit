@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/form/formActive/response")
+@RequestMapping("/formActive/{id}/response")
 public class AnswerController {
 
     @Autowired
