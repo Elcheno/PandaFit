@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @SpringBootTest
 public class PandafitUserServiceTests {
@@ -35,6 +36,11 @@ public class PandafitUserServiceTests {
                 .role(role)
                 .build());
     }
+    
+    @Test
+    public void testFindByUser() {
+        System.out.println(userService.findById(userService.findByEmail("ejemplo@example.com").getId()));
+    }
 
     @Test
     public void testFindByEmail() {
@@ -50,6 +56,11 @@ public class PandafitUserServiceTests {
 
     @Test
     public void testDeleteUser() {
-        userService.delete(userService.findByEmail("ejemplo@example.com"));
+        userService.delete(userService.findByEmail("ejemplo@example.com2"));
+    }
+
+    @Test
+    public void testDeleteUserError() {
+        System.out.println(userService.delete(userService.findByEmail("error")));
     }
 }
