@@ -6,6 +6,7 @@ import com.iesfranciscodelosrios.repository.InstitutionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -40,12 +41,18 @@ public class InstitutionService implements iServices<Institution> {
                 .orElse(null);
     }
 
-    public Page<Institution> findAll() {
+    public Page<Institution> findAll(Pageable pageable) {
         return institutionRepository.findAll(
                 PageRequest.of(
-                        0,
-                        10,
-                        Sort.by(Sort.Direction.DESC, "name")
+                        pageable.getPageNumber() > 0
+                                ? pageable.getPageNumber()
+                                : 0,
+
+                        pageable.getPageSize() > 0
+                                ? pageable.getPageSize()
+                                : 10,
+
+                        pageable.getSort()
                 )
         );
     }
