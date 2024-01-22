@@ -27,6 +27,7 @@ public class UserService implements iServices<UserEntity> {
 
     @Override
     public UserEntity delete(UserEntity userEntity) {
+        if (userEntity == null) return null;
         userRepository.delete(userEntity);
         return userEntity;
     }
