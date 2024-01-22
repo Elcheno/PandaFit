@@ -19,8 +19,8 @@ public class SchoolYearController {
     @Autowired
     private SchoolYearService schoolYearService;
 
-    @GetMapping()
-    public ResponseEntity<SchoolYearResponseDTO> getSchoolYearById(@RequestParam("id") String id) {
+    @GetMapping("{id}")
+    public ResponseEntity<SchoolYearResponseDTO> getSchoolYearById(@PathVariable("id") String id) {
         SchoolYear schoolYear = schoolYearService.findById(UUID.fromString(id));
 
         if (schoolYear == null) return ResponseEntity.notFound().build();
@@ -36,7 +36,7 @@ public class SchoolYearController {
     }
 
     //findById
-    @GetMapping()
+    @GetMapping("name")
     public ResponseEntity<SchoolYearResponseDTO> getSchoolYearByName(@RequestParam("name") String name) {
         SchoolYear schoolYear = schoolYearService.findByName(name);
 
