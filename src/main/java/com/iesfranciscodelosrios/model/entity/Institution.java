@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
- import java.util.Set;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -29,9 +31,11 @@ public class Institution {
     private String name;
 
     @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
+    @Cascade(CascadeType.ALL)
     private Set<UserEntity> userList;
 
     @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
+    @Cascade(CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private Set<SchoolYear> schoolYearList;
 
