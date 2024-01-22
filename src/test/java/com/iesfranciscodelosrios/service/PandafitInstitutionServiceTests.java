@@ -1,13 +1,12 @@
 package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.entity.Institution;
-import com.iesfranciscodelosrios.service.InstitutionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class PandaFitInstitutionServiceTests {
+public class PandafitInstitutionServiceTests {
 
     @Autowired
     private InstitutionService institutionService;
