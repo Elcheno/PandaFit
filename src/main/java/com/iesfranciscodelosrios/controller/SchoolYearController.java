@@ -7,6 +7,9 @@ import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.service.InstitutionService;
 import com.iesfranciscodelosrios.service.SchoolYearService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,6 +61,31 @@ public class SchoolYearController {
                 .build();
 
         return ResponseEntity.ok(schoolYearResponseDTO);
+    }
+
+    @GetMapping("/institution/{institutionId}/schoolYear")
+    public ResponseEntity<Page<SchoolYearResponseDTO>> getAllSchoolYears(
+            @PathVariable("institutionId") String institutionId,
+            @PageableDefault() Pageable pageable) {
+
+
+        Page<SchoolYear> result = schoolYearService.findAllByInstitution(
+                institutionService.findById(UUID.fromString(institutionId)),
+                pageable
+        );
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<SchoolYearResponseDTO> response = result.map(schoolYear -> {
+            return SchoolYearResponseDTO.builder()
+                    .id(schoolYear.getId())
+                    .name(schoolYear.getName())
+                    .institution(schoolYear.getInstitution())
+                    .formActList(schoolYear.getFormActList())
+                    .build();
+        });
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/institution/schoolYear")
