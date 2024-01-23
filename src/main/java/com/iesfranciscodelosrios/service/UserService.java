@@ -1,9 +1,14 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
+import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -13,6 +18,9 @@ public class UserService implements iServices<UserEntity> {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private InstitutionService institutionService;
 
     @Override
     public UserEntity save(UserEntity user) {
@@ -35,5 +43,100 @@ public class UserService implements iServices<UserEntity> {
     public UserEntity findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElse(null);
+    }
+
+    public Page<UserEntity> findAll(Pageable pageable) {
+        return  userRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber() > 0
+                            ? pageable.getPageNumber()
+                            : 0,
+
+                        pageable.getPageSize() > 0
+                            ? pageable.getPageSize()
+                            : 10,
+
+                        pageable.getSort()
+                )
+        );
+    }
+
+    public Page<UserEntity> findAllByInstitution(UUID institutionId, Pageable pageable) {
+        Institution institution = institutionService.findById(institutionId);
+        if (institution == null) return null;
+
+        return userRepository.findAllByInstitution(
+                institution,
+                PageRequest.of(
+                        pageable.getPageNumber() > 0
+                                ? pageable.getPageNumber()
+                                : 0,
+
+                        pageable.getPageSize() > 0
+                                ? pageable.getPageSize()
+                                : 10,
+
+                        pageable.getSort()
+                )
+        );
+    }
+
+    public Page<UserEntity> findAllByRole(
+            String role,
+            Pageable pageable) {
+
+        RoleType rol;
+        try{
+            rol = RoleType.valueOf(role);
+        } catch (IllegalArgumentException e) {
+            return null;
+        };
+
+        return userRepository.findAllByRole(
+                rol,
+                PageRequest.of(
+                        pageable.getPageNumber() > 0
+                                ? pageable.getPageNumber()
+                                : 0,
+
+                        pageable.getPageSize() > 0
+                                ? pageable.getPageSize()
+                                : 10,
+
+                        pageable.getSort()
+                )
+        );
+    }
+
+    public Page<UserEntity> findAllByInstitutionAndRole(
+            UUID institutionId,
+            String role,
+            Pageable pageable) {
+
+        Institution institution = institutionService.findById(institutionId);
+        RoleType rol;
+        try{
+            rol = RoleType.valueOf(role);
+        } catch (IllegalArgumentException e) {
+            return null;
+        };
+
+        if (institution == null) return null;
+
+        return userRepository.findAllByInstitutionAndRole(
+                institution,
+                rol,
+                PageRequest.of(
+                        pageable.getPageNumber() > 0
+                                ? pageable.getPageNumber()
+                                : 0,
+
+                        pageable.getPageSize() > 0
+                                ? pageable.getPageSize()
+                                : 10,
+
+                        pageable.getSort()
+                )
+        );
     }
 }
