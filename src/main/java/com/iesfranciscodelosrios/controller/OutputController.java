@@ -25,7 +25,7 @@ public class OutputController {
      * @param name name of the output
      * @return the output or 404
      */
-    @GetMapping("/output/name/:name")
+    @GetMapping("/output/name")
     public ResponseEntity<OutputResponseDTO> findByName(@RequestParam("name") String name) {
         Output output = OutputService.findByName(name);
 
@@ -47,8 +47,8 @@ public class OutputController {
      * @param id id of the output
      * @return the output or 404
      */
-    @GetMapping("/output/:id")
-    public ResponseEntity<OutputResponseDTO> findById(@RequestParam("id") UUID id) {
+    @GetMapping("/output/{id}")
+    public ResponseEntity<OutputResponseDTO> findById(@PathVariable("id") UUID id) {
         Output output = OutputService.findById(id);
 
         if (output == null) return ResponseEntity.notFound().build();
@@ -85,7 +85,6 @@ public class OutputController {
                 .name(output.getName())
                 .description(output.getDescription())
                 .formula(output.getFormula())
-                .userOwner(output.getUserOwner())
                 .result(output.getResult())
                 .build()
         );
