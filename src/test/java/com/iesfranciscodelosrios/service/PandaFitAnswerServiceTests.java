@@ -52,7 +52,7 @@ public class PandaFitAnswerServiceTests {
                 .build());
 
         Institution institution = Institution.builder()
-                .name("Institution")
+                .name("Institution1")
                 .build();
 
         UserEntity user = UserEntity.builder()
@@ -242,25 +242,5 @@ public class PandaFitAnswerServiceTests {
         assertEquals(answer.getDate(), deletedAnswer.getDate(), "La fecha debería ser igual");
         assertFalse(answerRepository.findAnswerByDate(answer.getDate()).isPresent(), "La respuesta debería ser eliminada de la base de datos");
 
-    }
-
-    private FormAct createFormActForTest() {
-        // Crea una instancia de Form según tus necesidades
-        Form form = Form.builder()
-                .name("Form")
-                .build();
-
-        // Crea una instancia de SchoolYear según tus necesidades
-        SchoolYear schoolYear = SchoolYear.builder()
-                .name("SchoolYear")
-                .build();
-
-        // Crea una instancia de FormAct con las referencias a Form y SchoolYear
-        return FormAct.builder()
-                .startDate(LocalDateTime.now())
-                .expirationDate(LocalDateTime.now().plusDays(30))
-                .form(form)
-                .schoolYear(schoolYear)
-                .build();
     }
 }
