@@ -24,6 +24,12 @@ public class SchoolYearController {
     @Autowired
     private InstitutionService institutionService;
 
+    /**
+     * Retrieves a SchoolYear by its ID.
+     *
+     * @param id The ID of the school year to retrieve.
+     * @return ResponseEntity containing a SchoolYearResponseDTO or not found if the school year does not exist.
+     */
     @GetMapping("/institution/schoolYear/{id}")
     public ResponseEntity<SchoolYearResponseDTO> getSchoolYearById(@PathVariable("id") String id) {
         SchoolYear schoolYear = schoolYearService.findById(UUID.fromString(id));
@@ -40,7 +46,14 @@ public class SchoolYearController {
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
-    //findById
+
+    /**
+     * Retrieves a SchoolYear by its name and institution ID.
+     *
+     * @param institutionId The ID of the institution to which the school year belongs.
+     * @param name The name of the school year to retrieve.
+     * @return ResponseEntity containing a SchoolYearResponseDTO or not found if the school year does not exist.
+     */
     @GetMapping("/institution/{institutionId}/schoolYear/name")
     public ResponseEntity<SchoolYearResponseDTO> getSchoolYearByName(
             @PathVariable("institutionId") String institutionId,
@@ -63,6 +76,13 @@ public class SchoolYearController {
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
+    /**
+     * Retrieves a paginated list of school years for a specific institution.
+     *
+     * @param institutionId The ID of the institution to which the school years belong.
+     * @param pageable Pageable object for pagination information.
+     * @return ResponseEntity containing a Page of SchoolYearResponseDTOs or no content if the page is empty.
+     */
     @GetMapping("/institution/{institutionId}/schoolYear/page")
     public ResponseEntity<Page<SchoolYearResponseDTO>> getAllSchoolYears(
             @PathVariable("institutionId") String institutionId,
@@ -87,6 +107,12 @@ public class SchoolYearController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Creates a new SchoolYear.
+     *
+     * @param schoolYearCreateDTO SchoolYearCreateDTO containing information for creating a new SchoolYear.
+     * @return ResponseEntity containing the created SchoolYearResponseDTO.
+     */
     @PostMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> createSchoolYear(@RequestBody SchoolYearCreateDTO schoolYearCreateDTO) {
         SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
@@ -107,6 +133,12 @@ public class SchoolYearController {
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
+    /**
+     * Deletes an existing SchoolYear.
+     *
+     * @param schoolYearResponseDTO SchoolYearResponseDTO containing information for deleting an existing SchoolYear.
+     * @return ResponseEntity containing the deleted SchoolYearResponseDTO.
+     */
     @DeleteMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> deleteSchoolYear(@RequestBody SchoolYearResponseDTO schoolYearResponseDTO) {
         SchoolYear schoolYear = schoolYearService.delete(SchoolYear.builder()
@@ -121,6 +153,12 @@ public class SchoolYearController {
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
+    /**
+     * Updates an existing SchoolYear.
+     *
+     * @param schoolYearUpdateDTO SchoolYearUpdateDTO containing information for updating an existing SchoolYear.
+     * @return ResponseEntity containing the updated SchoolYearResponseDTO.
+     */
     @PutMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> updateSchoolYear(@RequestBody SchoolYearUpdateDTO schoolYearUpdateDTO) {
         SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
