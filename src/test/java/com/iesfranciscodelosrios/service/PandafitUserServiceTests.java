@@ -8,6 +8,9 @@ import com.iesfranciscodelosrios.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,17 +27,27 @@ public class PandafitUserServiceTests {
 
     @Test
     public void testCreateUser() {
-        Set<Role> role = new HashSet<>();
-        role.add(Role.builder()
-                .role(RoleType.USER)
-                .build());
 
-        userService.save(UserEntity.builder()
-                .email("ejemplo@example.com")
-                .institution(institutionService.findByName("global"))
-                .password("Ejemplo2&")
-                .role(role)
-                .build());
+
+//        userService.save(UserEntity.builder()
+//                .email("user3@example.com")
+//                .institution(institutionService.findByName("global1"))
+//                .password("Ejemplo1&")
+//                .role(role)
+//                .build());
+
+        for(int i = 21; i < 31; i++) {
+            Set<Role> role = new HashSet<>();
+            role.add(Role.builder()
+                    .role(RoleType.USER)
+                    .build());
+            userService.save(UserEntity.builder()
+                    .email("user" + i + "@example.com")
+                    .institution(institutionService.findByName("global2"))
+                    .password("Ejemplo1&")
+                    .role(role)
+                    .build());
+        }
     }
     
     @Test
@@ -62,5 +75,41 @@ public class PandafitUserServiceTests {
     @Test
     public void testDeleteUserError() {
         System.out.println(userService.delete(userService.findByEmail("error")));
+    }
+
+    @Test
+    public void testFindAll() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<UserEntity> result = userService.findAll(pageable);
+        for(UserEntity user : result) {
+            System.out.println(user);
+        }
+    }
+
+    @Test
+    public void testFindAllByInstitution() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<UserEntity> result = userService.findAllByInstitution(institutionService.findByName("global2").getId(), pageable);
+        for(UserEntity user : result) {
+            System.out.println(user);
+        }
+    }
+
+    @Test
+    public void testFindAllByRole() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<UserEntity> result = userService.findAllByRole("USER", pageable);
+        for(UserEntity user : result) {
+            System.out.println(user);
+        }
+    }
+
+    @Test
+    public void testFindAllByInstitutionAndRole() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<UserEntity> result = userService.findAllByInstitutionAndRole(institutionService.findByName("global1").getId(),"USER", pageable);
+        for(UserEntity user : result) {
+            System.out.println(user);
+        }
     }
 }
