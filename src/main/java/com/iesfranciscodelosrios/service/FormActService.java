@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -68,5 +69,14 @@ public class FormActService implements iServices<FormAct> {
         if (formAct == null) return null;
         formActRepository.delete(formAct);
         return formAct;
+    }
+
+    public FormAct findByForm(Form form) {
+        Optional<FormAct> formAct = formActRepository.findByForm(form);
+        return formAct.orElse(null);
+    }
+
+    public List<FormAct> findAll() {
+        return formActRepository.findAll();
     }
 }
