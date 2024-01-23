@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -15,14 +16,8 @@ import java.util.Set;
 @EqualsAndHashCode
 public class FormActCreateDTO {
 
-    private LocalDateTime startDate;
+    private UUID formId;
 
-    private LocalDateTime expirationDate;
-
-    private Form form;
-
-    private SchoolYear schoolYear;
-
-    private Set<Answer> answersList;
+    private UUID schoolYearId;
 
 }

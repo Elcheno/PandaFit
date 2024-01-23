@@ -6,6 +6,9 @@ import com.iesfranciscodelosrios.service.SchoolYearService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
@@ -22,7 +25,7 @@ public class PandafitSchoolYearServiceTests {
     @Test
     public void testCreateSchoolYear() {
         schoolYearService.save(SchoolYear.builder()
-                .name("1 ESO C")
+                .name("1 ESO A")
                 .institution(institutionService.findByName("global"))
                 .build());
     }
@@ -35,6 +38,15 @@ public class PandafitSchoolYearServiceTests {
     @Test
     public void testFindByNameSchoolYear() {
         System.out.println(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("global")));
+    }
+
+    @Test
+    public void testFindAllByInstitution() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<SchoolYear> result = schoolYearService.findAllByInstitution(institutionService.findByName("global"), pageable);
+        for(SchoolYear schoolYear : result) {
+            System.out.println(schoolYear);
+        }
     }
 
     @Test
