@@ -42,18 +42,22 @@ public class InstitutionService implements iServices<Institution> {
     }
 
     public Page<Institution> findAll(Pageable pageable) {
-        return institutionRepository.findAll(
-                PageRequest.of(
-                        pageable.getPageNumber() > 0
-                                ? pageable.getPageNumber()
-                                : 0,
+        try {
+            return institutionRepository.findAll(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
 
-                        pageable.getPageSize() > 0
-                                ? pageable.getPageSize()
-                                : 10,
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
 
-                        pageable.getSort()
-                )
-        );
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

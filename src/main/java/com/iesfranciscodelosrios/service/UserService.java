@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 @Service
@@ -47,39 +48,47 @@ public class UserService implements iServices<UserEntity> {
     }
 
     public Page<UserEntity> findAll(Pageable pageable) {
-        return  userRepository.findAll(
-                PageRequest.of(
-                        pageable.getPageNumber() > 0
-                            ? pageable.getPageNumber()
-                            : 0,
+        try {
+            return  userRepository.findAll(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
 
-                        pageable.getPageSize() > 0
-                            ? pageable.getPageSize()
-                            : 10,
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
 
-                        pageable.getSort()
-                )
-        );
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Page<UserEntity> findAllByInstitution(UUID institutionId, Pageable pageable) {
         Institution institution = institutionService.findById(institutionId);
         if (institution == null) return null;
 
-        return userRepository.findAllByInstitution(
-                institution,
-                PageRequest.of(
-                        pageable.getPageNumber() > 0
-                                ? pageable.getPageNumber()
-                                : 0,
+        try {
+            return userRepository.findAllByInstitution(
+                    institution,
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
 
-                        pageable.getPageSize() > 0
-                                ? pageable.getPageSize()
-                                : 10,
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
 
-                        pageable.getSort()
-                )
-        );
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Page<UserEntity> findAllByRole(
@@ -97,20 +106,24 @@ public class UserService implements iServices<UserEntity> {
             return null;
         };
 
-        return userRepository.findAllByRole(
-                role,
-                PageRequest.of(
-                        pageable.getPageNumber() > 0
-                                ? pageable.getPageNumber()
-                                : 0,
+        try {
+            return userRepository.findAllByRole(
+                    role,
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
 
-                        pageable.getPageSize() > 0
-                                ? pageable.getPageSize()
-                                : 10,
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
 
-                        pageable.getSort()
-                )
-        );
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Page<UserEntity> findAllByInstitutionAndRole(
@@ -128,20 +141,26 @@ public class UserService implements iServices<UserEntity> {
 
         if (institution == null) return null;
 
-        return userRepository.findAllByInstitutionAndRole(
-                institution.getId(),
-                role,
-                PageRequest.of(
-                        pageable.getPageNumber() > 0
-                                ? pageable.getPageNumber()
-                                : 0,
+        System.out.println(pageable.getSort().getOrderFor("email"));
 
-                        pageable.getPageSize() > 0
-                                ? pageable.getPageSize()
-                                : 10,
+        try {
+            return userRepository.findAllByInstitutionAndRole(
+                    institution.getId(),
+                    role,
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
 
-                        pageable.getSort()
-                )
-        );
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
+
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
