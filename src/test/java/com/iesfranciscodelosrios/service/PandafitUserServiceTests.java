@@ -27,26 +27,34 @@ public class PandafitUserServiceTests {
 
     @Test
     public void testCreateUser() {
-
-
+//        Set<Role> role = new HashSet<>();
+//        role.add(Role.builder()
+//                .role(RoleType.USER)
+//                .build()
+//        );
+//
 //        userService.save(UserEntity.builder()
-//                .email("user3@example.com")
+//                .email("user2@example.com")
 //                .institution(institutionService.findByName("global1"))
 //                .password("Ejemplo1&")
 //                .role(role)
-//                .build());
+//                .build()
+//        );
 
-        for(int i = 21; i < 31; i++) {
+        for(int i = 25; i < 46; i++) {
             Set<Role> role = new HashSet<>();
             role.add(Role.builder()
                     .role(RoleType.USER)
-                    .build());
+                    .build()
+            );
+
             userService.save(UserEntity.builder()
                     .email("user" + i + "@example.com")
                     .institution(institutionService.findByName("global2"))
                     .password("Ejemplo1&")
                     .role(role)
-                    .build());
+                    .build()
+            );
         }
     }
     
