@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.entity.Institution;
+import com.iesfranciscodelosrios.model.entity.Role;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.model.type.RoleType;
@@ -85,15 +86,19 @@ public class UserService implements iServices<UserEntity> {
             String role,
             Pageable pageable) {
 
-        RoleType rol;
+        Role rol;
         try{
-            rol = RoleType.valueOf(role);
+            rol = Role.builder()
+                    .role(RoleType.valueOf(role))
+                    .build();
+
+            System.out.println(rol);
         } catch (IllegalArgumentException e) {
             return null;
         };
 
         return userRepository.findAllByRole(
-                rol,
+                role,
                 PageRequest.of(
                         pageable.getPageNumber() > 0
                                 ? pageable.getPageNumber()
@@ -124,8 +129,8 @@ public class UserService implements iServices<UserEntity> {
         if (institution == null) return null;
 
         return userRepository.findAllByInstitutionAndRole(
-                institution,
-                rol,
+                institution.getId(),
+                role,
                 PageRequest.of(
                         pageable.getPageNumber() > 0
                                 ? pageable.getPageNumber()
