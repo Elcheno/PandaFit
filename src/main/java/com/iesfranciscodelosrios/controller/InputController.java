@@ -26,7 +26,7 @@ public class InputController {
      * @param name The name of the input to retrieve.
      * @return ResponseEntity containing an InputResponseDTO or not found if the input does not exist.
      */
-    @GetMapping("/input/nam/:name")
+    @GetMapping("/input/name")
     public ResponseEntity<InputResponseDTO> findByName(@RequestParam("name") String name) {
         Input input = InputService.findByName(name);
 
@@ -48,8 +48,8 @@ public class InputController {
      * @param id The ID of the input to retrieve.
      * @return ResponseEntity containing an InputResponseDTO or not found if the input does not exist.
      */
-    @GetMapping("/input/:id")
-    public ResponseEntity<InputResponseDTO> findById(@RequestParam("id") UUID id) {
+    @GetMapping("/input/{id}")
+    public ResponseEntity<InputResponseDTO> findById(@PathVariable("id") UUID id) {
         Input input = InputService.findById(id);
 
         if (input == null) return ResponseEntity.notFound().build();

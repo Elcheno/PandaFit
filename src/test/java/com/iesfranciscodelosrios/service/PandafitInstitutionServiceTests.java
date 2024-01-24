@@ -19,7 +19,7 @@ public class PandafitInstitutionServiceTests {
     @Test
     public void testCreateInstitution() {
         institutionService.save(Institution.builder()
-                .name("global")
+                .name("global2")
                 .build()
         );
     }
