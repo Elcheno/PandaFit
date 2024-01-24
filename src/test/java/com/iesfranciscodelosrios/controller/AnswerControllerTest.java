@@ -26,11 +26,9 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(AnswerController.class)
@@ -170,8 +168,8 @@ class AnswerControllerTest {
 
         // Verifica que la respuesta tenga un código de estado 201 y el ID esperado
         result.andExpect(status().isCreated())
-                .andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect((ResultMatcher) jsonPath("$.id").value(answer.getId().toString()));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)) //import de RESULT no de REQUEST
+                .andExpect(jsonPath("$.id").value(answer.getId().toString())); //import de RESULT no de REQUEST
     }
 
     @Test
