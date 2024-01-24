@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -24,6 +25,7 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @Column(name = "date", unique = true)
     private LocalDateTime date;
 

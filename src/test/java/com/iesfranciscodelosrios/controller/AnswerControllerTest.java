@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
@@ -151,8 +152,11 @@ class AnswerControllerTest {
 
     @Test
     void createAnswer() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
         // Convierte answerCreateDTO a JSON
-        String jsonRequest = new ObjectMapper().writeValueAsString(answerCreateDTO);
+        String jsonRequest = objectMapper.writeValueAsString(answerCreateDTO);
 
         // Configura el comportamiento del servicio mock
         when(answerService.save(any(Answer.class))).thenReturn(answer);
