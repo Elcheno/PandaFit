@@ -25,7 +25,6 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @Column(name = "date", unique = true)
     private LocalDateTime date;
 

@@ -7,6 +7,8 @@ import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.service.AnswerService;
 import com.iesfranciscodelosrios.service.FormActService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
@@ -72,7 +74,7 @@ public class AnswerController {
                 .uuid(answerEntity.getUuid())
                 .build();
 
-        return ResponseEntity.ok(answerResponseDTO);
+        return new ResponseEntity<>(answerResponseDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping()
