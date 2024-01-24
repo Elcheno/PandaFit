@@ -6,6 +6,9 @@ import com.iesfranciscodelosrios.model.dto.output.OutputUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.service.OutputService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +25,7 @@ public class OutputController {
      * @param name name of the output
      * @return the output or 404
      */
-    @GetMapping("/output/name/:name")
+    @GetMapping("/output/name")
     public ResponseEntity<OutputResponseDTO> findByName(@RequestParam("name") String name) {
         Output output = OutputService.findByName(name);
 
@@ -44,8 +47,8 @@ public class OutputController {
      * @param id id of the output
      * @return the output or 404
      */
-    @GetMapping("/output/:id")
-    public ResponseEntity<OutputResponseDTO> findById(@RequestParam("id") UUID id) {
+    @GetMapping("/output/{id}")
+    public ResponseEntity<OutputResponseDTO> findById(@PathVariable("id") UUID id) {
         Output output = OutputService.findById(id);
 
         if (output == null) return ResponseEntity.notFound().build();
@@ -59,6 +62,34 @@ public class OutputController {
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
+    }
+
+    /**
+     * Retrieves a paginated list of outputs.
+     *
+     * @param pageable Pageable object for pagination information.
+     * @return ResponseEntity containing a Page of OutputResponseDTOs or no content if the page is empty.
+     */
+    @GetMapping("/outputs/page")
+    public ResponseEntity<Page<OutputResponseDTO>> getAllOutputs(
+            @PageableDefault() Pageable pageable) {
+
+        Page<Output> result = OutputService.findAll(pageable);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        Page<OutputResponseDTO> response = result.map(output -> OutputResponseDTO.builder()
+                .id(output.getId())
+                .name(output.getName())
+                .description(output.getDescription())
+                .formula(output.getFormula())
+                .result(output.getResult())
+                .build()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     /**

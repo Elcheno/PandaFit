@@ -4,6 +4,8 @@ import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.OutputRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -18,6 +20,10 @@ public class OutputService implements iServices<Output> {
     @Override
     public Output findById(UUID id) {
         return outputRepository.findById(id).orElse(null);
+    }
+
+    public Page<Output> findAll(Pageable pageable) {
+        return outputRepository.findAll(pageable);
     }
 
     @Override

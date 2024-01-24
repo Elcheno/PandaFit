@@ -42,6 +42,10 @@ public class SchoolYearService implements iServices<SchoolYear> {
 
     public Page<SchoolYear> findAllByInstitution(Institution institution, Pageable pageable) {
         if (institution == null) return null;
-        return schoolYearRepository.findAllByInstitution(institution, pageable);
+        try {
+            return schoolYearRepository.findAllByInstitution(institution, pageable);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

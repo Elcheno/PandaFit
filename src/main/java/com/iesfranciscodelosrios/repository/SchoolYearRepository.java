@@ -17,5 +17,5 @@ public interface SchoolYearRepository extends JpaRepository<SchoolYear, UUID> {
 
     Optional<SchoolYear> findByNameAndAndInstitution(String name, Institution institution);
 
-    Page<SchoolYear> findAllByInstitution(Institution institution, Pageable pageable);
+    Page<SchoolYear> findAllByInstitution(Institution institution, Pageable pageable) throws Exception;
 }

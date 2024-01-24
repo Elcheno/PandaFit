@@ -40,7 +40,7 @@ public class UserEntity {
 
     @NotNull(message = "La institución no puede ser nula")
     @ManyToOne
-    @JoinColumn(name = "institution_id", nullable = false, unique = true)
+    @JoinColumn(name = "institution_id", nullable = false)
     private Institution institution;
 
     @NotNull(message = "Los roles no pueden ser nulos")

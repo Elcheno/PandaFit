@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -33,6 +35,7 @@ public class Input {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_owner_id", nullable = false)
+    @Cascade(CascadeType.PERSIST)
     @NotNull(message = "El propietario del usuario no puede ser nulo")
     private UserEntity userOwner;
 
