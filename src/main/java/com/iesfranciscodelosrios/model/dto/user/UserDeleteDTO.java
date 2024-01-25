@@ -15,9 +15,4 @@ import java.util.UUID;
 public class UserDeleteDTO {
     private UUID id;
 
-    private String email;
-
-    private String password;
-
-
 }

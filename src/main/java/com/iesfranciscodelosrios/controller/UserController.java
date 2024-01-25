@@ -33,11 +33,7 @@ public class UserController {
                 .id(userEntity.getId())
                 .email(userEntity.getEmail())
                 .role(userEntity.getRole())
-                .institution(userEntity.getInstitution())
                 .password(userEntity.getPassword())
-                .formList(userEntity.getFormList())
-                .outputList(userEntity.getOutputList())
-                .inputList(userEntity.getInputList())
                 .build();
 
         return ResponseEntity.ok(userResponseDTO);
@@ -47,6 +43,7 @@ public class UserController {
     public ResponseEntity<Page<UserResponseDTO>> getAllUser(@PageableDefault() Pageable pageable) {
         Page<UserEntity> result = userService.findAll(pageable);
 
+        if (result == null) return ResponseEntity.badRequest().build();
         if (result.isEmpty()) return ResponseEntity.noContent().build();
 
         Page<UserResponseDTO> response = result.map(user -> UserResponseDTO.builder()
@@ -153,10 +150,6 @@ public class UserController {
                 .email(userCreateDTO.getEmail())
                 .password(userCreateDTO.getPassword())
                 .role(userCreateDTO.getRole())
-                .institution(userCreateDTO.getInstitution())
-                .formList(userCreateDTO.getFormList())
-                .inputList(userCreateDTO.getInputList())
-                .outputList(userCreateDTO.getOutputList())
                 .build());
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
@@ -165,11 +158,7 @@ public class UserController {
                 .id(userEntity.getId())
                 .email(userEntity.getEmail())
                 .password(userEntity.getPassword())
-                .institution(userEntity.getInstitution())
                 .role(userEntity.getRole())
-                .formList(userEntity.getFormList())
-                .inputList(userEntity.getInputList())
-                .outputList(userEntity.getOutputList())
                 .build();
 
         return ResponseEntity.ok(userResponseDTO);
@@ -181,11 +170,6 @@ public class UserController {
                 .id(userUpdateDTO.getId())
                 .email(userUpdateDTO.getEmail())
                 .password(userUpdateDTO.getPassword())
-                .role(userUpdateDTO.getRole())
-                .institution(userUpdateDTO.getInstitution())
-                .formList(userUpdateDTO.getFormList())
-                .inputList(userUpdateDTO.getInputList())
-                .outputList(userUpdateDTO.getOutputList())
                 .build());
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
@@ -194,11 +178,7 @@ public class UserController {
                 .id(userEntity.getId())
                 .email(userEntity.getEmail())
                 .password(userEntity.getPassword())
-                .institution(userEntity.getInstitution())
                 .role(userEntity.getRole())
-                .formList(userEntity.getFormList())
-                .inputList(userEntity.getInputList())
-                .outputList(userEntity.getOutputList())
                 .build();
 
         return ResponseEntity.ok(userResponseDTO);
@@ -208,13 +188,6 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
         UserEntity userEntity = userService.delete(UserEntity.builder()
                         .id(userDeleteDTO.getId())
-                        .email(userDeleteDTO.getEmail())
-                        .password(userDeleteDTO.getPassword())
-                        .role(userDeleteDTO.getRole())
-                        .institution(userDeleteDTO.getInstitution())
-                        .formList(userDeleteDTO.getFormList())
-                        .inputList(userDeleteDTO.getInputList())
-                        .outputList(userDeleteDTO.getOutputList())
                         .build());
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
@@ -223,11 +196,7 @@ public class UserController {
                 .id(userEntity.getId())
                 .email(userEntity.getEmail())
                 .password(userEntity.getPassword())
-                .institution(userEntity.getInstitution())
                 .role(userEntity.getRole())
-                .formList(userEntity.getFormList())
-                .inputList(userEntity.getInputList())
-                .outputList(userEntity.getOutputList())
                 .build();
 
         return ResponseEntity.ok(userResponseDTO);
