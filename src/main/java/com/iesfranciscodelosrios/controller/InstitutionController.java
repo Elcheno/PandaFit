@@ -32,8 +32,6 @@ public class InstitutionController {
         InstitutionResponseDTO institutionResponseDTO = InstitutionResponseDTO.builder()
                 .id(institution.getId())
                 .name(institution.getName())
-                .userList(institution.getUserList())
-                .schoolYearList(institution.getSchoolYearList())
                 .build();
 
         return ResponseEntity.ok(institutionResponseDTO);
@@ -59,8 +57,6 @@ public class InstitutionController {
     public ResponseEntity<InstitutionResponseDTO> createInstitution(@RequestBody InstitutionCreateDTO institutionCreateDTO) {
         Institution institution = institutionService.save(Institution.builder()
                         .name(institutionCreateDTO.getName())
-                        .schoolYearList(institutionCreateDTO.getSchoolYearList())
-                        .userList(institutionCreateDTO.getUserList())
                         .build());
 
         if (institution == null) return ResponseEntity.badRequest().build();
@@ -68,8 +64,6 @@ public class InstitutionController {
         InstitutionResponseDTO institutionResponseDTO = InstitutionResponseDTO.builder()
                 .id(institution.getId())
                 .name(institution.getName())
-                .userList(institution.getUserList())
-                .schoolYearList(institution.getSchoolYearList())
                 .build();
 
         return ResponseEntity.ok(institutionResponseDTO);
@@ -80,8 +74,6 @@ public class InstitutionController {
         Institution institution = institutionService.save(Institution.builder()
                 .id(institutionUpdateDTO.getId())
                 .name(institutionUpdateDTO.getName())
-                .userList(institutionUpdateDTO.getUserList())
-                .schoolYearList(institutionUpdateDTO.getSchoolYearList())
                 .build());
 
         if (institution == null) return ResponseEntity.badRequest().build();
@@ -89,8 +81,6 @@ public class InstitutionController {
         InstitutionResponseDTO institutionResponseDTO = InstitutionResponseDTO.builder()
                 .id(institution.getId())
                 .name(institution.getName())
-                .userList(institution.getUserList())
-                .schoolYearList(institution.getSchoolYearList())
                 .build();
 
         return ResponseEntity.ok(institutionResponseDTO);
@@ -101,8 +91,6 @@ public class InstitutionController {
         Institution institution = institutionService.delete(Institution.builder()
                         .id(UUID.fromString(String.valueOf(institutionDeleteDTO.getId())))
                         .name(institutionDeleteDTO.getName())
-                        .userList(institutionDeleteDTO.getUserList())
-                        .schoolYearList(institutionDeleteDTO.getSchoolYearList())
                         .build());
 
         if (institution == null) return ResponseEntity.badRequest().build();
@@ -110,8 +98,6 @@ public class InstitutionController {
         InstitutionResponseDTO institutionResponseDTO = InstitutionResponseDTO.builder()
                 .id(institution.getId())
                 .name(institution.getName())
-                .userList(institution.getUserList())
-                .schoolYearList(institution.getSchoolYearList())
                 .build();
 
         return ResponseEntity.ok(institutionResponseDTO);
