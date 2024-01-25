@@ -2,6 +2,7 @@ package com.iesfranciscodelosrios.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.iesfranciscodelosrios.PandafitApplication;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
@@ -10,20 +11,25 @@ import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.service.AnswerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -131,8 +137,8 @@ class AnswerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isOk())
-                .andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect((ResultMatcher) jsonPath("$.id").value(answer.getId().toString()));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(answer.getId().toString()));
     }
 
     @Test
@@ -146,12 +152,12 @@ class AnswerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isOk())
-                .andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect((ResultMatcher) jsonPath("$.id").value(answer.getId().toString()));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(answer.getId().toString()));
     }
 
     @Test
-    void createAnswer() throws Exception {
+    void createAnswerTest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
@@ -159,7 +165,8 @@ class AnswerControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(answerCreateDTO);
 
         // Configura el comportamiento del servicio mock
-        when(answerService.save(any(Answer.class))).thenReturn(answer);
+        //answerService.save(any(Answer.class))).thenReturn(answer);
+        when(answerController.createAnswer(formAct.getId(), answerCreateDTO)).thenReturn(any(AnswerResponseDTO.class));
 
         // Realiza la solicitud POST con el cuerpo JSON
         ResultActions result = mockMvc.perform(post("/active/{idActive}/response", formAct.getId())
@@ -170,6 +177,15 @@ class AnswerControllerTest {
         result.andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON)) //import de RESULT no de REQUEST
                 .andExpect(jsonPath("$.id").value(answer.getId().toString())); //import de RESULT no de REQUEST
+
+        System.out.println("Verifying database after saving...");
+
+        // Busca el objeto en la base de datos y verifica si existe
+        Answer savedAnswer = answerService.findById(answer.getId());
+        assertEquals(answer, savedAnswer, "El objeto no se ha guardado correctamente en la base de datos");
+
+        // Muestra el objeto guardado en la base de datos
+        System.out.println("Saved Answer from database: " + savedAnswer);
     }
 
     @Test
@@ -180,7 +196,7 @@ class AnswerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isOk())
-                .andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect((ResultMatcher) jsonPath("$.id").value(answer.getId().toString()));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(answer.getId().toString()));
     }
 }
