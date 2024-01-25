@@ -18,6 +18,4 @@ public class InstitutionDeleteDTO {
     private UUID id;
 
     private String name;
-
-
 }

@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 import java.util.UUID;
@@ -32,6 +34,7 @@ public class Institution {
 
     @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UserEntity> userList;
 
     @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
