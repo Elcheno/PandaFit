@@ -34,9 +34,9 @@ public class OutputController {
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-                .description(output.getDescription())
-                .formula(output.getFormula())
-                .userOwner(output.getUserOwner())
+        //        .description(output.getDescription())
+        //        .formula(output.getFormula())
+        //        .userOwner(output.getUserOwner())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -56,9 +56,9 @@ public class OutputController {
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-                .description(output.getDescription())
-                .formula(output.getFormula())
-                .userOwner(output.getUserOwner())
+        //        .description(output.getDescription())
+        //        .formula(output.getFormula())
+        //        .userOwner(output.getUserOwner())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -83,8 +83,8 @@ public class OutputController {
         Page<OutputResponseDTO> response = result.map(output -> OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-                .description(output.getDescription())
-                .formula(output.getFormula())
+        //        .description(output.getDescription())
+        //        .formula(output.getFormula())
                 .result(output.getResult())
                 .build()
         );
@@ -101,16 +101,16 @@ public class OutputController {
     public ResponseEntity<OutputResponseDTO> save(@RequestBody OutputCreateDTO outputCreateDTO) {
         Output output = OutputService.save(Output.builder()
                 .name(outputCreateDTO.getName())
-                .description(outputCreateDTO.getDescription())
-                .formula(outputCreateDTO.getFormula())
-                .userOwner(outputCreateDTO.getUserOwner())
+        //        .description(outputCreateDTO.getDescription())
+        //        .formula(outputCreateDTO.getFormula())
+        //        .userOwner(outputCreateDTO.getUserOwner())
                 .build());
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-                .description(output.getDescription())
-                .formula(output.getFormula())
-                .userOwner(output.getUserOwner())
+        //        .description(output.getDescription())
+        //        .formula(output.getFormula())
+        //        .userOwner(output.getUserOwner())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -126,16 +126,16 @@ public class OutputController {
         Output output = OutputService.save(Output.builder()
                 .id(outputUpdateDTO.getId())
                 .name(outputUpdateDTO.getName())
-                .description(outputUpdateDTO.getDescription())
-                .formula(outputUpdateDTO.getFormula())
-                .userOwner(outputUpdateDTO.getUserOwner())
+        //        .description(outputUpdateDTO.getDescription())
+        //        .formula(outputUpdateDTO.getFormula())
+        //        .userOwner(outputUpdateDTO.getUserOwner())
                 .build());
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-                .description(output.getDescription())
-                .formula(output.getFormula())
-                .userOwner(output.getUserOwner())
+        //        .description(output.getDescription())
+        //        .formula(output.getFormula())
+        //        .userOwner(output.getUserOwner())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -151,16 +151,16 @@ public class OutputController {
         Output output = OutputService.save(Output.builder()
                 .id(outputResponseDTO.getId())
                 .name(outputResponseDTO.getName())
-                .description(outputResponseDTO.getDescription())
-                .formula(outputResponseDTO.getFormula())
-                .userOwner(outputResponseDTO.getUserOwner())
+        //        .description(outputResponseDTO.getDescription())
+        //        .formula(outputResponseDTO.getFormula())
+        //        .userOwner(outputResponseDTO.getUserOwner())
                 .build());
         OutputResponseDTO response = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-                .description(output.getDescription())
-                .formula(output.getFormula())
-                .userOwner(output.getUserOwner())
+        //        .description(output.getDescription())
+        //        .formula(output.getFormula())
+        //        .userOwner(output.getUserOwner())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(response);
