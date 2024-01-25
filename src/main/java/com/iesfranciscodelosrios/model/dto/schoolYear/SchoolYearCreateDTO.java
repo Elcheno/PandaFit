@@ -17,8 +17,5 @@ public class SchoolYearCreateDTO {
 
     private String name;
 
-    private Institution institution;
-
-    private Set<FormAct> formActList;
 
 }

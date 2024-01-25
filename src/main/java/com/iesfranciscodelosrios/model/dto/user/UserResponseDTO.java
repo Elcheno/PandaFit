@@ -20,13 +20,5 @@ public class UserResponseDTO {
 
     private String password;
 
-    private Institution institution;
 
-    private Set<Role> role;
-
-    private Set<Input> inputList;
-
-    private Set<Output> outputList;
-
-    private Set<Form> formList;
 }

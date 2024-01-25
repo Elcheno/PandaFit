@@ -15,7 +15,4 @@ import java.util.Set;
 @Builder
 public class FormDeleteDTO {
     private String name;
-    private String description;
-    private UserEntity userOwner;
-    private Set<FormAct> formActList;
 }
