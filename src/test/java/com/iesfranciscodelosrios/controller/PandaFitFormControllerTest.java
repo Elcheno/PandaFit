@@ -82,30 +82,20 @@ class PandaFitFormControllerTest {
                 .id(form.getId())
                 .name(form.getName())
                 .description(form.getDescription())
-                .userOwner(form.getUserOwner())
-                .formActList(form.getFormActList())
                 .build();
 
         formCreateDTO = FormCreateDTO.builder()
                 .name(form.getName())
-                .description(form.getDescription())
-                .userOwner(form.getUserOwner())
-                .formActList(form.getFormActList())
                 .build();
 
         formUpdateDTO = FormUpdateDTO.builder()
                 .id(form.getId())
                 .name("UpdatedFormName")
                 .description("Updated Form Description")
-                .userOwner(form.getUserOwner())
-                .formActList(form.getFormActList())
                 .build();
 
         formDeleteDTO = FormDeleteDTO.builder()
                 .name(form.getName())
-                .description(form.getDescription())
-                .userOwner(form.getUserOwner())
-                .formActList(form.getFormActList())
                 .build();
     }
 
@@ -156,8 +146,7 @@ class PandaFitFormControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(form.getId().toString()))
-                .andExpect(jsonPath("$.name").value(formCreateDTO.getName()))
-                .andExpect(jsonPath("$.description").value(formCreateDTO.getDescription()));
+                .andExpect(jsonPath("$.name").value(formCreateDTO.getName()));
     }
 
     @Test

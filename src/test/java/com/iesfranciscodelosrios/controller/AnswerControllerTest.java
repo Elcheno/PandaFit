@@ -108,14 +108,12 @@ class AnswerControllerTest {
         answerResponseDTO = AnswerResponseDTO.builder()
                 .id(answer.getId())
                 .date(answer.getDate())
-                .formAct(answer.getFormAct())
                 .uuid(answer.getUuid())
                 .build();
 
         answerCreateDTO = AnswerCreateDTO.builder()
                 .id(answer.getId())
                 .date(answer.getDate())
-                .formAct(answer.getFormAct())
                 .uuid(answer.getUuid())
                 .build();
 
