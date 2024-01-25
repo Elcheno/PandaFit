@@ -17,7 +17,7 @@ public class UserCreateDTO {
 
     private String password;
 
-    private Set<RoleType> roles;
+    private Set<String> roles;
 
     private UUID institutionId;
 
