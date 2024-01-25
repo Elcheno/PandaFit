@@ -16,4 +16,6 @@ public class UserCreateDTO {
 
     private String password;
 
+    private Set<Role> role;
+
 }
