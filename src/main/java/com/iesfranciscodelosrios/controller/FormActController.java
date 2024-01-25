@@ -32,9 +32,6 @@ public class FormActController {
                 .id(formAct.getId())
                 .startDate(formAct.getStartDate())
                 .expirationDate(formAct.getExpirationDate())
-                .form(formAct.getForm())
-                .schoolYear(formAct.getSchoolYear())
-                .answersList(formAct.getAnswersList())
                 .build();
         return ResponseEntity.ok(formActResponseDTO);
     }
@@ -48,9 +45,6 @@ public class FormActController {
                 .id(formAct.getId())
                 .startDate(formAct.getStartDate())
                 .expirationDate(formAct.getExpirationDate())
-                .form(formAct.getForm())
-                .schoolYear(formAct.getSchoolYear())
-                .answersList(formAct.getAnswersList())
                 .build();
 
         return ResponseEntity.ok(formActResponseDTO);
@@ -59,11 +53,6 @@ public class FormActController {
     @DeleteMapping()
     public ResponseEntity<FormActResponseDTO> deleteFormActById(@RequestBody FormActDeleteDTO FormActDeleteDTO) {
         FormAct formAct = formActService.delete(FormAct.builder()
-                .startDate(FormActDeleteDTO.getStartDate())
-                .expirationDate(FormActDeleteDTO.getExpirationDate())
-                .form(FormActDeleteDTO.getForm())
-                .schoolYear(FormActDeleteDTO.getSchoolYear())
-                .answersList(FormActDeleteDTO.getAnswersList())
                 .build());
 
         if (formAct == null) return ResponseEntity.notFound().build();
@@ -72,9 +61,6 @@ public class FormActController {
                 .id(formAct.getId())
                 .startDate(formAct.getStartDate())
                 .expirationDate(formAct.getExpirationDate())
-                .form(formAct.getForm())
-                .schoolYear(formAct.getSchoolYear())
-                .answersList(formAct.getAnswersList())
                 .build();
 
         return ResponseEntity.ok(formActResponseDTO);

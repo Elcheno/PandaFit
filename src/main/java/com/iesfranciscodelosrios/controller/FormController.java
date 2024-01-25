@@ -29,8 +29,6 @@ public class FormController {
                 .id(formEntity.getId())
                 .name(formEntity.getName())
                 .description(formEntity.getDescription())
-                .userOwner(formEntity.getUserOwner())
-                .formActList(formEntity.getFormActList())
                 .build();
 
         return ResponseEntity.ok(formResponseDTO);
@@ -46,8 +44,6 @@ public class FormController {
                 .id(formEntity.getId())
                 .name(formEntity.getName())
                 .description(formEntity.getDescription())
-                .userOwner(formEntity.getUserOwner())
-                .formActList(formEntity.getFormActList())
                 .build();
 
         return ResponseEntity.ok(formResponseDTO);
@@ -57,9 +53,6 @@ public class FormController {
     public ResponseEntity<FormResponseDTO> createForm(@RequestBody FormCreateDTO formCreateDTO){
         Form formEntity = formService.save(Form.builder()
                 .name(formCreateDTO.getName())
-                .description(formCreateDTO.getDescription())
-                .userOwner(formCreateDTO.getUserOwner())
-                .formActList(formCreateDTO.getFormActList())
                 .build());
 
         if (formEntity == null) return ResponseEntity.badRequest().build();
@@ -68,8 +61,6 @@ public class FormController {
                 .id(formEntity.getId())
                 .name(formEntity.getName())
                 .description(formEntity.getDescription())
-                .userOwner(formEntity.getUserOwner())
-                .formActList(formEntity.getFormActList())
                 .build();
 
         return ResponseEntity.ok(formResponseDTO);
@@ -81,8 +72,6 @@ public class FormController {
                 .id(formUpdateDTO.getId())
                 .name(formUpdateDTO.getName())
                 .description(formUpdateDTO.getDescription())
-                .userOwner(formUpdateDTO.getUserOwner())
-                .formActList(formUpdateDTO.getFormActList())
                 .build());
 
         if (formEntity == null) return ResponseEntity.badRequest().build();
@@ -91,8 +80,6 @@ public class FormController {
                 .id(formEntity.getId())
                 .name(formEntity.getName())
                 .description(formEntity.getDescription())
-                .userOwner(formEntity.getUserOwner())
-                .formActList(formEntity.getFormActList())
                 .build();
 
         return ResponseEntity.ok(formResponseDTO);
@@ -103,9 +90,6 @@ public class FormController {
 
         Form formEntity = formService.delete(Form.builder()
                 .name(formDeleteDTO.getName())
-                .description(formDeleteDTO.getDescription())
-                .userOwner(formDeleteDTO.getUserOwner())
-                .formActList(formDeleteDTO.getFormActList())
                 .build());
 
         if (formEntity == null) return ResponseEntity.badRequest().build();
@@ -114,8 +98,6 @@ public class FormController {
                 .id(formEntity.getId())
                 .name(formEntity.getName())
                 .description(formEntity.getDescription())
-                .userOwner(formEntity.getUserOwner())
-                .formActList(formEntity.getFormActList())
                 .build();
 
         return ResponseEntity.ok(formResponseDTO);

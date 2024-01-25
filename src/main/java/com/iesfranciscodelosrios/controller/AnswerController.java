@@ -31,7 +31,6 @@ public class AnswerController {
         AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
                 .id(answerEntity.getId())
                 .date(answerEntity.getDate())
-                .formAct(answerEntity.getFormAct())
                 .uuid(answerEntity.getUuid())
                 .build();
 
@@ -49,7 +48,6 @@ public class AnswerController {
         AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
                 .id(answerEntity.getId())
                 .date(answerEntity.getDate())
-                .formAct(answerEntity.getFormAct())
                 .uuid(answerEntity.getUuid())
                 .build();
 
@@ -61,7 +59,6 @@ public class AnswerController {
 
         Answer answerEntity = answerService.save(Answer.builder()
                 .date(answerCreateDTO.getDate())
-                .formAct(answerCreateDTO.getFormAct())
                 .uuid(answerCreateDTO.getUuid())
                 .build());
 
@@ -70,7 +67,6 @@ public class AnswerController {
         AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
                 .id(answerEntity.getId())
                 .date(answerEntity.getDate())
-                .formAct(answerEntity.getFormAct())
                 .uuid(answerEntity.getUuid())
                 .build();
 
@@ -90,7 +86,6 @@ public class AnswerController {
         AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
                 .id(answerEntity.getId())
                 .date(answerEntity.getDate())
-                .formAct(answerEntity.getFormAct())
                 .uuid(answerEntity.getUuid())
                 .build();
 
