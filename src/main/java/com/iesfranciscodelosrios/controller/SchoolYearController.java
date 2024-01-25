@@ -39,8 +39,6 @@ public class SchoolYearController {
         SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
                 .id(schoolYear.getId())
                 .name(schoolYear.getName())
-                .institution(schoolYear.getInstitution())
-                .formActList(schoolYear.getFormActList())
                 .build();
 
         return ResponseEntity.ok(schoolYearResponseDTO);
@@ -69,8 +67,6 @@ public class SchoolYearController {
         SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
                 .id(schoolYear.getId())
                 .name(schoolYear.getName())
-                .institution(schoolYear.getInstitution())
-                .formActList(schoolYear.getFormActList())
                 .build();
 
         return ResponseEntity.ok(schoolYearResponseDTO);
@@ -99,8 +95,6 @@ public class SchoolYearController {
         Page<SchoolYearResponseDTO> response = result.map(schoolYear -> SchoolYearResponseDTO.builder()
                 .id(schoolYear.getId())
                 .name(schoolYear.getName())
-//                .institution(schoolYear.getInstitution())
-//                .formActList(schoolYear.getFormActList())
                 .build()
         );
 
@@ -117,8 +111,6 @@ public class SchoolYearController {
     public ResponseEntity<SchoolYearResponseDTO> createSchoolYear(@RequestBody SchoolYearCreateDTO schoolYearCreateDTO) {
         SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
                         .name(schoolYearCreateDTO.getName())
-                        .institution(schoolYearCreateDTO.getInstitution())
-                        .formActList(schoolYearCreateDTO.getFormActList())
                         .build());
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
@@ -126,8 +118,6 @@ public class SchoolYearController {
         SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
                 .id(schoolYear.getId())
                 .name(schoolYear.getName())
-                .institution(schoolYear.getInstitution())
-                .formActList(schoolYear.getFormActList())
                 .build();
 
         return ResponseEntity.ok(schoolYearResponseDTO);
@@ -144,8 +134,6 @@ public class SchoolYearController {
         SchoolYear schoolYear = schoolYearService.delete(SchoolYear.builder()
                         .id(UUID.fromString(String.valueOf(schoolYearResponseDTO.getId())))
                         .name(schoolYearResponseDTO.getName())
-                        .institution(schoolYearResponseDTO.getInstitution())
-                        .formActList(schoolYearResponseDTO.getFormActList())
                         .build());
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
@@ -164,8 +152,6 @@ public class SchoolYearController {
         SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
                         .id(schoolYearUpdateDTO.getId())
                         .name(schoolYearUpdateDTO.getName())
-                        .institution(schoolYearUpdateDTO.getInstitution())
-                        .formActList(schoolYearUpdateDTO.getFormActList())
                         .build());
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
@@ -173,8 +159,6 @@ public class SchoolYearController {
         SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
                 .id(schoolYear.getId())
                 .name(schoolYear.getName())
-                .institution(schoolYear.getInstitution())
-                .formActList(schoolYear.getFormActList())
                 .build();
 
         return ResponseEntity.ok(schoolYearResponseDTO);
