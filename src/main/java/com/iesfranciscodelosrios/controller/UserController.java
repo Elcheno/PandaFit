@@ -4,8 +4,11 @@ import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserResponseDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserUpdateDTO;
+import com.iesfranciscodelosrios.model.entity.Institution;
+import com.iesfranciscodelosrios.model.entity.Role;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.type.RoleType;
+import com.iesfranciscodelosrios.service.InstitutionService;
 import com.iesfranciscodelosrios.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +17,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("institution")
@@ -22,6 +27,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private InstitutionService institutionService;
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") String userId) {
@@ -146,10 +154,21 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
+
+        Set<Role> roles = userCreateDTO.getRoles().stream().map(roleType -> Role.builder()
+                .role(roleType)
+                .build())
+                .collect(Collectors.toSet());
+
+        Institution institution = institutionService.findById(userCreateDTO.getInstitutionId());
+
+        if (roles.isEmpty() || institution == null) return ResponseEntity.badRequest().build();
+
         UserEntity userEntity = userService.save(UserEntity.builder()
                 .email(userCreateDTO.getEmail())
                 .password(userCreateDTO.getPassword())
-                .role(userCreateDTO.getRole())
+                .role(roles)
+                .institution(institution)
                 .build());
 
         if (userEntity == null) return ResponseEntity.badRequest().build();

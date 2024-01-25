@@ -5,6 +5,7 @@ import com.iesfranciscodelosrios.model.type.RoleType;
 import lombok.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +17,8 @@ public class UserCreateDTO {
 
     private String password;
 
-    private Set<Role> role;
+    private Set<RoleType> roles;
+
+    private UUID institutionId;
 
 }
