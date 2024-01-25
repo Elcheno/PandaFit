@@ -35,9 +35,9 @@ public class InputController {
         InputResponseDTO inputResponseDTO = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
-                .description(input.getDescription())
-                .validator(input.getValidator())
-                .userOwner(input.getUserOwner())
+        //        .description(input.getDescription())
+        //        .validator(input.getValidator())
+        //        .userOwner(input.getUserOwner())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }
@@ -57,9 +57,9 @@ public class InputController {
         InputResponseDTO inputResponseDTO = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
-                .description(input.getDescription())
-                .validator(input.getValidator())
-                .userOwner(input.getUserOwner())
+        //        .description(input.getDescription())
+        //        .validator(input.getValidator())
+        //        .userOwner(input.getUserOwner())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }
@@ -83,8 +83,8 @@ public class InputController {
         Page<InputResponseDTO> response = result.map(input -> InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
-                .description(input.getDescription())
-                .validator(input.getValidator())
+        //        .description(input.getDescription())
+        //        .validator(input.getValidator())
                 .build()
         );
 
@@ -101,16 +101,16 @@ public class InputController {
     public ResponseEntity<InputResponseDTO> save(@RequestBody InputCreateDTO inputCreateDTO) {
         Input input = InputService.save(Input.builder()
                 .name(inputCreateDTO.getName())
-                .description(inputCreateDTO.getDescription())
-                .validator(inputCreateDTO.getValidator())
-                .userOwner(inputCreateDTO.getUserOwner())
+        //        .description(inputCreateDTO.getDescription())
+        //        .validator(inputCreateDTO.getValidator())
+        //        .userOwner(inputCreateDTO.getUserOwner())
                 .build());
         InputResponseDTO inputResponseDTO = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
-                .description(input.getDescription())
-                .validator(input.getValidator())
-                .userOwner(input.getUserOwner())
+        //        .description(input.getDescription())
+        //        .validator(input.getValidator())
+        //        .userOwner(input.getUserOwner())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }
@@ -126,16 +126,16 @@ public class InputController {
         Input input = InputService.save(Input.builder()
                 .id(inputUpdateDTO.getId())
                 .name(inputUpdateDTO.getName())
-                .description(inputUpdateDTO.getDescription())
-                .validator(inputUpdateDTO.getValidator())
-                .userOwner(inputUpdateDTO.getUserOwner())
+        //        .description(inputUpdateDTO.getDescription())
+        //        .validator(inputUpdateDTO.getValidator())
+        //        .userOwner(inputUpdateDTO.getUserOwner())
                 .build());
         InputResponseDTO inputResponseDTO = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
-                .description(input.getDescription())
-                .validator(input.getValidator())
-                .userOwner(input.getUserOwner())
+        //        .description(input.getDescription())
+        //        .validator(input.getValidator())
+        //        .userOwner(input.getUserOwner())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }
@@ -151,16 +151,16 @@ public class InputController {
         Input input = InputService.delete(Input.builder()
                 .id(inputResponseDTO.getId())
                 .name(inputResponseDTO.getName())
-                .description(inputResponseDTO.getDescription())
-                .validator(inputResponseDTO.getValidator())
-                .userOwner(inputResponseDTO.getUserOwner())
+        //        .description(inputResponseDTO.getDescription())
+        //        .validator(inputResponseDTO.getValidator())
+        //        .userOwner(inputResponseDTO.getUserOwner())
                 .build());
         InputResponseDTO response = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
-                .description(input.getDescription())
-                .validator(input.getValidator())
-                .userOwner(input.getUserOwner())
+        //        .description(input.getDescription())
+        //        .validator(input.getValidator())
+        //        .userOwner(input.getUserOwner())
                 .build();
         return ResponseEntity.ok(response);
     }
