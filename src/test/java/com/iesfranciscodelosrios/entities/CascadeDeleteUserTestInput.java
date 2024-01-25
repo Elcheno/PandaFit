@@ -15,7 +15,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class CascadeDeleteUserTest {
+public class CascadeDeleteUserTestInput {
 
     @Autowired
     private UserService userService;
