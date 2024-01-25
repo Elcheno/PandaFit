@@ -19,7 +19,4 @@ public class InstitutionCreateDTO {
 
     private String name;
 
-    private Set<UserEntity> userList;
-
-    private Set<SchoolYear> schoolYearList;
 }

@@ -22,11 +22,5 @@ public class FormActResponseDTO {
 
     private LocalDateTime expirationDate;
 
-    private Form form;
-
-    private SchoolYear schoolYear;
-
-    private Set<Answer> answersList;
-
 }
 

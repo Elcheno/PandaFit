@@ -12,7 +12,4 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InputCreateDTO {
     private String name;
-    private String description;
-    private String validator;
-    private UserEntity userOwner;
 }

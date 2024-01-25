@@ -17,7 +17,4 @@ import java.util.UUID;
 public class FormCreateDTO {
     private UUID id;
     private String name;
-    private String description;
-    private UserEntity userOwner;
-    private Set<FormAct> formActList;
 }

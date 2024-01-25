@@ -13,6 +13,5 @@ import java.util.UUID;
 public class AnswerResponseDTO {
     private UUID id;
     private LocalDateTime date;
-    private FormAct formAct;
     private String uuid;
 }

@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OutputCreateDTO {
     private String name;
-    private String description;
-    private String formula;
-    private UserEntity userOwner;
+
     private String result;
 }

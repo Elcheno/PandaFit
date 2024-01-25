@@ -18,6 +18,5 @@ public class FormUpdateDTO {
     private UUID id;
     private String name;
     private String description;
-    private UserEntity userOwner;
-    private Set<FormAct> formActList;
+
 }
