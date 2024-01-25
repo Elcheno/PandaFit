@@ -20,7 +20,4 @@ public class InstitutionUpdateDTO {
 
     private String name;
 
-    private Set<UserEntity> userList;
-
-    private Set<SchoolYear> schoolYearList;
 }

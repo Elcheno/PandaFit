@@ -20,7 +20,4 @@ public class SchoolYearUpdateDTO {
 
     private String name;
 
-    private Institution institution;
-
-    private Set<FormAct> formActList;
 }

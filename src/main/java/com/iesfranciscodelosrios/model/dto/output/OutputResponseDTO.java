@@ -15,8 +15,6 @@ import java.util.UUID;
 public class OutputResponseDTO {
     private UUID id;
     private String name;
-    private String description;
-    private String formula;
-    private UserEntity userOwner;
+
     private String result;
 }

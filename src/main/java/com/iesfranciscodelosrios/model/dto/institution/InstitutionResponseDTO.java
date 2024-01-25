@@ -18,7 +18,4 @@ public class InstitutionResponseDTO {
 
     private String name;
 
-    private Set<UserEntity> userList;
-
-    private Set<SchoolYear> schoolYearList;
 }
