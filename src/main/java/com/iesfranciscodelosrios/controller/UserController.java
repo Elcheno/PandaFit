@@ -52,7 +52,7 @@ public class UserController {
         Page<UserEntity> result = userService.findAll(pageable);
 
         if (result == null) return ResponseEntity.badRequest().build();
-        if (result.isEmpty()) return ResponseEntity.noContent().build();
+//        if (result.isEmpty()) return ResponseEntity.noContent().build();
 
         Page<UserResponseDTO> response = result.map(user -> UserResponseDTO.builder()
                 .id(user.getId())
@@ -77,7 +77,7 @@ public class UserController {
         Page<UserEntity> result = userService.findAllByInstitution(UUID.fromString(institutionId), pageable);
 
         if (result == null) return ResponseEntity.badRequest().build();
-        if (result.isEmpty()) return ResponseEntity.noContent().build();
+//        if (result.isEmpty()) return ResponseEntity.noContent().build();
 
         Page<UserResponseDTO> response = result.map(user -> UserResponseDTO.builder()
                         .id(user.getId())
@@ -156,7 +156,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
 
         Set<Role> roles = userCreateDTO.getRoles().stream().map(roleType -> Role.builder()
-                .role(roleType)
+                .role(RoleType.valueOf(roleType))
                 .build())
                 .collect(Collectors.toSet());
 
@@ -205,9 +205,12 @@ public class UserController {
 
     @DeleteMapping("/users")
     public ResponseEntity<UserResponseDTO> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
-        UserEntity userEntity = userService.delete(UserEntity.builder()
-                        .id(userDeleteDTO.getId())
-                        .build());
+        UserEntity user = userService.findById(userDeleteDTO.getId());
+
+        if (user == null) return ResponseEntity.badRequest().build();
+        System.out.println("USUARIO");
+
+        UserEntity userEntity = userService.delete(user);
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
 
