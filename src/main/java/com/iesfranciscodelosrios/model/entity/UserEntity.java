@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Objects;
 import java.util.Set;
@@ -46,6 +48,7 @@ public class UserEntity {
     @NotNull(message = "Los roles no pueden ser nulos")
     @Size(min = 1, message = "Debe tener al menos un rol")
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class, cascade = CascadeType.PERSIST)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
