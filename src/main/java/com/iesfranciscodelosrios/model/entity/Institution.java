@@ -40,6 +40,7 @@ public class Institution {
     @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
     @EqualsAndHashCode.Exclude
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SchoolYear> schoolYearList;
 
     /*@Override
