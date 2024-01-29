@@ -70,13 +70,11 @@ public class AnswerController {
 
         if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<AnswerResponseDTO> response = result.map(answer -> {
-            return AnswerResponseDTO.builder()
-                    .id(answer.getId())
-                    .date(answer.getDate())
-                    .uuid(answer.getUuid())
-                    .build();
-        });
+        Page<AnswerResponseDTO> response = result.map(answer -> AnswerResponseDTO.builder()
+                .id(answer.getId())
+                .date(answer.getDate())
+                .uuid(answer.getUuid())
+                .build());
 
         return ResponseEntity.ok(response);
     }
@@ -99,11 +97,7 @@ public class AnswerController {
 
     @DeleteMapping()
     public ResponseEntity<AnswerResponseDTO> deleteAnswer(@PathVariable("idActive") UUID formActId, @RequestBody AnswerDeleteDTO answerDeleteDTO) {
-        Answer answerEntity = answerService.delete(Answer.builder()
-                .date(answerDeleteDTO.getDate())
-                .formAct(answerDeleteDTO.getFormAct())
-                .uuid(answerDeleteDTO.getUuid())
-                .build());
+        Answer answerEntity = answerService.delete(answerDeleteDTO);
 
         if (answerEntity == null) return ResponseEntity.badRequest().build();
 

@@ -1,8 +1,8 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
+import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
-import com.iesfranciscodelosrios.model.entity.Institution;
-import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.AnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,15 +48,25 @@ public class AnswerService{
         return answer.orElse(null);
     }
 
-    public Answer save(Answer answer) {
-        Answer.builder()
-                /*.date(answerCreateDTO.getDate())
-                .uuid(answerCreateDTO.getUuid())
-                .build());*/
+    public Answer save(AnswerCreateDTO answerDTO) {
+        if(answerDTO == null) return null;
+
+        Answer answer = Answer.builder()
+                .id(UUID.fromString(answerDTO.getUuid()))
+                .date(answerDTO.getDate())
+                .uuid(answerDTO.getUuid())
+                .build();
         return answerRepository.save(answer);
     }
 
-    public Answer delete(Answer answer) {
+    public Answer delete(AnswerDeleteDTO answerDTO) {
+        if(answerDTO == null) return null;
+
+        Answer answer = Answer.builder()
+                .date(answerDTO.getDate())
+                .formAct(answerDTO.getFormAct())
+                .uuid(answerDTO.getUuid())
+                .build();
         answerRepository.delete(answer);
         return answer;
     }
