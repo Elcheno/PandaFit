@@ -1,8 +1,10 @@
 package com.iesfranciscodelosrios.controller;
 
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputResponseDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputUpdateDTO;
+import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.service.OutputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +72,7 @@ public class OutputController {
      * @param pageable Pageable object for pagination information.
      * @return ResponseEntity containing a Page of OutputResponseDTOs or no content if the page is empty.
      */
-    @GetMapping("/outputs/page")
+    /*@GetMapping("/outputs/page")
     public ResponseEntity<Page<OutputResponseDTO>> getAllOutputs(
             @PageableDefault() Pageable pageable) {
 
@@ -88,6 +90,22 @@ public class OutputController {
                 .result(output.getResult())
                 .build()
         );
+
+        return ResponseEntity.ok(response);
+    }*/
+
+    @GetMapping("/outputs/page")
+    public ResponseEntity<Page<OutputResponseDTO>> getAllOutputs(@PageableDefault() Pageable pageable) {
+        Page<Output> result = OutputService.findAll(pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<OutputResponseDTO> response = result.map(output -> {
+            return OutputResponseDTO.builder()
+                    .id(output.getId())
+                    .name(output.getName())
+                    .build();
+        });
 
         return ResponseEntity.ok(response);
     }
