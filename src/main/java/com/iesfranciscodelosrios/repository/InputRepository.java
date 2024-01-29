@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.repository;
 
 import com.iesfranciscodelosrios.model.entity.Input;
+import com.iesfranciscodelosrios.model.entity.Institution;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -14,5 +15,5 @@ public interface InputRepository extends CrudRepository<Input, UUID> {
 
     Optional<Input> findByName(String name);
 
-    Page<Input> findAll(Pageable pageable);
+    Page<Input> findAll(Pageable pageable) throws Exception;
 }

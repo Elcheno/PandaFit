@@ -3,7 +3,9 @@ package com.iesfranciscodelosrios.controller;
 import com.iesfranciscodelosrios.model.dto.input.InputCreateDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputResponseDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputUpdateDTO;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Input;
+import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.service.InputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -64,13 +66,29 @@ public class InputController {
         return ResponseEntity.ok(inputResponseDTO);
     }
 
+    @GetMapping("/inputs/page")
+    public ResponseEntity<Page<InputResponseDTO>> getAllInputs(@PageableDefault() Pageable pageable) {
+        Page<Input> result = InputService.findAll(pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<InputResponseDTO> response = result.map(input -> {
+            return InputResponseDTO.builder()
+                    .id(input.getId())
+                    .name(input.getName())
+                    .build();
+        });
+
+        return ResponseEntity.ok(response);
+    }
+
     /**
      * Retrieves a paginated list of inputs.
      *
      * @param pageable Pageable object for pagination information.
      * @return ResponseEntity containing a Page of InputResponseDTOs or no content if the page is empty.
      */
-    @GetMapping("/inputs/page")
+   /* @GetMapping("/inputs/page")
     public ResponseEntity<Page<InputResponseDTO>> getAllInputs(
             @PageableDefault() Pageable pageable) {
 
@@ -89,7 +107,7 @@ public class InputController {
         );
 
         return ResponseEntity.ok(response);
-    }
+    }*/
 
     /**
      * Saves a new Input.
