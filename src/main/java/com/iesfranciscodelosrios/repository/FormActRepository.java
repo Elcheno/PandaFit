@@ -2,6 +2,7 @@ package com.iesfranciscodelosrios.repository;
 
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
+import com.iesfranciscodelosrios.model.entity.Institution;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -23,4 +24,6 @@ public interface FormActRepository extends CrudRepository <FormAct, UUID> {
     Page<FormAct> findAllByForm(Form form, Pageable pageable);
 
     List<FormAct> findAll();
+
+    Page<FormAct> findAll(Pageable pageable) throws Exception;
 }
