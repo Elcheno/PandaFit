@@ -2,34 +2,26 @@ package com.iesfranciscodelosrios.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.iesfranciscodelosrios.PandafitApplication;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.service.AnswerService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(AnswerController.class)
+@TestMethodOrder(MethodOrderer.class)
 class AnswerControllerTest {
 
     @Autowired
@@ -125,14 +118,23 @@ class AnswerControllerTest {
     }
 
     @Test
+    @Order(3)
     void getAnswerByDate() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        // Convierte answerCreateDTO a JSON
+        String jsonRequest = objectMapper.writeValueAsString(answerResponseDTO);
+
         // Mock de la respuesta esperada del servicio
         when(answerService.findById(any(UUID.class)))
                 .thenReturn(answer);
 
         // Llamada a la API y verificación de la respuesta
-        ResultActions result = mockMvc.perform(get("/active/{idActive}/response/{date}", formAct.getId(),answer.getDate())
-                .contentType(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(get("/active/{idActive}/response/byDate", formAct.getId(), answer.getDate())
+                .param("idActive", formAct.getId().toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest));
 
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -140,14 +142,24 @@ class AnswerControllerTest {
     }
 
     @Test
+    @Order(2)
     void getAnswerById() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        // Convierte answerCreateDTO a JSON
+        String jsonRequest = objectMapper.writeValueAsString(answerResponseDTO);
+
         // Mock de la respuesta esperada del servicio
         when(answerService.findById(any(UUID.class)))
                 .thenReturn(answer);
 
         // Llamada a la API y verificación de la respuesta
-        ResultActions result = mockMvc.perform(get("/active/{idActive}/response/byId/{id}", formAct.getId(),answer.getId())
-                .contentType(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(get("/active/{idActive}/response/{id}", formAct.getId(), answer.getId())
+                .param("idActive", formAct.getId().toString())
+                .param("date", answerResponseDTO.getDate().toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest));
 
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -155,6 +167,7 @@ class AnswerControllerTest {
     }
 
     @Test
+    @Order(1)
     void createAnswerTest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -169,9 +182,14 @@ class AnswerControllerTest {
         ResultActions result = mockMvc.perform(post("/active/{idActive}/response", formAct.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRequest));
+
+        result.andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(answer.getId().toString()));
     }
 
     @Test
+    @Order(4)
     void deleteAnswer() throws Exception {
         when(answerService.delete(any(Answer.class))).thenReturn(answer);
 
