@@ -3,10 +3,15 @@ package com.iesfranciscodelosrios.controller;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
+import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.service.AnswerService;
 import com.iesfranciscodelosrios.service.FormActService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +26,7 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
-    @GetMapping("{date}")
+    @GetMapping("/byDate/{date}")
     public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("idActive") UUID formActId, @RequestParam("date") String answerDate) {
         LocalDateTime date = LocalDateTime.parse(answerDate);
         Answer answerEntity = answerService.loadAnswerByDate(date);
@@ -38,7 +43,6 @@ public class AnswerController {
     }
 
 
-    //Rehacer bien hecho para tenerlo de ejemplo
     @GetMapping("{id}")
     public ResponseEntity<AnswerResponseDTO> getAnswerById(@RequestParam("idActive") UUID formActId, @PathVariable("id") String answerId) {
         Answer answerEntity = answerService.findById(UUID.fromString(answerId));
@@ -52,6 +56,23 @@ public class AnswerController {
                 .build();
 
         return ResponseEntity.ok(answerResponseDTO);
+    }
+
+    @GetMapping("page")
+    public ResponseEntity<Page<AnswerResponseDTO>> getAllAnswers(@PageableDefault() Pageable pageable) {
+        Page<Answer> result = answerService.findAll(pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<AnswerResponseDTO> response = result.map(answer -> {
+            return AnswerResponseDTO.builder()
+                    .id(answer.getId())
+                    .date(answer.getDate())
+                    .uuid(answer.getUuid())
+                    .build();
+        });
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping()
