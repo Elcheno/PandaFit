@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class AnswerService implements iServices<Answer> {
+public class AnswerService{
     @Autowired
     AnswerRepository answerRepository;
 
@@ -43,18 +43,19 @@ public class AnswerService implements iServices<Answer> {
             return null;
         }
     }
-    @Override
     public Answer findById(UUID id) {
         Optional<Answer> answer = answerRepository.findById(id);
         return answer.orElse(null);
     }
 
-    @Override
     public Answer save(Answer answer) {
+        Answer.builder()
+                /*.date(answerCreateDTO.getDate())
+                .uuid(answerCreateDTO.getUuid())
+                .build());*/
         return answerRepository.save(answer);
     }
 
-    @Override
     public Answer delete(Answer answer) {
         answerRepository.delete(answer);
         return answer;

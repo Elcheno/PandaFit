@@ -84,10 +84,7 @@ public class AnswerController {
     @PostMapping()
     public ResponseEntity<AnswerResponseDTO> createAnswer(@PathVariable("idActive") UUID formActId, @RequestBody AnswerCreateDTO answerCreateDTO) {
 
-        Answer answerEntity = answerService.save(Answer.builder()
-                .date(answerCreateDTO.getDate())
-                .uuid(answerCreateDTO.getUuid())
-                .build());
+        Answer answerEntity = answerService.save(answerCreateDTO);
 
         if (answerEntity == null) return ResponseEntity.badRequest().build();
 
