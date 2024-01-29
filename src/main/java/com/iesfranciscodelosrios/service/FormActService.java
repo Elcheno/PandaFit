@@ -45,7 +45,7 @@ public class FormActService implements iServices<FormAct> {
      */
     @Override
     public FormAct save(FormAct formAct) {
-        return null;
+        return formActRepository.save(formAct);
     }
 
     public FormAct save(FormActCreateDTO formActCreateDTO) {
