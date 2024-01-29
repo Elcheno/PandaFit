@@ -45,9 +45,12 @@ public class UserEntity {
     @JoinColumn(name = "institution_id", nullable = false)
     private Institution institution;
 
+
+    //    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @NotNull(message = "Los roles no pueden ser nulos")
     @Size(min = 1, message = "Debe tener al menos un rol")
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class, cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
