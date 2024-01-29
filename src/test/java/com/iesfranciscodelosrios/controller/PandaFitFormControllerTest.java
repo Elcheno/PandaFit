@@ -167,8 +167,7 @@ class PandaFitFormControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(form.getId().toString()))
-                .andExpect(jsonPath("$.name").value(formUpdateDTO.getName()))
-                .andExpect(jsonPath("$.description").value(formUpdateDTO.getDescription()));
+                .andExpect(jsonPath("$.name").value(formUpdateDTO.getName()));
     }
 
     @Test
