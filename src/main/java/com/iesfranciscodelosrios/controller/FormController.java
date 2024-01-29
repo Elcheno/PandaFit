@@ -30,12 +30,7 @@ public class FormController {
 
         if (formEntity == null) return ResponseEntity.notFound().build();
 
-        FormResponseDTO formResponseDTO = FormResponseDTO.builder()
-                .id(formEntity.getId())
-                .name(formEntity.getName())
-                .description(formEntity.getDescription())
-                .build();
-
+        FormResponseDTO formResponseDTO = formService.mapToResponseDTO(formEntity);
         return ResponseEntity.ok(formResponseDTO);
     }
 
@@ -45,12 +40,7 @@ public class FormController {
 
         if (formEntity == null) return ResponseEntity.notFound().build();
 
-        FormResponseDTO formResponseDTO = FormResponseDTO.builder()
-                .id(formEntity.getId())
-                .name(formEntity.getName())
-                .description(formEntity.getDescription())
-                .build();
-
+        FormResponseDTO formResponseDTO = formService.mapToResponseDTO(formEntity);
         return ResponseEntity.ok(formResponseDTO);
     }
 
@@ -60,67 +50,37 @@ public class FormController {
 
         if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<FormResponseDTO> response = result.map(form -> {
-            return FormResponseDTO.builder()
-                    .id(form.getId())
-                    .name(form.getName())
-                    .build();
-        });
-
+        Page<FormResponseDTO> response = result.map(formService::mapToResponseDTO);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping()
     public ResponseEntity<FormResponseDTO> createForm(@RequestBody FormCreateDTO formCreateDTO){
-        Form formEntity = formService.save(Form.builder()
-                .name(formCreateDTO.getName())
-                .build());
+        Form formEntity = formService.save(formCreateDTO);
 
         if (formEntity == null) return ResponseEntity.badRequest().build();
 
-        FormResponseDTO formResponseDTO = FormResponseDTO.builder()
-                .id(formEntity.getId())
-                .name(formEntity.getName())
-                .description(formEntity.getDescription())
-                .build();
-
+        FormResponseDTO formResponseDTO = formService.mapToResponseDTO(formEntity);
         return ResponseEntity.ok(formResponseDTO);
     }
 
     @PutMapping()
     public ResponseEntity<FormResponseDTO> updateForm(@RequestBody FormUpdateDTO formUpdateDTO){
-        Form formEntity = formService.save(Form.builder()
-                .id(formUpdateDTO.getId())
-                .name(formUpdateDTO.getName())
-                .description(formUpdateDTO.getDescription())
-                .build());
+        Form formEntity = formService.update(formUpdateDTO);
 
         if (formEntity == null) return ResponseEntity.badRequest().build();
 
-        FormResponseDTO formResponseDTO = FormResponseDTO.builder()
-                .id(formEntity.getId())
-                .name(formEntity.getName())
-                .description(formEntity.getDescription())
-                .build();
-
+        FormResponseDTO formResponseDTO = formService.mapToResponseDTO(formEntity);
         return ResponseEntity.ok(formResponseDTO);
     }
 
     @DeleteMapping()
     public ResponseEntity<FormResponseDTO> deleteForm(@RequestBody() FormDeleteDTO formDeleteDTO){
-
-        Form formEntity = formService.delete(Form.builder()
-                .name(formDeleteDTO.getName())
-                .build());
+        Form formEntity = formService.delete(formDeleteDTO);
 
         if (formEntity == null) return ResponseEntity.badRequest().build();
 
-        FormResponseDTO formResponseDTO = FormResponseDTO.builder()
-                .id(formEntity.getId())
-                .name(formEntity.getName())
-                .description(formEntity.getDescription())
-                .build();
-
+        FormResponseDTO formResponseDTO = formService.mapToResponseDTO(formEntity);
         return ResponseEntity.ok(formResponseDTO);
     }
 }

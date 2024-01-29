@@ -1,6 +1,8 @@
 package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.dto.formAct.FormActCreateDTO;
+import com.iesfranciscodelosrios.model.dto.formAct.FormActDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.formAct.FormActResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Institution;
@@ -19,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class FormActService implements iServices<FormAct> {
+public class FormActService {
 
     @Autowired
     FormActRepository formActRepository;
@@ -35,7 +37,6 @@ public class FormActService implements iServices<FormAct> {
         return formAct.orElse(null);
     }
 
-    @Override
     public FormAct findById(UUID id) {
         Optional<FormAct> formAct = formActRepository.findById(id);
         return formAct.orElse(null);
@@ -61,17 +62,6 @@ public class FormActService implements iServices<FormAct> {
         }
     }
 
-
-    /**
-     * @Deprecated
-     * @param formAct
-     * @return
-     */
-    @Override
-    public FormAct save(FormAct formAct) {
-        return formActRepository.save(formAct);
-    }
-
     public FormAct save(FormActCreateDTO formActCreateDTO) {
         Form form = formService.findById(formActCreateDTO.getFormId());
         SchoolYear schoolYear = schoolYearService.findById(formActCreateDTO.getSchoolYearId());
@@ -88,9 +78,15 @@ public class FormActService implements iServices<FormAct> {
         return formActRepository.save(formAct);
     }
 
-    @Override
-    public FormAct delete(FormAct formAct) {
-        if (formAct == null) return null;
+    public FormAct delete(FormActDeleteDTO formActDeleteDTO) {
+        FormAct formAct = FormAct.builder()
+                .id(formActDeleteDTO.getId())
+        //        .startDate(formActDeleteDTO.getStartDate())
+        //        .expirationDate(formActDeleteDTO.getExpirationDate())
+        //        .form(formActDeleteDTO.getForm())
+        //        .schoolYear(formActDeleteDTO.getSchoolYear())
+                .build();
+
         formActRepository.delete(formAct);
         return formAct;
     }
@@ -102,5 +98,13 @@ public class FormActService implements iServices<FormAct> {
 
     public List<FormAct> findAll() {
         return formActRepository.findAll();
+    }
+
+    public FormActResponseDTO mapToResponseDTO(FormAct formAct) {
+        return FormActResponseDTO.builder()
+                .id(formAct.getId())
+                .startDate(formAct.getStartDate())
+                .expirationDate(formAct.getExpirationDate())
+                .build();
     }
 }

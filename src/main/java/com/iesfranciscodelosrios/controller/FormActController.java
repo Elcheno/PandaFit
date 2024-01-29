@@ -33,11 +33,7 @@ public class FormActController {
         FormAct formAct = formActService.findById(UUID.fromString(id));
         if (formAct == null) return ResponseEntity.notFound().build();
 
-        FormActResponseDTO formActResponseDTO = FormActResponseDTO.builder()
-                .id(formAct.getId())
-                .startDate(formAct.getStartDate())
-                .expirationDate(formAct.getExpirationDate())
-                .build();
+        FormActResponseDTO formActResponseDTO = formActService.mapToResponseDTO(formAct);
         return ResponseEntity.ok(formActResponseDTO);
     }
 
@@ -60,32 +56,21 @@ public class FormActController {
 
 
     @PostMapping()
-    public ResponseEntity<FormActResponseDTO> createFormAct(@RequestBody() FormActCreateDTO formActCreateDTO) {
+    public ResponseEntity<FormActResponseDTO> createFormAct(@RequestBody FormActCreateDTO formActCreateDTO) {
         FormAct formAct = formActService.save(formActCreateDTO);
         if (formAct == null) return ResponseEntity.badRequest().build();
 
-        FormActResponseDTO formActResponseDTO = FormActResponseDTO.builder()
-                .id(formAct.getId())
-                .startDate(formAct.getStartDate())
-                .expirationDate(formAct.getExpirationDate())
-                .build();
-
+        FormActResponseDTO formActResponseDTO = formActService.mapToResponseDTO(formAct);
         return ResponseEntity.ok(formActResponseDTO);
     }
 
     @DeleteMapping()
-    public ResponseEntity<FormActResponseDTO> deleteFormActById(@RequestBody FormActDeleteDTO FormActDeleteDTO) {
-        FormAct formAct = formActService.delete(FormAct.builder()
-                .build());
+    public ResponseEntity<FormActResponseDTO> deleteFormActById(@RequestBody FormActDeleteDTO formActDeleteDTO) {
+        FormAct formAct = formActService.delete(formActDeleteDTO);
 
         if (formAct == null) return ResponseEntity.notFound().build();
 
-        FormActResponseDTO formActResponseDTO = FormActResponseDTO.builder()
-                .id(formAct.getId())
-                .startDate(formAct.getStartDate())
-                .expirationDate(formAct.getExpirationDate())
-                .build();
-
+        FormActResponseDTO formActResponseDTO = formActService.mapToResponseDTO(formAct);
         return ResponseEntity.ok(formActResponseDTO);
     }
 }
