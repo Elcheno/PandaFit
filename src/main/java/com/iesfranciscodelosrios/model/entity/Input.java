@@ -36,7 +36,7 @@ public class Input {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_owner_id", nullable = false)
     @Cascade(CascadeType.PERSIST)
-    @NotNull(message = "El propietario del usuario no puede ser nulo")
+    @NotNull(message = "El propietario de un Input no puede ser nulo")
     private UserEntity userOwner;
 
     @Override
