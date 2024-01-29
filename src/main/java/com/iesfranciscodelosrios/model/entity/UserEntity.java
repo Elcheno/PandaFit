@@ -48,7 +48,6 @@ public class UserEntity {
     @NotNull(message = "Los roles no pueden ser nulos")
     @Size(min = 1, message = "Debe tener al menos un rol")
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class, cascade = CascadeType.PERSIST)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -57,12 +56,15 @@ public class UserEntity {
     private Set<Role> role;
 
     @OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Input> inputList;
 
     @OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Output> outputList;
 
     @OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Form> formList;
 
     @Override

@@ -36,7 +36,7 @@ public class Output {
     @Column(name = "formula")
     private String formula;
 
-    @NotNull(message = "El usuario propietario no puede ser nulo")
+    @NotNull(message = "El usuario propietario de Output no puede ser nulo")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_owner_id")
     @Cascade(CascadeType.PERSIST)
