@@ -1,5 +1,8 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
+import com.iesfranciscodelosrios.model.dto.output.OutputDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.output.OutputUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
@@ -13,13 +16,12 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class OutputService implements iServices<Output> {
+public class OutputService {
 
     @Autowired
     private OutputRepository outputRepository;
 
 
-    @Override
     public Output findById(UUID id) {
         return outputRepository.findById(id).orElse(null);
     }
@@ -45,15 +47,39 @@ public class OutputService implements iServices<Output> {
         }
     }
 
-    @Override
-    public Output save(Output output) {
+    public Output save(OutputCreateDTO outputCreateDTO) {
+        Output output = Output.builder()
+                .name(outputCreateDTO.getName())
+                //        .description(outputCreateDTO.getDescription())
+                //        .formula(outputCreateDTO.getFormula())
+                //        .userOwner(outputCreateDTO.getUserOwner())
+                .build();
+
         return outputRepository.save(output);
     }
 
-    @Override
-    public Output delete(Output output) {
-        outputRepository.delete(output);
-        return output;
+    public Output update(OutputUpdateDTO outputUpdateDTO) {
+        Output output = Output.builder()
+                .id(outputUpdateDTO.getId())
+                .name(outputUpdateDTO.getName())
+                //        .description(outputUpdateDTO.getDescription())
+                //        .formula(outputUpdateDTO.getFormula())
+                //        .userOwner(outputUpdateDTO.getUserOwner())
+                .build();
+
+        return outputRepository.save(output);
+    }
+
+    public Output delete(OutputDeleteDTO outputDeleteDTO) {
+        Output output = Output.builder()
+                .id(outputDeleteDTO.getId())
+                .name(outputDeleteDTO.getName())
+                //        .description(outputDeleteDTO.getDescription())
+                //        .formula(outputDeleteDTO.getFormula())
+                //        .userOwner(outputDeleteDTO.getUserOwner())
+                .build();
+
+        return outputRepository.save(output);
     }
 
     public Output findByName(String name) {
