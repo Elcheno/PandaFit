@@ -2,6 +2,7 @@ package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.entity.Role;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
+import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,15 @@ public class RoleService implements iServices<Role> {
     public Role delete(Role role) {
         roleRepository.delete(role);
         return role;
+    }
+
+    public Role findByName(RoleType role) {
+        try {
+            return roleRepository.findByRole(role)
+                    .orElse(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
