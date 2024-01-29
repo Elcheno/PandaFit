@@ -1,6 +1,9 @@
 package com.iesfranciscodelosrios.repository;
 
 import com.iesfranciscodelosrios.model.entity.Answer;
+import com.iesfranciscodelosrios.model.entity.Institution;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +16,6 @@ import java.util.UUID;
 public interface AnswerRepository extends CrudRepository<Answer, UUID> {
 
     Optional<Answer> findAnswerByDate(LocalDateTime date);
+
+    Page<Answer> findAll(Pageable pageable) throws Exception;
 }
