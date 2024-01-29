@@ -6,6 +6,7 @@ import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.repository.UserRepository;
+import org.hibernate.exception.GenericJDBCException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,10 +37,26 @@ public class UserService implements iServices<UserEntity> {
     }
 
     @Override
-    public UserEntity delete(UserEntity userEntity) {
-        if (userEntity == null) return null;
-        userRepository.delete(userEntity);
-        return userEntity;
+    public UserEntity delete(UserEntity user) {
+        return  null;
+    }
+
+    public UserEntity delete(UUID id)  {
+        if (id == null) return null;
+        try {
+           // userRepository.deleteById(id);
+            userRepository.forceDelete(id);
+        }
+        catch (GenericJDBCException a) {
+            System.out.println("consulta al fallo");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        return null;
     }
 
     public UserEntity findByEmail(String email) {

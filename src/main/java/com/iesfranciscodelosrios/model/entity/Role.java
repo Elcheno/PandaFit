@@ -24,4 +24,8 @@ public class Role {
     @NotNull(message = "El tipo de rol no puede ser nulo")
     @Enumerated(EnumType.STRING)
     private RoleType role;
+
+    @ManyToMany(mappedBy = "role")
+    private Set<UserEntity> userList;
+
 }
