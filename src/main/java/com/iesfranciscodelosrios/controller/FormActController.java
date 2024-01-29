@@ -3,11 +3,16 @@ package com.iesfranciscodelosrios.controller;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActCreateDTO;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActResponseDTO;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.entity.FormAct;
+import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.service.FormActService;
 import com.iesfranciscodelosrios.service.FormService;
 import com.iesfranciscodelosrios.service.SchoolYearService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +40,24 @@ public class FormActController {
                 .build();
         return ResponseEntity.ok(formActResponseDTO);
     }
+
+    @GetMapping("page")
+    public ResponseEntity<Page<FormActResponseDTO>> getAllFormsAct(@PageableDefault() Pageable pageable) {
+        Page<FormAct> result = formActService.findAll(pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<FormActResponseDTO> response = result.map(formAct -> {
+            return FormActResponseDTO.builder()
+                    .id(formAct.getId())
+                    .startDate(formAct.getStartDate())
+                    .expirationDate(formAct.getExpirationDate())
+                    .build();
+        });
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @PostMapping()
     public ResponseEntity<FormActResponseDTO> createFormAct(@RequestBody() FormActCreateDTO formActCreateDTO) {
