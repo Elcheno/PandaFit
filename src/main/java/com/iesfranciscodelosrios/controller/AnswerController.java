@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
 @RestController
@@ -28,18 +29,23 @@ public class AnswerController {
 
     @GetMapping("/byDate/{date}")
     public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("idActive") UUID formActId, @RequestParam("date") String answerDate) {
-        LocalDateTime date = LocalDateTime.parse(answerDate);
-        Answer answerEntity = answerService.loadAnswerByDate(date);
+        try {
+            LocalDateTime date = LocalDateTime.parse(answerDate);
+            Answer answerEntity = answerService.loadAnswerByDate(date);
 
-        if (answerEntity == null) return ResponseEntity.notFound().build();
+            if (answerEntity == null) return ResponseEntity.notFound().build();
 
-        AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
-                .id(answerEntity.getId())
-                .date(answerEntity.getDate())
-                .uuid(answerEntity.getUuid())
-                .build();
+            AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
+                    .id(answerEntity.getId())
+                    .date(answerEntity.getDate())
+                    .uuid(answerEntity.getUuid())
+                    .build();
 
-        return ResponseEntity.ok(answerResponseDTO);
+            return ResponseEntity.ok(answerResponseDTO);
+        } catch (DateTimeParseException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 
@@ -64,13 +70,11 @@ public class AnswerController {
 
         if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<AnswerResponseDTO> response = result.map(answer -> {
-            return AnswerResponseDTO.builder()
-                    .id(answer.getId())
-                    .date(answer.getDate())
-                    .uuid(answer.getUuid())
-                    .build();
-        });
+        Page<AnswerResponseDTO> response = result.map(answer -> AnswerResponseDTO.builder()
+                .id(answer.getId())
+                .date(answer.getDate())
+                .uuid(answer.getUuid())
+                .build());
 
         return ResponseEntity.ok(response);
     }
@@ -78,10 +82,7 @@ public class AnswerController {
     @PostMapping()
     public ResponseEntity<AnswerResponseDTO> createAnswer(@PathVariable("idActive") UUID formActId, @RequestBody AnswerCreateDTO answerCreateDTO) {
 
-        Answer answerEntity = answerService.save(Answer.builder()
-                .date(answerCreateDTO.getDate())
-                .uuid(answerCreateDTO.getUuid())
-                .build());
+        Answer answerEntity = answerService.save(answerCreateDTO);
 
         if (answerEntity == null) return ResponseEntity.badRequest().build();
 
@@ -96,11 +97,7 @@ public class AnswerController {
 
     @DeleteMapping()
     public ResponseEntity<AnswerResponseDTO> deleteAnswer(@PathVariable("idActive") UUID formActId, @RequestBody AnswerDeleteDTO answerDeleteDTO) {
-        Answer answerEntity = answerService.delete(Answer.builder()
-                .date(answerDeleteDTO.getDate())
-                .formAct(answerDeleteDTO.getFormAct())
-                .uuid(answerDeleteDTO.getUuid())
-                .build());
+        Answer answerEntity = answerService.delete(answerDeleteDTO);
 
         if (answerEntity == null) return ResponseEntity.badRequest().build();
 

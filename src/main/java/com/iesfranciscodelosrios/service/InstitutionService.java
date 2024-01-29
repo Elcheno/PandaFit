@@ -1,37 +1,54 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionCreateDTO;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
-import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.InstitutionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class InstitutionService implements iServices<Institution> {
+public class InstitutionService{
 
     @Autowired
     private InstitutionRepository institutionRepository;
 
-    @Override
     public Institution findById(UUID id) {
         return institutionRepository.findById(id)
                 .orElse(null);
     }
 
-    @Override
-    public Institution save(Institution institution) {
+    public Institution save(InstitutionCreateDTO institutionDTO) {
+        if (institutionDTO == null) return null;
+
+        Institution institution = Institution.builder()
+                .name(institutionDTO.getName())
+                .build();
         return institutionRepository.save(institution);
     }
 
-    @Override
-    public Institution delete(Institution institution) {
-        if (institution == null) return null;
+    public Institution update(InstitutionUpdateDTO institutionDTO) {
+        if (institutionDTO == null) return null;
+
+        Institution institution = Institution.builder()
+                .id(institutionDTO.getId())
+                .name(institutionDTO.getName())
+                .build();
+        return institutionRepository.save(institution);
+    }
+
+    public Institution delete(InstitutionDeleteDTO institutionDTO) {
+        if (institutionDTO == null) return null;
+        Institution institution = Institution.builder()
+                .id(UUID.fromString(String.valueOf(institutionDTO.getId())))
+                .name(institutionDTO.getName())
+                .build();
         institutionRepository.delete(institution);
         return institution;
     }

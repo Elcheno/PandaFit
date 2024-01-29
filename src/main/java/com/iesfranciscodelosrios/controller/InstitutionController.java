@@ -43,21 +43,17 @@ public class InstitutionController {
 
         if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<InstitutionResponseDTO> response = result.map(institution -> {
-            return InstitutionResponseDTO.builder()
-                    .id(institution.getId())
-                    .name(institution.getName())
-                    .build();
-        });
+        Page<InstitutionResponseDTO> response = result.map(institution -> InstitutionResponseDTO.builder()
+                .id(institution.getId())
+                .name(institution.getName())
+                .build());
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping()
     public ResponseEntity<InstitutionResponseDTO> createInstitution(@RequestBody InstitutionCreateDTO institutionCreateDTO) {
-        Institution institution = institutionService.save(Institution.builder()
-                        .name(institutionCreateDTO.getName())
-                        .build());
+        Institution institution = institutionService.save(institutionCreateDTO);
 
         if (institution == null) return ResponseEntity.badRequest().build();
 
@@ -71,10 +67,7 @@ public class InstitutionController {
 
     @PutMapping()
     public ResponseEntity<InstitutionResponseDTO> updateInstitution(@RequestBody InstitutionUpdateDTO institutionUpdateDTO) {
-        Institution institution = institutionService.save(Institution.builder()
-                .id(institutionUpdateDTO.getId())
-                .name(institutionUpdateDTO.getName())
-                .build());
+        Institution institution = institutionService.update(institutionUpdateDTO);
 
         if (institution == null) return ResponseEntity.badRequest().build();
 
@@ -88,10 +81,7 @@ public class InstitutionController {
 
     @DeleteMapping()
     public ResponseEntity<InstitutionResponseDTO> deleteInstitution(@RequestBody InstitutionDeleteDTO institutionDeleteDTO) {
-        Institution institution = institutionService.delete(Institution.builder()
-                        .id(UUID.fromString(String.valueOf(institutionDeleteDTO.getId())))
-                        .name(institutionDeleteDTO.getName())
-                        .build());
+        Institution institution = institutionService.delete(institutionDeleteDTO);
 
         if (institution == null) return ResponseEntity.badRequest().build();
 
