@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
 @RestController
@@ -28,18 +29,23 @@ public class AnswerController {
 
     @GetMapping("/byDate/{date}")
     public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("idActive") UUID formActId, @RequestParam("date") String answerDate) {
-        LocalDateTime date = LocalDateTime.parse(answerDate);
-        Answer answerEntity = answerService.loadAnswerByDate(date);
+        try {
+            LocalDateTime date = LocalDateTime.parse(answerDate);
+            Answer answerEntity = answerService.loadAnswerByDate(date);
 
-        if (answerEntity == null) return ResponseEntity.notFound().build();
+            if (answerEntity == null) return ResponseEntity.notFound().build();
 
-        AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
-                .id(answerEntity.getId())
-                .date(answerEntity.getDate())
-                .uuid(answerEntity.getUuid())
-                .build();
+            AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
+                    .id(answerEntity.getId())
+                    .date(answerEntity.getDate())
+                    .uuid(answerEntity.getUuid())
+                    .build();
 
-        return ResponseEntity.ok(answerResponseDTO);
+            return ResponseEntity.ok(answerResponseDTO);
+        } catch (DateTimeParseException e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 
