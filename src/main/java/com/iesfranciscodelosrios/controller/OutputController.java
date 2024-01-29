@@ -2,6 +2,7 @@ package com.iesfranciscodelosrios.controller;
 
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
+import com.iesfranciscodelosrios.model.dto.output.OutputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputResponseDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
@@ -117,12 +118,7 @@ public class OutputController {
      */
     @PostMapping("/output")
     public ResponseEntity<OutputResponseDTO> save(@RequestBody OutputCreateDTO outputCreateDTO) {
-        Output output = OutputService.save(Output.builder()
-                .name(outputCreateDTO.getName())
-        //        .description(outputCreateDTO.getDescription())
-        //        .formula(outputCreateDTO.getFormula())
-        //        .userOwner(outputCreateDTO.getUserOwner())
-                .build());
+        Output output = OutputService.save(outputCreateDTO);
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
@@ -141,13 +137,7 @@ public class OutputController {
      */
     @PutMapping("/output")
     public ResponseEntity<OutputResponseDTO> update(@RequestBody OutputUpdateDTO outputUpdateDTO) {
-        Output output = OutputService.save(Output.builder()
-                .id(outputUpdateDTO.getId())
-                .name(outputUpdateDTO.getName())
-        //        .description(outputUpdateDTO.getDescription())
-        //        .formula(outputUpdateDTO.getFormula())
-        //        .userOwner(outputUpdateDTO.getUserOwner())
-                .build());
+        Output output = OutputService.update(outputUpdateDTO);
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
@@ -161,18 +151,12 @@ public class OutputController {
 
     /**
      * Delete an output
-     * @param outputResponseDTO the output to delete
+     * @param outputDeleteDTO the output to delete
      * @return the deleted output
      */
     @DeleteMapping("/output")
-    public ResponseEntity<OutputResponseDTO> delete(@RequestBody OutputResponseDTO outputResponseDTO) {
-        Output output = OutputService.save(Output.builder()
-                .id(outputResponseDTO.getId())
-                .name(outputResponseDTO.getName())
-        //        .description(outputResponseDTO.getDescription())
-        //        .formula(outputResponseDTO.getFormula())
-        //        .userOwner(outputResponseDTO.getUserOwner())
-                .build());
+    public ResponseEntity<OutputResponseDTO> delete(@RequestBody OutputDeleteDTO outputDeleteDTO) {
+        Output output = OutputService.delete(outputDeleteDTO);
         OutputResponseDTO response = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())

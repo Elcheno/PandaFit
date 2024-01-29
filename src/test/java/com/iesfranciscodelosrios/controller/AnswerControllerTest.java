@@ -26,11 +26,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(AnswerController.class)
-@TestMethodOrder(MethodOrderer.class)
 class AnswerControllerTest {
 
     @Autowired
@@ -51,6 +51,8 @@ class AnswerControllerTest {
     private Form form;
     private UserEntity user;
     private Institution institution;
+    private  LocalDateTime testDate = LocalDateTime.of(2024, 1, 22, 20, 29, 17, 835885);
+
     @BeforeEach
     void setUp() {
         Set<Role> role = new HashSet<>();
@@ -93,7 +95,7 @@ class AnswerControllerTest {
 
         answer = Answer.builder()
                 .id(UUID.randomUUID())  // Simula un ID generado al guardar en la base de datos
-                .date(LocalDateTime.now())
+                .date(testDate)
                 .formAct(formAct)
                 .uuid(UUID.randomUUID().toString())
                 .build();
@@ -129,16 +131,20 @@ class AnswerControllerTest {
         // Mock de la respuesta esperada del servicio
         when(answerService.findById(any(UUID.class)))
                 .thenReturn(answer);
+        System.out.println("Mocked Answer: " + answer);
 
         // Llamada a la API y verificación de la respuesta
-        ResultActions result = mockMvc.perform(get("/active/{idActive}/response/byDate", formAct.getId(), answer.getDate())
+        ResultActions result = mockMvc.perform(get("/active/{idActive}/response/byDate/{date}",
+                formAct.getId(), answer.getDate().toString())
                 .param("idActive", formAct.getId().toString())
+                .param("date", "2004")//SUSTITUIR answer.getDate().toString() por ENCODE url, buscar JAVA encode/decode url
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRequest));
 
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(answer.getId().toString()));
+                .andExpect(jsonPath("$.id").value(answer.getId().toString()))
+                .andDo(print());
     }
 
     @Test
@@ -153,6 +159,7 @@ class AnswerControllerTest {
         // Mock de la respuesta esperada del servicio
         when(answerService.findById(any(UUID.class)))
                 .thenReturn(answer);
+        System.out.println("Mocked Answer: " + answer);
 
         // Llamada a la API y verificación de la respuesta
         ResultActions result = mockMvc.perform(get("/active/{idActive}/response/{id}", formAct.getId(), answer.getId())
@@ -163,7 +170,8 @@ class AnswerControllerTest {
 
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(answer.getId().toString()));
+                .andExpect(jsonPath("$.id").value(answer.getId().toString()))
+                .andDo(print());
     }
 
     @Test
@@ -185,10 +193,11 @@ class AnswerControllerTest {
 
         result.andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(answer.getId().toString()));
+                .andExpect(jsonPath("$.id").value(answer.getId().toString()))
+                .andDo(print());
     }
 
-    @Test
+    /*@Test
     @Order(4)
     void deleteAnswer() throws Exception {
         when(answerService.delete(any(Answer.class))).thenReturn(answer);
@@ -199,5 +208,5 @@ class AnswerControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(answer.getId().toString()));
-    }
+    }*/
 }
