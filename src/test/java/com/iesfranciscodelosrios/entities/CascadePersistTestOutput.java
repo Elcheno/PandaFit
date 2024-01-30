@@ -31,7 +31,7 @@ public class CascadePersistTestOutput {
                 .name("outputName")
                 .description("Output Description")
                 .formula("OutputFormula")
-        //        .userOwnerId(userOwner.getId())
+                .userOwner(userOwner)
                 .result("Some Result")
                 .build();
 

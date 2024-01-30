@@ -33,7 +33,7 @@ public class CascadePersistTestInput {
                 .name("inputName")
                 .description("Input Description")
                 .validator("InputValidator")
-        //        .userOwnerId(userOwner.getId())
+                .userOwner(userOwner)
                 .build();
 
         // When
