@@ -92,10 +92,10 @@ public class AnswerController {
         @RequestBody AnswerCreateDTO answerCreateDTO) {
 
         FormAct formAct = formActService.findById(formActId);
-        if (formAct == null) return ResponseEntity.badRequest().build();
+        //if (formAct == null) return ResponseEntity.badRequest().build();
 
         Answer answerEntity = answerService.save(answerCreateDTO, formAct);
-        if (answerEntity == null) return ResponseEntity.badRequest().build();
+        //if (answerEntity == null) return ResponseEntity.badRequest().build();
 
         AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
                 .id(answerEntity.getId())
