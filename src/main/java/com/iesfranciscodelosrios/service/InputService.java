@@ -81,18 +81,15 @@ public class InputService {
     }
 
 
-    // Este delete de deberá cambiar por un delete if not use
     public Input delete(InputDeleteDTO inputDeleteDTO) {
+        UUID id = inputDeleteDTO.getId();
 
-        Input input = Input.builder()
-                .id(inputDeleteDTO.getId())
-                .name(inputDeleteDTO.getName())
-        //        .description(inputDeleteDTO.getDescription())
-        //        .validator(inputDeleteDTO.getValidator())
-        //        .userOwner(inputDeleteDTO.getUserOwner())
-                .build();
+        Input inputToDelete = inputRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Input no encontrado"));
 
-        return inputRepository.save(input);
+        inputRepository.deleteById(id);
+
+        return inputToDelete;
     }
 
     public Input findByName(String name) {
