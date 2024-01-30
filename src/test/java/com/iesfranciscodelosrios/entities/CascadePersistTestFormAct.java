@@ -4,9 +4,9 @@ import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
-import com.iesfranciscodelosrios.service.FormActService;
-import com.iesfranciscodelosrios.service.FormService;
-import com.iesfranciscodelosrios.service.UserService;
+import com.iesfranciscodelosrios.repository.FormActRepository;
+import com.iesfranciscodelosrios.repository.FormRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,13 +22,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CascadePersistTestFormAct {
 
     @Autowired
-    private FormActService formActService;
+    private FormActRepository formActRepository;
 
     @Autowired
-    private FormService formService;
+    private FormRepository formRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Test
     @Transactional
@@ -66,8 +66,8 @@ public class CascadePersistTestFormAct {
         formAct.setAnswersList(answerList);
 
         // When
-        Form savedForm = formService.save(form);
-        FormAct savedFormAct = formActService.save(formAct);
+        Form savedForm = formRepository.save(form);
+        FormAct savedFormAct = formActRepository.save(formAct);
 
         // Then
         assertNotNull(savedFormAct.getId(), "ID debería generarse después de guardar");
@@ -82,7 +82,7 @@ public class CascadePersistTestFormAct {
 
     private UserEntity createUserForTest() {
         // Crea un usuario para utilizarlo en las pruebas
-        return userService.save(UserEntity.builder()
+        return userRepository.save(UserEntity.builder()
                 .email("testuser@example.com")
                 .password("Abcdefg1!")
                 .build());

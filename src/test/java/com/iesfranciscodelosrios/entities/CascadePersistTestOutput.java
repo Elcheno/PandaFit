@@ -3,8 +3,8 @@ package com.iesfranciscodelosrios.entities;
 import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
-import com.iesfranciscodelosrios.service.OutputService;
-import com.iesfranciscodelosrios.service.UserService;
+import com.iesfranciscodelosrios.repository.OutputRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,30 +14,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class CascadePersistTestOutput {
-    // RESULTADO: Al guardar un output el usuario debería ser persistido junto con el input por el CASCADE PERSIST
 
     @Autowired
-    private OutputService outputService;
+    private OutputRepository outputRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Test
     @Transactional
     public void testCascadePersist() {
+        // RESULTADO: Al guardar un output, el usuario debería ser persistido junto con el input por el CASCADE PERSIST
         // Given
         UserEntity userOwner = createUserForTest();
-        OutputCreateDTO outputCreateDTO = OutputCreateDTO.builder()
+        Output output = Output.builder()
                 .name("outputName")
                 .description("Output Description")
                 .formula("OutputFormula")
-                .userOwnerId(userOwner.getId())
+        //        .userOwnerId(userOwner.getId())
                 .result("Some Result")
                 .build();
 
 
         // When
-        Output savedOutput = outputService.save(outputCreateDTO);
+        Output savedOutput = outputRepository.save(output);
 
         // Then
         assertNotNull(savedOutput.getId(), "ID debería generarse después de guardar");
@@ -50,7 +50,7 @@ public class CascadePersistTestOutput {
 
     private UserEntity createUserForTest() {
         // Crea un usuario para utilizarlo en las pruebas
-        return userService.save(UserEntity.builder()
+        return userRepository.save(UserEntity.builder()
                 .email("testuser@example.com")
                 .password("Abcdefg1!")
                 .build());

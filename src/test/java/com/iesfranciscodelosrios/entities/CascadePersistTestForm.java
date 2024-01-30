@@ -3,8 +3,8 @@ package com.iesfranciscodelosrios.entities;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
-import com.iesfranciscodelosrios.service.FormService;
-import com.iesfranciscodelosrios.service.UserService;
+import com.iesfranciscodelosrios.repository.FormRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CascadePersistTestForm {
 
     @Autowired
-    private FormService formService;
+    private FormRepository formRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Test
     @Transactional
@@ -55,7 +55,7 @@ public class CascadePersistTestForm {
         form.setFormActList(formActList);
 
         // When
-        Form savedForm = formService.save(form);
+        Form savedForm = formRepository.save(form);
 
         // Then
         assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
@@ -77,7 +77,7 @@ public class CascadePersistTestForm {
 
     private UserEntity createUserForTest() {
         // Crea un usuario para utilizarlo en las pruebas
-        return userService.save(UserEntity.builder()
+        return userRepository.save(UserEntity.builder()
                 .email("testuser@example.com")
                 .password("Abcdefg1!")
                 .build());

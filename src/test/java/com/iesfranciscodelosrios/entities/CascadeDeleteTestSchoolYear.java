@@ -3,9 +3,9 @@ package com.iesfranciscodelosrios.entities;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.model.entity.Institution;
-import com.iesfranciscodelosrios.service.FormActService;
-import com.iesfranciscodelosrios.service.SchoolYearService;
-import com.iesfranciscodelosrios.service.InstitutionService;
+import com.iesfranciscodelosrios.repository.FormActRepository;
+import com.iesfranciscodelosrios.repository.SchoolYearRepository;
+import com.iesfranciscodelosrios.repository.InstitutionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,13 +22,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CascadeDeleteTestSchoolYear {
 
     @Autowired
-    private SchoolYearService schoolYearService;
+    private SchoolYearRepository schoolYearRepository;
 
     @Autowired
-    private FormActService formActService;
+    private FormActRepository formActRepository;
 
     @Autowired
-    private InstitutionService institutionService;
+    private InstitutionRepository institutionRepository;
 
     @Test
     @Transactional
@@ -42,13 +43,13 @@ public class CascadeDeleteTestSchoolYear {
         FormAct formAct1 = FormAct.builder()
                 .startDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusDays(7))
-        //        .schoolYear(schoolYear)
+                .schoolYear(schoolYear)
                 .build();
 
         FormAct formAct2 = FormAct.builder()
                 .startDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusDays(14))
-        //        .schoolYear(schoolYear)
+                .schoolYear(schoolYear)
                 .build();
 
         Set<FormAct> formActList = new HashSet<>();
@@ -58,7 +59,7 @@ public class CascadeDeleteTestSchoolYear {
         schoolYear.setFormActList(formActList);
 
         // When
-        SchoolYear savedSchoolYear = schoolYearService.save(schoolYear);
+        SchoolYear savedSchoolYear = schoolYearRepository.save(schoolYear);
 
         // Then
         assertNotNull(savedSchoolYear.getId(), "ID debería generarse después de guardar");
@@ -66,18 +67,21 @@ public class CascadeDeleteTestSchoolYear {
         assertEquals(2, savedSchoolYear.getFormActList().size(), "Debería haber dos FormAct guardados");
 
         // When (eliminar el año escolar y verificar eliminación en cascada)
-        schoolYearService.delete(savedSchoolYear);
+        schoolYearRepository.delete(savedSchoolYear);
 
         // Then (verificar que el año escolar y los FormAct se han eliminado)
-        assertNull(schoolYearService.findById(savedSchoolYear.getId()), "El año escolar debería ser nulo después de eliminar");
+        Optional<SchoolYear> deletedSchoolYear = schoolYearRepository.findById(savedSchoolYear.getId());
+        assertFalse(deletedSchoolYear.isPresent(), "El año escolar debería ser nulo después de eliminar");
+
         for (FormAct savedFormAct : savedSchoolYear.getFormActList()) {
-            assertNull(formActService.findById(savedFormAct.getId()), "El FormAct debería ser nulo después de eliminar el año escolar");
+            Optional<FormAct> deletedFormAct = formActRepository.findById(savedFormAct.getId());
+            assertFalse(deletedFormAct.isPresent(), "El FormAct debería ser nulo después de eliminar el año escolar");
         }
     }
 
     private Institution createInstitutionForTest() {
         // Crea una institución para utilizarla en las pruebas
-        return institutionService.save(Institution.builder()
+        return institutionRepository.save(Institution.builder()
                 .name("Instituto de Prueba")
                 .build());
     }
