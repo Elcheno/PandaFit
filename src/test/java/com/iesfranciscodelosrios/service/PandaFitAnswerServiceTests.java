@@ -1,5 +1,7 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
+import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.repository.*;
@@ -92,14 +94,14 @@ public class PandaFitAnswerServiceTests {
                 .build();
         formActRepository.save(formAct);  // Guarda la instancia de FormAct
 
-        Answer answer = Answer.builder()
+        AnswerCreateDTO answerCreateDTO = AnswerCreateDTO.builder()
+                .id(UUID.randomUUID())
                 .date(LocalDateTime.now())
-                .formAct(formAct)
                 .uuid(UUID.randomUUID().toString())
                 .build();
 
         // When
-        Answer savedAnswer = answerService.save(answer);
+        Answer savedAnswer = answerService.save(answerCreateDTO);
 
         // Then
         assertNotNull(savedAnswer.getId(), "ID debería generarse después de guardar");
@@ -159,14 +161,13 @@ public class PandaFitAnswerServiceTests {
                 .build();
         formActRepository.save(formAct);  // Guarda la instancia de FormAct
 
-        Answer answer = Answer.builder()
+        AnswerCreateDTO answerCreateDTO = AnswerCreateDTO.builder()
                 .date(nuevaDate)
-                .formAct(formAct)
                 .uuid(UUID.randomUUID().toString())
                 .build();
 
         // When
-        Answer savedAnswer = answerService.save(answer);
+        Answer savedAnswer = answerService.save(answerCreateDTO);
 
         // When
         Answer loadedAnswer = answerService.loadAnswerByDate(nuevaDate);
@@ -174,7 +175,7 @@ public class PandaFitAnswerServiceTests {
         // Then
         assertNotNull(loadedAnswer, "Debería encontrar una respuesta por fecha");
         assertEquals(nuevaDate.truncatedTo(ChronoUnit.SECONDS), (loadedAnswer != null ? loadedAnswer.getDate().truncatedTo(ChronoUnit.SECONDS) : null), "La fecha debería ser igual");
-        assertEquals(answer.getUuid(), loadedAnswer.getUuid(), "Los UUID deberían ser iguales");
+        assertEquals(answerCreateDTO.getUuid(), loadedAnswer.getUuid(), "Los UUID deberían ser iguales");
     }
 
     @Test
@@ -228,19 +229,19 @@ public class PandaFitAnswerServiceTests {
                 .build();
         formActRepository.save(formAct);  // Guarda la instancia de FormAct
 
-        Answer answer = Answer.builder()
+        AnswerDeleteDTO answerDeleteDTO = AnswerDeleteDTO.builder()
                 .date(nuevaDate)
                 .formAct(formAct)
                 .uuid(UUID.randomUUID().toString())
                 .build();
 
         // When
-        Answer deletedAnswer = answerService.delete(answer);
+        Answer deletedAnswer = answerService.delete(answerDeleteDTO);
 
         // Then
         assertNotNull(deletedAnswer, "La respuesta eliminada no debería ser nula");
-        assertEquals(answer.getDate(), deletedAnswer.getDate(), "La fecha debería ser igual");
-        assertFalse(answerRepository.findAnswerByDate(answer.getDate()).isPresent(), "La respuesta debería ser eliminada de la base de datos");
+        assertEquals(answerDeleteDTO.getDate(), deletedAnswer.getDate(), "La fecha debería ser igual");
+        assertFalse(answerRepository.findAnswerByDate(answerDeleteDTO.getDate()).isPresent(), "La respuesta debería ser eliminada de la base de datos");
 
     }
 }

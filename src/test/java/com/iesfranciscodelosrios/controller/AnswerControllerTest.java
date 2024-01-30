@@ -184,7 +184,7 @@ class AnswerControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(answerCreateDTO);
 
         // Configura el comportamiento del servicio mock
-        when(answerService.save(any(Answer.class))).thenReturn(answer);
+        when(answerService.save(any(AnswerCreateDTO.class))).thenReturn(answer);
 
         // Realiza la solicitud POST con el cuerpo JSON
         ResultActions result = mockMvc.perform(post("/active/{idActive}/response", formAct.getId())
