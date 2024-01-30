@@ -5,8 +5,10 @@ import com.iesfranciscodelosrios.model.dto.output.OutputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Output;
+import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.OutputRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,9 @@ public class OutputService {
 
     @Autowired
     private OutputRepository outputRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     public Output findById(UUID id) {
@@ -48,11 +53,14 @@ public class OutputService {
     }
 
     public Output save(OutputCreateDTO outputCreateDTO) {
+
+        UserEntity userOwner = userRepository.findById(outputCreateDTO.getUserOwnerId())
+                .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
         Output output = Output.builder()
                 .name(outputCreateDTO.getName())
-                //        .description(outputCreateDTO.getDescription())
-                //        .formula(outputCreateDTO.getFormula())
-                //        .userOwner(outputCreateDTO.getUserOwner())
+                .description(outputCreateDTO.getDescription())
+                .formula(outputCreateDTO.getFormula())
+                .userOwner(userOwner)
                 .build();
 
         return outputRepository.save(output);
