@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.controller;
 
 import com.iesfranciscodelosrios.model.dto.input.InputCreateDTO;
+import com.iesfranciscodelosrios.model.dto.input.InputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputResponseDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputUpdateDTO;
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
@@ -117,12 +118,9 @@ public class InputController {
      */
     @PostMapping("/input")
     public ResponseEntity<InputResponseDTO> save(@RequestBody InputCreateDTO inputCreateDTO) {
-        Input input = InputService.save(Input.builder()
-                .name(inputCreateDTO.getName())
-        //        .description(inputCreateDTO.getDescription())
-        //        .validator(inputCreateDTO.getValidator())
-        //        .userOwner(inputCreateDTO.getUserOwner())
-                .build());
+
+        Input input = InputService.save(inputCreateDTO);
+
         InputResponseDTO inputResponseDTO = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
@@ -141,13 +139,7 @@ public class InputController {
      */
     @PutMapping("/input")
     public ResponseEntity<InputResponseDTO> update(@RequestBody InputUpdateDTO inputUpdateDTO) {
-        Input input = InputService.save(Input.builder()
-                .id(inputUpdateDTO.getId())
-                .name(inputUpdateDTO.getName())
-        //        .description(inputUpdateDTO.getDescription())
-        //        .validator(inputUpdateDTO.getValidator())
-        //        .userOwner(inputUpdateDTO.getUserOwner())
-                .build());
+        Input input = InputService.update(inputUpdateDTO);
         InputResponseDTO inputResponseDTO = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())
@@ -161,18 +153,12 @@ public class InputController {
     /**
      * Deletes an existing Input.
      *
-     * @param inputResponseDTO InputResponseDTO containing information for deleting an existing Input.
+     * @param  inputDeleteDTO containing information for deleting an existing Input.
      * @return ResponseEntity containing the deleted InputResponseDTO.
      */
     @DeleteMapping("/input")
-    public ResponseEntity<InputResponseDTO> delete(@RequestBody InputResponseDTO inputResponseDTO) {
-        Input input = InputService.delete(Input.builder()
-                .id(inputResponseDTO.getId())
-                .name(inputResponseDTO.getName())
-        //        .description(inputResponseDTO.getDescription())
-        //        .validator(inputResponseDTO.getValidator())
-        //        .userOwner(inputResponseDTO.getUserOwner())
-                .build());
+    public ResponseEntity<InputResponseDTO> delete(@RequestBody InputDeleteDTO inputDeleteDTO) {
+        Input input = InputService.delete(inputDeleteDTO);
         InputResponseDTO response = InputResponseDTO.builder()
                 .id(input.getId())
                 .name(input.getName())

@@ -20,6 +20,6 @@ public class UserResponseDTO {
 
     private String password;
 
-    private Set<Role> role;
+    private Set<RoleType> role;
 
 }
