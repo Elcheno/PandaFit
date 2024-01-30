@@ -1,13 +1,9 @@
 package com.iesfranciscodelosrios.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,7 +12,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-//@EqualsAndHashCode
 @Entity
 @Table(name = "answer")
 public class Answer {

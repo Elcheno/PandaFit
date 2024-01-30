@@ -8,6 +8,7 @@ import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.service.AnswerService;
+import com.iesfranciscodelosrios.service.FormActService;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,10 @@ class AnswerControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private AnswerService answerService;
-
+    @MockBean
+    private FormActService formActService;
     @InjectMocks
     private AnswerController answerController;
 
