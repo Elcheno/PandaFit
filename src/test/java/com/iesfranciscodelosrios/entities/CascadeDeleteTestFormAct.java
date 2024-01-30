@@ -4,10 +4,10 @@ import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
-import com.iesfranciscodelosrios.service.AnswerService;
-import com.iesfranciscodelosrios.service.FormActService;
-import com.iesfranciscodelosrios.service.FormService;
-import com.iesfranciscodelosrios.service.UserService;
+import com.iesfranciscodelosrios.repository.AnswerRepository;
+import com.iesfranciscodelosrios.repository.FormActRepository;
+import com.iesfranciscodelosrios.repository.FormRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,16 +24,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CascadeDeleteTestFormAct {
 
     @Autowired
-    private FormActService formActService;
+    private FormActRepository formActRepository;
 
     @Autowired
-    private FormService formService;
+    private FormRepository formRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    private AnswerService answerService;
+    private AnswerRepository answerRepository;
 
     @Test
     @Transactional
@@ -70,8 +71,8 @@ public class CascadeDeleteTestFormAct {
         formAct.setAnswersList(answerList);
 
         // When
-        Form savedForm = formService.save(form);
-        FormAct savedFormAct = formActService.save(formAct);
+        Form savedForm = formRepository.save(form);
+        FormAct savedFormAct = formActRepository.save(formAct);
 
         // Then
         assertNotNull(savedFormAct.getId(), "ID debería generarse después de guardar");
@@ -79,21 +80,23 @@ public class CascadeDeleteTestFormAct {
         assertEquals(2, savedFormAct.getAnswersList().size(), "Debería haber dos respuestas guardadas");
 
         // When (eliminar el formulario de actividad y verificar eliminación en cascada)
-        formActService.delete(savedFormAct);
+        formActRepository.delete(savedFormAct);
 
         // Then (verificar que el formulario de actividad y las respuestas se han eliminado)
-        assertNull(formActService.findById(savedFormAct.getId()), "El formulario de actividad debería ser nulo después de eliminar");
+        Optional<FormAct> deletedFormAct = formActRepository.findById(savedFormAct.getId());
+        assertFalse(deletedFormAct.isPresent(), "El formulario de actividad debería ser nulo después de eliminar");
+
         for (Answer savedAnswer : savedFormAct.getAnswersList()) {
-            assertNull(answerService.findById(savedAnswer.getId()), "La respuesta debería ser nula después de eliminar el formulario de actividad");
+            Optional<Answer> deletedAnswer = answerRepository.findById(savedAnswer.getId());
+            assertFalse(deletedAnswer.isPresent(), "La respuesta debería ser nula después de eliminar el formulario de actividad");
         }
     }
 
     private UserEntity createUserForTest() {
         // Crea un usuario para utilizarlo en las pruebas
-        return userService.save(UserEntity.builder()
+        return userRepository.save(UserEntity.builder()
                 .email("testuser@example.com")
                 .password("Abcdefg1!")
                 .build());
     }
 }
-

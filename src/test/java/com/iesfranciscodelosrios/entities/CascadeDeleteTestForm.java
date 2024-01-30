@@ -3,9 +3,9 @@ package com.iesfranciscodelosrios.entities;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
-import com.iesfranciscodelosrios.service.FormActService;
-import com.iesfranciscodelosrios.service.FormService;
-import com.iesfranciscodelosrios.service.UserService;
+import com.iesfranciscodelosrios.repository.FormRepository;
+import com.iesfranciscodelosrios.repository.FormActRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,13 +22,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CascadeDeleteTestForm {
 
     @Autowired
-    private FormService formService;
+    private FormRepository formRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    private FormActService formActService;
+    private FormActRepository formActRepository;
 
     @Test
     @Transactional
@@ -59,7 +60,7 @@ public class CascadeDeleteTestForm {
         form.setFormActList(formActList);
 
         // When
-        Form savedForm = formService.save(form);
+        Form savedForm = formRepository.save(form);
 
         // Then
         assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
@@ -74,18 +75,21 @@ public class CascadeDeleteTestForm {
         assertEquals(2, savedFormActList.size(), "Debería haber dos FormAct guardados");
 
         // When (eliminar el formulario y verificar eliminación en cascada)
-        formService.delete(savedForm);
+        formRepository.delete(savedForm);
 
         // Then (verificar que el formulario y los FormAct se han eliminado)
-        assertNull(formService.findById(savedForm.getId()), "El formulario debería ser nulo después de eliminar");
+        Optional<Form> deletedForm = formRepository.findById(savedForm.getId());
+        assertFalse(deletedForm.isPresent(), "El formulario debería ser nulo después de eliminar");
+
         for (FormAct savedFormAct : savedFormActList) {
-            assertNull(formActService.findById(savedFormAct.getId()), "El FormAct debería ser nulo después de eliminar el formulario");
+            Optional<FormAct> deletedFormAct = formActRepository.findById(savedFormAct.getId());
+            assertFalse(deletedFormAct.isPresent(), "El FormAct debería ser nulo después de eliminar el formulario");
         }
     }
 
     private UserEntity createUserForTest() {
         // Crea un usuario para utilizarlo en las pruebas
-        return userService.save(UserEntity.builder()
+        return userRepository.save(UserEntity.builder()
                 .email("testuser@example.com")
                 .password("Abcdefg1!")
                 .build());
