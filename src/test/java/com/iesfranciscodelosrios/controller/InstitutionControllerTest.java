@@ -92,7 +92,7 @@ public class InstitutionControllerTest {
         institution.setId(UUID.randomUUID());
         institution.setName("New Institution");
 
-        when(institutionService.save(any(Institution.class))).thenReturn(institution);
+        when(institutionService.save(any(InstitutionCreateDTO.class))).thenReturn(institution);
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.post("/institution")
@@ -114,7 +114,7 @@ public class InstitutionControllerTest {
         institution.setId(updateDTO.getId());
         institution.setName(updateDTO.getName());
 
-        when(institutionService.save(any(Institution.class))).thenReturn(institution);
+        when(institutionService.save(any(InstitutionCreateDTO.class))).thenReturn(institution);
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.put("/institution")
@@ -136,7 +136,7 @@ public class InstitutionControllerTest {
         institution.setId(deleteDTO.getId());
         institution.setName(deleteDTO.getName());
 
-        when(institutionService.delete(any(Institution.class))).thenReturn(institution);
+        when(institutionService.delete(any(InstitutionDeleteDTO.class))).thenReturn(institution);
 
         // Act & Assert
         mockMvc.perform(MockMvcRequestBuilders.delete("/institution")

@@ -3,6 +3,7 @@ package com.iesfranciscodelosrios.service;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
+import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.repository.AnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,11 +49,12 @@ public class AnswerService{
         return answer.orElse(null);
     }
 
-    public Answer save(AnswerCreateDTO answerDTO) {
+    public Answer save(AnswerCreateDTO answerDTO, FormAct formAct) {
         if(answerDTO == null) return null;
 
         Answer answer = Answer.builder()
                 .id(UUID.fromString(answerDTO.getUuid()))
+                .formAct(formAct)
                 .date(answerDTO.getDate())
                 .uuid(answerDTO.getUuid())
                 .build();

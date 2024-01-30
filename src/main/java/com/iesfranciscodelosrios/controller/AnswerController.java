@@ -5,6 +5,7 @@ import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
+import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.service.AnswerService;
 import com.iesfranciscodelosrios.service.FormActService;
@@ -27,8 +28,13 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
+    @Autowired
+    private FormActService formActService;
+
     @GetMapping("/byDate/{date}")
-    public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("idActive") UUID formActId, @RequestParam("date") String answerDate) {
+    public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("idActive") UUID formActId,
+        @RequestParam("date") String answerDate) {
+
         try {
             LocalDateTime date = LocalDateTime.parse(answerDate);
             Answer answerEntity = answerService.loadAnswerByDate(date);
@@ -50,7 +56,9 @@ public class AnswerController {
 
 
     @GetMapping("{id}")
-    public ResponseEntity<AnswerResponseDTO> getAnswerById(@RequestParam("idActive") UUID formActId, @PathVariable("id") String answerId) {
+    public ResponseEntity<AnswerResponseDTO> getAnswerById(@RequestParam("idActive") UUID formActId,
+       @PathVariable("id") String answerId) {
+
         Answer answerEntity = answerService.findById(UUID.fromString(answerId));
 
         if (answerEntity == null) return ResponseEntity.notFound().build();
@@ -80,10 +88,13 @@ public class AnswerController {
     }
 
     @PostMapping()
-    public ResponseEntity<AnswerResponseDTO> createAnswer(@PathVariable("idActive") UUID formActId, @RequestBody AnswerCreateDTO answerCreateDTO) {
+    public ResponseEntity<AnswerResponseDTO> createAnswer(@PathVariable("idActive") UUID formActId,
+        @RequestBody AnswerCreateDTO answerCreateDTO) {
 
-        Answer answerEntity = answerService.save(answerCreateDTO);
+        FormAct formAct = formActService.findById(formActId);
+        if (formAct == null) return ResponseEntity.badRequest().build();
 
+        Answer answerEntity = answerService.save(answerCreateDTO, formAct);
         if (answerEntity == null) return ResponseEntity.badRequest().build();
 
         AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()

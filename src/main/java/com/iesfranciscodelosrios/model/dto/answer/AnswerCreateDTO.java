@@ -1,7 +1,5 @@
 package com.iesfranciscodelosrios.model.dto.answer;
 
-
-import com.iesfranciscodelosrios.model.entity.FormAct;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
