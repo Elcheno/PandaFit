@@ -29,7 +29,7 @@ public class Answer {
     private LocalDateTime date;
 
     @ManyToOne
-    @JoinColumn(name = "formAct_id", nullable = false, unique = true)
+    @JoinColumn(name = "formAct", nullable = false, unique = true)
     @EqualsAndHashCode.Exclude
     private FormAct formAct;
 

@@ -27,6 +27,8 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
+    @Autowired FormActService formActService;
+
     @GetMapping("/byDate/{date}")
     public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("idActive") UUID formActId, @RequestParam("date") String answerDate) {
         try {
@@ -82,7 +84,7 @@ public class AnswerController {
     @PostMapping()
     public ResponseEntity<AnswerResponseDTO> createAnswer(@PathVariable("idActive") UUID formActId, @RequestBody AnswerCreateDTO answerCreateDTO) {
 
-        Answer answerEntity = answerService.save(answerCreateDTO);
+        Answer answerEntity = answerService.save(answerCreateDTO, formActService.findById(formActId));
 
         if (answerEntity == null) return ResponseEntity.badRequest().build();
 
