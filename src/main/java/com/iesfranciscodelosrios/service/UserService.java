@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.user.UserUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Role;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
@@ -33,6 +34,16 @@ public class UserService implements iServices<UserEntity> {
     public UserEntity findById(UUID id) {
         return userRepository.findById(id)
                 .orElse(null);
+    }
+
+    public UserEntity update(UserUpdateDTO userUpdateDTO) {
+        UserEntity userEntity = UserEntity.builder()
+                .id(userUpdateDTO.getId())
+                .email(userUpdateDTO.getEmail())
+                .password(userUpdateDTO.getPassword())
+                .build();
+
+        return userRepository.save(userEntity);
     }
 
     @Override
