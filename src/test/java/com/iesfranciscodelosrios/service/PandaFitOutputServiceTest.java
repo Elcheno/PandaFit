@@ -1,5 +1,8 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionCreateDTO;
+import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
+import com.iesfranciscodelosrios.model.dto.output.OutputDeleteDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.model.entity.Role;
@@ -16,9 +19,10 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @SpringBootTest
 @Transactional
-public class PandFitOutputServiceTest {
+public class PandaFitOutputServiceTest {
 
     @Autowired
     private OutputService outputService;
@@ -36,16 +40,16 @@ public class PandFitOutputServiceTest {
     public void testSaveOutput() {
         // Given
         UserEntity userOwner = createUserForTest();
-        Output output = Output.builder()
+        OutputCreateDTO outputCreateDTO = OutputCreateDTO.builder()
                 .name("outputName")
                 .description("Output Description")
                 .formula("OutputFormula")
-                .userOwner(userOwner)
+                .userOwnerId(userOwner.getId())
                 .result("OutputResult")
                 .build();
 
         // When
-        Output savedOutput = outputService.save(output);
+        Output savedOutput = outputService.save(outputCreateDTO);
 
         // Then
         assertNotNull(savedOutput.getId(), "ID debería generarse después de guardar");
@@ -56,18 +60,22 @@ public class PandFitOutputServiceTest {
         assertEquals("OutputResult", savedOutput.getResult(), "El resultado debe ser igual");
     }
 
+
+
     @Test
     public void testFindByName() {
         // Given
-        UserEntity userOwner = createUserForTest(); // Asegúrate de que createUserForTest() crea un UserEntity válido
-        Output output = Output.builder()
+        UserEntity userOwner = createUserForTest();
+        OutputCreateDTO outputCreateDTO = OutputCreateDTO.builder()
                 .name("outputName")
                 .description("Output Description")
                 .formula("OutputFormula")
-                .userOwner(userOwner)
+                .userOwnerId(userOwner.getId())  // Utiliza el ID del propietario
                 .result("OutputResult")
                 .build();
-        outputService.save(output);
+
+        // Save the output using the service
+        outputService.save(outputCreateDTO);
 
         // When
         Output foundOutput = outputService.findByName("outputName");
@@ -77,20 +85,29 @@ public class PandFitOutputServiceTest {
         assertEquals("outputName", foundOutput.getName(), "El nombre debe ser igual");
     }
 
+
     @Test
     public void testDeleteOutput() {
         // Given
-        Output output = Output.builder()
+        UserEntity userOwner = createUserForTest();
+        OutputCreateDTO outputCreateDTO = OutputCreateDTO.builder()
                 .name("outputName")
                 .description("Output Description")
                 .formula("OutputFormula")
-                .userOwner(createUserForTest())
+                .userOwnerId(userOwner.getId())  // Utiliza el ID del propietario
                 .result("OutputResult")
                 .build();
-        outputService.save(output);
+
+        // Save the output using the service
+        Output savedOutput = outputService.save(outputCreateDTO);
+
+        OutputDeleteDTO outputDeleteDTO = OutputDeleteDTO.builder()
+                .id(savedOutput.getId())
+                .name(savedOutput.getName())
+                .build();
 
         // When
-        Output deletedOutput = outputService.delete(output);
+        Output deletedOutput = outputService.delete(outputDeleteDTO);
 
         // Then
         assertNotNull(deletedOutput, "El output eliminado no debería ser nulo");
@@ -98,11 +115,14 @@ public class PandFitOutputServiceTest {
         assertTrue(outputRepository.findByName("outputName").isEmpty(), "El output debería ser eliminado de la base de datos");
     }
 
+
     private UserEntity createUserForTest() {
         // Crea una institución para utilizarla en las pruebas
-        Institution institution = institutionService.save(Institution.builder()
+        InstitutionCreateDTO institutionCreateDTO = InstitutionCreateDTO.builder()
                 .name("TestInstitution")
-                .build());
+                .build();
+
+        Institution institution = institutionService.save(institutionCreateDTO);
 
         // Define los roles según tu lógica, aquí asigno un role por defecto
         Set<Role> roles = new HashSet<>();
@@ -116,4 +136,5 @@ public class PandFitOutputServiceTest {
                 .role(roles)
                 .build());
     }
+
 }

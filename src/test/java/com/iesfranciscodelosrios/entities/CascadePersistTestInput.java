@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.entities;
 
+import com.iesfranciscodelosrios.model.dto.input.InputCreateDTO;
 import com.iesfranciscodelosrios.model.entity.Input;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.service.InputService;
@@ -22,18 +23,20 @@ public class CascadePersistTestInput {
     @Test
     @Transactional
     public void testCascadePersist() {
-        //RESULTADO: Al guardar un input el usuario debería ser persistido junto con el input por el CASCADE PERSIST
+        // RESULTADO: Al guardar un input el usuario debería ser persistido junto con el input por el CASCADE PERSIST
         // Given
         UserEntity userOwner = createUserForTest();
-        Input input = Input.builder()
+
+        // Asegúrate de que el propietario se asigna correctamente al inputCreateDTO
+        InputCreateDTO inputCreateDTO = InputCreateDTO.builder()
                 .name("inputName")
                 .description("Input Description")
                 .validator("InputValidator")
-                .userOwner(userOwner)
+                .userOwnerId(userOwner.getId())
                 .build();
 
         // When
-        Input savedInput = inputService.save(input);
+        Input savedInput = inputService.save(inputCreateDTO);
 
         // Then
         assertNotNull(savedInput.getId(), "ID debería generarse después de guardar");

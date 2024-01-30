@@ -9,12 +9,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class OutputCreateDTO {
     private String name;
+
+    private String description;
+
+    private String formula;
+
+    private UUID userOwnerId;
 
     private String result;
 }
