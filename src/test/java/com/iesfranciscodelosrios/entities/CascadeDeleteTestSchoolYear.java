@@ -3,6 +3,7 @@ package com.iesfranciscodelosrios.entities;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.model.entity.Institution;
+
 import com.iesfranciscodelosrios.repository.FormActRepository;
 import com.iesfranciscodelosrios.repository.SchoolYearRepository;
 import com.iesfranciscodelosrios.repository.InstitutionRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CascadeDeleteTestSchoolYear {
 
     @Autowired
+
     private SchoolYearRepository schoolYearRepository;
 
     @Autowired
@@ -43,12 +46,14 @@ public class CascadeDeleteTestSchoolYear {
         FormAct formAct1 = FormAct.builder()
                 .startDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusDays(7))
+
                 .schoolYear(schoolYear)
                 .build();
 
         FormAct formAct2 = FormAct.builder()
                 .startDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusDays(14))
+
                 .schoolYear(schoolYear)
                 .build();
 
@@ -59,6 +64,7 @@ public class CascadeDeleteTestSchoolYear {
         schoolYear.setFormActList(formActList);
 
         // When
+
         SchoolYear savedSchoolYear = schoolYearRepository.save(schoolYear);
 
         // Then
@@ -67,6 +73,7 @@ public class CascadeDeleteTestSchoolYear {
         assertEquals(2, savedSchoolYear.getFormActList().size(), "Debería haber dos FormAct guardados");
 
         // When (eliminar el año escolar y verificar eliminación en cascada)
+
         schoolYearRepository.delete(savedSchoolYear);
 
         // Then (verificar que el año escolar y los FormAct se han eliminado)
@@ -81,6 +88,7 @@ public class CascadeDeleteTestSchoolYear {
 
     private Institution createInstitutionForTest() {
         // Crea una institución para utilizarla en las pruebas
+
         return institutionRepository.save(Institution.builder()
                 .name("Instituto de Prueba")
                 .build());
