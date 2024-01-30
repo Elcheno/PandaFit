@@ -1,5 +1,9 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.form.FormCreateDTO;
+import com.iesfranciscodelosrios.model.dto.form.FormDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.form.FormResponseDTO;
+import com.iesfranciscodelosrios.model.dto.form.FormUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
@@ -14,7 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class FormService implements iServices<Form> {
+public class FormService {
 
     @Autowired
     FormRepository formRepository;
@@ -24,7 +28,6 @@ public class FormService implements iServices<Form> {
         return form.orElse(null);
     }
 
-    @Override
     public Form findById(UUID id) {
         Optional<Form> form = formRepository.findById(id);
         return form.orElse(null);
@@ -50,14 +53,45 @@ public class FormService implements iServices<Form> {
         }
     }
 
-    @Override
-    public Form save(Form form) {
+    public Form save(FormCreateDTO formCreateDTO) {
+        Form form = Form.builder()
+                .id(formCreateDTO.getId())
+                .name(formCreateDTO.getName())
+                // .description(formCreateDTO.getDescription())
+                // .otherFields(formCreateDTO.getOtherFields())
+                .build();
+
         return formRepository.save(form);
     }
 
-    @Override
-    public Form delete(Form form) {
+    public Form update(FormUpdateDTO formUpdateDTO) {
+        Form form = Form.builder()
+                .id(formUpdateDTO.getId())
+                .name(formUpdateDTO.getName())
+                .description(formUpdateDTO.getDescription())
+                // .otherFields(formUpdateDTO.getOtherFields())
+                .build();
+
+        return formRepository.save(form);
+    }
+
+    public Form delete(FormDeleteDTO formDeleteDTO) {
+        Form form = Form.builder()
+        //        .id(formDeleteDTO.getId())
+                .name(formDeleteDTO.getName())
+                // .description(formDeleteDTO.getDescription())
+                // .otherFields(formDeleteDTO.getOtherFields())
+                .build();
+
         formRepository.delete(form);
         return form;
+    }
+
+    public FormResponseDTO mapToResponseDTO(Form form) {
+        return FormResponseDTO.builder()
+                .id(form.getId())
+                .name(form.getName())
+                .description(form.getDescription())
+                .build();
     }
 }

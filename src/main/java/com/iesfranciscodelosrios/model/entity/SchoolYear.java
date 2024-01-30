@@ -39,7 +39,7 @@ public class SchoolYear {
     @EqualsAndHashCode.Exclude
     private Institution institution;
 
-    @OneToMany(mappedBy = "schoolYear")
+    @OneToMany(mappedBy = "schoolYear", cascade = {CascadeType.ALL})
     @EqualsAndHashCode.Exclude
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<FormAct> formActList;
