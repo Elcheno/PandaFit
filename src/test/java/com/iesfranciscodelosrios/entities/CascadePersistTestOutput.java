@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.entities;
 
+import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.service.OutputService;
@@ -9,14 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class CascadePersistTestOutput {
-    //RESULTADO: Al guardar un output el usuario debería ser persistido junto con el input por el CASCADE PERSIST
+    // RESULTADO: Al guardar un output el usuario debería ser persistido junto con el input por el CASCADE PERSIST
 
     @Autowired
     private OutputService outputService;
@@ -29,15 +27,17 @@ public class CascadePersistTestOutput {
     public void testCascadePersist() {
         // Given
         UserEntity userOwner = createUserForTest();
-        Output output = Output.builder()
+        OutputCreateDTO outputCreateDTO = OutputCreateDTO.builder()
                 .name("outputName")
                 .description("Output Description")
                 .formula("OutputFormula")
-                .userOwner(userOwner)
+                .userOwnerId(userOwner.getId())
+                .result("Some Result")
                 .build();
 
+
         // When
-        Output savedOutput = outputService.save(output);
+        Output savedOutput = outputService.save(outputCreateDTO);
 
         // Then
         assertNotNull(savedOutput.getId(), "ID debería generarse después de guardar");
@@ -56,4 +56,3 @@ public class CascadePersistTestOutput {
                 .build());
     }
 }
-
