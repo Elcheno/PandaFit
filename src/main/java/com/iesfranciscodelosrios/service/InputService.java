@@ -5,8 +5,10 @@ import com.iesfranciscodelosrios.model.dto.input.InputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Input;
 import com.iesfranciscodelosrios.model.entity.Institution;
+import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.InputRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,9 @@ public class InputService {
 
     @Autowired
     private InputRepository inputRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     public Input findById(UUID id) {
@@ -49,15 +54,18 @@ public class InputService {
 
 
     public Input save(InputCreateDTO inputCreateDTO) {
+        // ...
+        UserEntity userOwner = userRepository.findById(inputCreateDTO.getUserOwnerId())
+                .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
+
         Input input = Input.builder()
-                    .name(inputCreateDTO.getName())
-                    //        .description(inputCreateDTO.getDescription())
-                    //        .validator(inputCreateDTO.getValidator())
-                    //        .userOwner(inputCreateDTO.getUserOwner())
-                    .build();
+                .name(inputCreateDTO.getName())
+                .description(inputCreateDTO.getDescription())
+                .validator(inputCreateDTO.getValidator())
+                .userOwner(userOwner)
+                .build();
 
         return inputRepository.save(input);
-
     }
 
     public Input update(InputUpdateDTO inputUpdateDTO) {

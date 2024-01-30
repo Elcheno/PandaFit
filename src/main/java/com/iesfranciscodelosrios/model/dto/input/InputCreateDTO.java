@@ -6,10 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class InputCreateDTO {
     private String name;
+
+    private String description;
+
+    private String validator;
+
+    private UUID userOwnerId;
+
+
 }
