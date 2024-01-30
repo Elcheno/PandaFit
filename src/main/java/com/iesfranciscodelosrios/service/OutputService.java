@@ -56,6 +56,10 @@ public class OutputService {
         UserEntity userOwner = userRepository.findById(outputCreateDTO.getUserOwnerId())
                 .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
 
+        if (outputCreateDTO.getResult() == null) {
+            throw new IllegalArgumentException("El campo 'result' no puede ser nulo");
+        }
+
         Output output = Output.builder()
                 .name(outputCreateDTO.getName())
                 .description(outputCreateDTO.getDescription())
@@ -68,16 +72,21 @@ public class OutputService {
     }
 
     public Output update(OutputUpdateDTO outputUpdateDTO) {
+        // Asegurar que el ID esté presente antes de intentar la actualización
+        if (outputUpdateDTO.getId() == null) {
+            throw new IllegalArgumentException("El campo 'id' no puede ser nulo para la actualización");
+        }
+
         Output output = Output.builder()
                 .id(outputUpdateDTO.getId())
                 .name(outputUpdateDTO.getName())
-                //        .description(outputUpdateDTO.getDescription())
-                //        .formula(outputUpdateDTO.getFormula())
-                //        .userOwner(outputUpdateDTO.getUserOwner())
+                .description(outputUpdateDTO.getDescription())
+                .formula(outputUpdateDTO.getFormula())
                 .build();
 
         return outputRepository.save(output);
     }
+
 
     public Output delete(OutputDeleteDTO outputDeleteDTO) {
         UUID id = outputDeleteDTO.getId();
