@@ -71,9 +71,8 @@ public class OutputService {
         Output output = Output.builder()
                 .id(outputUpdateDTO.getId())
                 .name(outputUpdateDTO.getName())
-                //        .description(outputUpdateDTO.getDescription())
-                //        .formula(outputUpdateDTO.getFormula())
-                //        .userOwner(outputUpdateDTO.getUserOwner())
+                .description(outputUpdateDTO.getDescription())
+                .formula(outputUpdateDTO.getFormula())
                 .build();
 
         return outputRepository.save(output);

@@ -17,4 +17,11 @@ public class OutputUpdateDTO {
     private String name;
 
     private String result;
+
+    private String description;
+
+    private String formula;
+
+
+
 }

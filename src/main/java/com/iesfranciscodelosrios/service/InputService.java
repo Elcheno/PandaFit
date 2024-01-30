@@ -72,9 +72,8 @@ public class InputService {
         Input input = Input.builder()
                 .id(inputUpdateDTO.getId())
                 .name(inputUpdateDTO.getName())
-        //        .description(inputUpdateDTO.getDescription())
-        //        .validator(inputUpdateDTO.getValidator())
-        //        .userOwner(inputUpdateDTO.getUserOwner())
+                .description(inputUpdateDTO.getDescription())
+                .validator(inputUpdateDTO.getValidator())
                 .build();
 
         return inputRepository.save(input);
