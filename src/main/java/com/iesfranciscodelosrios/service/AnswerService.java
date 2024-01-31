@@ -5,6 +5,8 @@ import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.repository.AnswerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,11 +22,30 @@ public class AnswerService{
     @Autowired
     AnswerRepository answerRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(InputService.class);
+
+    /**
+     * Loads an Answer based on the specified date.
+     *
+     * @param date The LocalDateTime representing the date to search for.
+     * @return An Answer object if found, or null if not found.
+     */
     public Answer loadAnswerByDate(LocalDateTime date) {
-        Optional<Answer> answer = answerRepository.findAnswerByDate(date);
-        return answer.orElse(null);
+        try {
+            Optional<Answer> answer = answerRepository.findAnswerByDate(date);
+            return answer.orElse(null);
+        } catch (Exception e) {
+            logger.error("Error al cargar la respuesta por fecha: {}", e.getMessage());
+            return null;
+        }
     }
 
+    /**
+     * Retrieves all Answers with pagination support.
+     *
+     * @param pageable The Pageable object specifying the page number, size, and sorting criteria.
+     * @return A Page containing Answer objects based on the provided Pageable parameters.
+     */
     public Page<Answer> findAll(Pageable pageable) {
         try {
             return answerRepository.findAll(
@@ -41,36 +62,84 @@ public class AnswerService{
                     )
             );
         } catch (Exception e) {
+            logger.error("Error al buscar todas las respuestas: {}", e.getMessage());
             return null;
         }
     }
+
+    /**
+     * Retrieves an Answer based on the specified UUID identifier.
+     *
+     * @param id The UUID identifier of the Answer to be retrieved.
+     * @return An Answer object if found, or null if not found.
+     */
     public Answer findById(UUID id) {
-        Optional<Answer> answer = answerRepository.findById(id);
-        return answer.orElse(null);
+        try {
+            Optional<Answer> answer = answerRepository.findById(id);
+            return answer.orElse(null);
+        } catch (Exception e) {
+            logger.error("Error al buscar una respuesta por ID: {}", e.getMessage());
+            return null;
+        }
     }
 
+    /**
+     * Saves an Answer based on the provided AnswerCreateDTO and associated FormAct.
+     *
+     * @param answerDTO The AnswerCreateDTO containing information for creating the Answer.
+     * @param formAct   The FormAct associated with the Answer.
+     * @return The saved Answer object, or null if an issue occurs.
+     */
     public Answer save(AnswerCreateDTO answerDTO, FormAct formAct) {
-        if(answerDTO == null) return null;
+        try {
+            if (answerDTO == null) {
+                logger.warn("Se intentó guardar una respuesta nula.");
+                return null;
+            }
 
-        Answer answer = Answer.builder()
-                .id(UUID.fromString(answerDTO.getUuid()))
-                .formAct(formAct)
-                .date(answerDTO.getDate())
-                .uuid(answerDTO.getUuid())
-                .build();
-        return answerRepository.save(answer);
+            Answer answer = Answer.builder()
+                    .id(UUID.fromString(answerDTO.getUuid()))
+                    .formAct(formAct)
+                    .date(answerDTO.getDate())
+                    .uuid(answerDTO.getUuid())
+                    .build();
+
+            return answerRepository.save(answer);
+        } catch (Exception e) {
+            logger.error("Error al guardar una respuesta: {}", e.getMessage());
+            return null;
+        }
     }
 
-    public Answer delete(AnswerDeleteDTO answerDTO) {
-        if(answerDTO == null) return null;
 
-        Answer answer = Answer.builder()
-                .date(answerDTO.getDate())
-                .formAct(answerDTO.getFormAct())
-                .uuid(answerDTO.getUuid())
-                .build();
-        answerRepository.delete(answer);
-        return answer;
+    /**
+     * Deletes an Answer based on the provided AnswerDeleteDTO.
+     *
+     * @param answerDTO The AnswerDeleteDTO containing information for deleting the Answer.
+     * @return The deleted Answer object, or null if an issue occurs.
+     */
+    public Answer delete(AnswerDeleteDTO answerDTO) {
+        try {
+            if (answerDTO == null) {
+                logger.warn("Se intentó eliminar una respuesta nula.");
+                return null;
+            }
+
+            Answer answer = Answer.builder()
+                    .date(answerDTO.getDate())
+                    .formAct(answerDTO.getFormAct())
+                    .uuid(answerDTO.getUuid())
+                    .build();
+
+            answerRepository.delete(answer);
+
+            logger.info("Respuesta eliminada con éxito: {}", answerDTO.getUuid());
+
+            return answer;
+        } catch (Exception e) {
+            logger.error("Error al eliminar una respuesta: {}", e.getMessage());
+            return null;
+        }
     }
 }
 
