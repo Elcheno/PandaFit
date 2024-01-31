@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
@@ -110,7 +111,7 @@ public class PandaFitAnswerServiceTests {
         beforeEach();
 
         // When
-        Answer savedAnswer = answerService.save(answerCreateDTO, formAct);
+        Answer savedAnswer = answerService.save(answerCreateDTO, formAct.getId());
 
         // Then
         assertNotNull(savedAnswer.getId(), "ID debería generarse después de guardar");
@@ -125,7 +126,7 @@ public class PandaFitAnswerServiceTests {
         beforeEach();
 
         // When
-        Answer savedAnswer = answerService.save(answerCreateDTO, formAct);
+        Answer savedAnswer = answerService.save(answerCreateDTO, formAct.getId());
 
         // When
         Answer loadedAnswer = answerService.loadAnswerByDate(testDate);

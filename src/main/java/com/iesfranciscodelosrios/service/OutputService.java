@@ -9,6 +9,8 @@ import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.OutputRepository;
 import com.iesfranciscodelosrios.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,13 +28,40 @@ public class OutputService {
     @Autowired
     private UserRepository userRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(InputService.class);
 
-    public Output findById(UUID id) {
+
+    /*public Output findById(UUID id) {
         return outputRepository.findById(id).orElse(null);
+    }*/
+
+    /**
+     * Retrieves an Output based on the specified UUID identifier.
+     *
+     * @param id The UUID identifier of the Output to be retrieved.
+     * @return The retrieved Output object, or null if not found.
+     */
+    public Output findById(UUID id) {
+        try {
+            Output result = outputRepository.findById(id).orElse(null);
+
+            if (result != null) {
+                logger.info("Buscando output por ID '{}': {}", id, result);
+            } else {
+                logger.info("No se encontró ningún output con el ID '{}'", id);
+            }
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar output por ID '{}': {}", id, e.getMessage());
+
+            throw new RuntimeException("Error al buscar output por ID: " + e.getMessage());
+        }
     }
 
 
-    public Page<Output> findAll(Pageable pageable) {
+
+    /*public Page<Output> findAll(Pageable pageable) {
         try {
             return outputRepository.findAll(
                     PageRequest.of(
@@ -50,48 +79,158 @@ public class OutputService {
         } catch (Exception e) {
             return null;
         }
+    }*/
+
+    /**
+     * Retrieves all Outputs with pagination support.
+     *
+     * @param pageable The Pageable object specifying the page number, size, and sorting criteria.
+     * @return A Page containing Output objects based on the provided Pageable parameters.
+     */
+    public Page<Output> findAll(Pageable pageable) {
+        try {
+            Page<Output> result = outputRepository.findAll(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
+
+                            pageable.getSort()
+                    )
+            );
+
+            logger.info("Buscando todos los outputs paginados: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todos los outputs paginados: {}", e.getMessage());
+
+            throw new RuntimeException("Error al buscar todos los outputs paginados: " + e.getMessage());
+        }
     }
 
+
+    /**
+     * Saves an Output based on the provided OutputCreateDTO.
+     *
+     * @param outputCreateDTO The OutputCreateDTO containing information for creating the Output.
+     * @return The saved Output object.
+     * @throws RuntimeException if an error occurs during the save process.
+     */
     public Output save(OutputCreateDTO outputCreateDTO) {
-        UserEntity userOwner = userRepository.findById(outputCreateDTO.getUserOwnerId())
-                .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
+        try {
+            UserEntity userOwner = userRepository.findById(outputCreateDTO.getUserOwnerId())
+                    .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
 
-        Output output = Output.builder()
-                .name(outputCreateDTO.getName())
-                .description(outputCreateDTO.getDescription())
-                .formula(outputCreateDTO.getFormula())
-                .userOwner(userOwner)
-                .result(outputCreateDTO.getResult())  // Asegúrate de incluir esta línea
-                .build();
+            if (outputCreateDTO.getResult() == null) {
+                logger.error("Error al guardar el output: El campo 'result' no puede ser nulo");
+                throw new IllegalArgumentException("El campo 'result' no puede ser nulo");
+            }
 
-        return outputRepository.save(output);
+            Output output = Output.builder()
+                    .name(outputCreateDTO.getName())
+                    .description(outputCreateDTO.getDescription())
+                    .formula(outputCreateDTO.getFormula())
+                    .userOwner(userOwner)
+                    .result(outputCreateDTO.getResult())
+                    .build();
+
+            Output savedOutput = outputRepository.save(output);
+
+            logger.info("Output guardado con éxito: {}", savedOutput);
+
+            return savedOutput;
+        } catch (IllegalArgumentException e) {
+            logger.error("Error al guardar el output: {}", e.getMessage());
+
+            throw new RuntimeException("Error al guardar el output: " + e.getMessage());
+        }
     }
 
+    /**
+     * Updates an Output based on the provided OutputUpdateDTO.
+     *
+     * @param outputUpdateDTO The OutputUpdateDTO containing information for updating the Output.
+     * @return The updated Output object.
+     * @throws RuntimeException if an error occurs during the update process.
+     */
     public Output update(OutputUpdateDTO outputUpdateDTO) {
-        Output output = Output.builder()
-                .id(outputUpdateDTO.getId())
-                .name(outputUpdateDTO.getName())
-                //        .description(outputUpdateDTO.getDescription())
-                //        .formula(outputUpdateDTO.getFormula())
-                //        .userOwner(outputUpdateDTO.getUserOwner())
-                .build();
+        try {
+            if (outputUpdateDTO.getId() == null) {
+                logger.error("Error al actualizar el output: El campo 'id' no puede ser nulo");
+                throw new IllegalArgumentException("El campo 'id' no puede ser nulo para la actualización");
+            }
 
-        return outputRepository.save(output);
+            Output output = Output.builder()
+                    .id(outputUpdateDTO.getId())
+                    .name(outputUpdateDTO.getName())
+                    .description(outputUpdateDTO.getDescription())
+                    .formula(outputUpdateDTO.getFormula())
+                    .build();
+
+            Output updatedOutput = outputRepository.save(output);
+
+            logger.info("Output actualizado con éxito: {}", updatedOutput);
+
+            return updatedOutput;
+        } catch (IllegalArgumentException e) {
+            logger.error("Error al actualizar el output: {}", e.getMessage());
+
+            throw new RuntimeException("Error al actualizar el output: " + e.getMessage());
+        }
     }
 
+
+    /**
+     * Deletes an Output based on the provided OutputDeleteDTO.
+     *
+     * @param outputDeleteDTO The OutputDeleteDTO containing information for deleting the Output.
+     * @return The deleted Output object.
+     * @throws RuntimeException if an error occurs during the delete process.
+     */
     public Output delete(OutputDeleteDTO outputDeleteDTO) {
-        UUID id = outputDeleteDTO.getId();
+        try {
+            UUID id = outputDeleteDTO.getId();
 
-        Output outputToDelete = outputRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Output no encontrado"));
+            Output outputToDelete = outputRepository.findById(id)
+                    .orElseThrow(() -> {
+                        logger.error("Error al eliminar el output: Output no encontrado");
+                        return new IllegalArgumentException("Output no encontrado");
+                    });
 
-        outputRepository.deleteById(id);
+            outputRepository.deleteById(id);
 
-        return outputToDelete;
+            logger.info("Output eliminado con éxito: {}", outputToDelete);
+
+            return outputToDelete;
+        } catch (IllegalArgumentException e) {
+            logger.error("Error al eliminar el output: {}", e.getMessage());
+
+            throw new RuntimeException("Error al eliminar el output: " + e.getMessage());
+        }
     }
 
 
-    public Output findByName(String name) {
+    /*public Output findByName(String name) {
         return outputRepository.findByName(name).orElse(null);
+    }*/
+
+    /**
+     * Retrieves an Output based on the specified name.
+     *
+     * @param name The name of the Output to be retrieved.
+     * @return The retrieved Output object, or null if not found.
+     */
+    public Output findByName(String name) {
+        try {
+            return outputRepository.findByName(name).orElse(null);
+        } catch (Exception e) {
+            logger.error("Error al buscar el output por nombre: {}", e.getMessage());
+            return null;
+        }
     }
 }
