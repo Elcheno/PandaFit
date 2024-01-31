@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,6 +20,8 @@ import java.util.UUID;
 public class AnswerService{
     @Autowired
     AnswerRepository answerRepository;
+    @Autowired
+    FormActService formActService;
 
     public Answer loadAnswerByDate(LocalDateTime date) {
         Optional<Answer> answer = answerRepository.findAnswerByDate(date);
@@ -49,7 +52,9 @@ public class AnswerService{
         return answer.orElse(null);
     }
 
-    public Answer save(AnswerCreateDTO answerDTO, FormAct formAct) {
+    public Answer save(AnswerCreateDTO answerDTO, UUID formActId) {
+        FormAct formAct = formActService.findById(formActId);
+
         if(answerDTO == null) return null;
 
         Answer answer = Answer.builder()

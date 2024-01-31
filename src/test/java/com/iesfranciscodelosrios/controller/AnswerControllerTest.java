@@ -38,8 +38,6 @@ class AnswerControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private AnswerService answerService;
-    @MockBean
-    private FormActService formActService;
     @InjectMocks
     private AnswerController answerController;
 
@@ -138,7 +136,7 @@ class AnswerControllerTest {
         ResultActions result = mockMvc.perform(get("/active/{idActive}/response/byDate/{date}",
                 formAct.getId(), answer.getDate().toString())
                 .param("idActive", formAct.getId().toString())
-                .param("date", "2004")//SUSTITUIR answer.getDate().toString() por ENCODE url, buscar JAVA encode/decode url
+                .param("date", answer.getDate().toString())//SUSTITUIR answer.getDate().toString() por ENCODE url, buscar JAVA encode/decode url
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRequest));
 
@@ -185,7 +183,7 @@ class AnswerControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(answerCreateDTO);
 
         // Configura el comportamiento del servicio mock
-        when(answerService.save(any(AnswerCreateDTO.class),any(FormAct.class))).thenReturn(answer);
+        when(answerService.save(any(AnswerCreateDTO.class),any(UUID.class))).thenReturn(answer);
 
         // Realiza la solicitud POST con el cuerpo JSON
         ResultActions result = mockMvc.perform(post("/active/{idActive}/response", formAct.getId())
