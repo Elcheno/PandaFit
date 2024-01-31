@@ -10,6 +10,7 @@ import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.InputRepository;
 import com.iesfranciscodelosrios.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,42 +55,57 @@ public class InputService {
 
 
     public Input save(InputCreateDTO inputCreateDTO) {
-        // ...
-        UserEntity userOwner = userRepository.findById(inputCreateDTO.getUserOwnerId())
-                .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
+        try {
+            UserEntity userOwner = userRepository.findById(inputCreateDTO.getUserOwnerId())
+                    .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
 
-        Input input = Input.builder()
-                .name(inputCreateDTO.getName())
-                .description(inputCreateDTO.getDescription())
-                .validator(inputCreateDTO.getValidator())
-                .userOwner(userOwner)
-                .build();
+            Input input = Input.builder()
+                    .name(inputCreateDTO.getName())
+                    .description(inputCreateDTO.getDescription())
+                    .validator(inputCreateDTO.getValidator())
+                    .userOwner(userOwner)
+                    .build();
 
-        return inputRepository.save(input);
+            return inputRepository.save(input);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al guardar el input: " + e.getMessage());
+        }
     }
+
 
     public Input update(InputUpdateDTO inputUpdateDTO) {
-        Input input = Input.builder()
-                .id(inputUpdateDTO.getId())
-                .name(inputUpdateDTO.getName())
-        //        .description(inputUpdateDTO.getDescription())
-        //        .validator(inputUpdateDTO.getValidator())
-        //        .userOwner(inputUpdateDTO.getUserOwner())
-                .build();
+        try {
+            Input input = Input.builder()
+                    .id(inputUpdateDTO.getId())
+                    .name(inputUpdateDTO.getName())
+                    .description(inputUpdateDTO.getDescription())
+                    .validator(inputUpdateDTO.getValidator())
+                    .build();
 
-        return inputRepository.save(input);
+            return inputRepository.save(input);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al actualizar el input: " + e.getMessage());
+        }
     }
+
 
 
     public Input delete(InputDeleteDTO inputDeleteDTO) {
-        UUID id = inputDeleteDTO.getId();
+        try {
+            UUID id = inputDeleteDTO.getId();
 
-        Input inputToDelete = inputRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Input no encontrado"));
+            Input inputToDelete = inputRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Input no encontrado"));
 
-        inputRepository.deleteById(id);
+            inputRepository.deleteById(id);
 
-        return inputToDelete;
+            return inputToDelete;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al eliminar el input: " + e.getMessage());
+        }
     }
 
     public Input findByName(String name) {

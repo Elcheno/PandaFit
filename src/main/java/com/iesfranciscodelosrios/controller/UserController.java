@@ -203,11 +203,7 @@ public class UserController {
 
     @PutMapping("/users")
     public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserUpdateDTO userUpdateDTO) {
-        UserEntity userEntity = userService.save(UserEntity.builder()
-                .id(userUpdateDTO.getId())
-                .email(userUpdateDTO.getEmail())
-                .password(userUpdateDTO.getPassword())
-                .build());
+        UserEntity userEntity = userService.update(userUpdateDTO);
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
 

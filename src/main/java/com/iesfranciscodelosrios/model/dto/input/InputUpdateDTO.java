@@ -15,4 +15,7 @@ import java.util.UUID;
 public class InputUpdateDTO {
     private UUID id;
     private String name;
+    private String description;
+    private String validator;
+    private String formula;
 }
