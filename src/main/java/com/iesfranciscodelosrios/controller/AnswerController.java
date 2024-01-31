@@ -13,10 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
@@ -28,16 +31,15 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
-    @Autowired
-    private FormActService formActService;
-
     @GetMapping("/byDate/{date}")
     public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("idActive") UUID formActId,
-        @RequestParam("date") String answerDate) {
+        @PathVariable("date") String answerDate) {
 
-        try {
-            LocalDateTime date = LocalDateTime.parse(answerDate);
-            Answer answerEntity = answerService.loadAnswerByDate(date);
+            System.out.println(answerDate);
+            System.out.println(Timestamp.valueOf(LocalDateTime.parse(answerDate)));
+            //Si ejecuto el test del servicio este funciona correctamente pero cuando llego al test del controlador
+            //da null pointer exception al ejecutar el metodo del servicio y no se porque
+            Answer answerEntity = answerService.loadAnswerByDate(LocalDateTime.parse(answerDate));
 
             if (answerEntity == null) return ResponseEntity.notFound().build();
 
@@ -48,10 +50,6 @@ public class AnswerController {
                     .build();
 
             return ResponseEntity.ok(answerResponseDTO);
-        } catch (DateTimeParseException e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
     }
 
 
@@ -91,10 +89,7 @@ public class AnswerController {
     public ResponseEntity<AnswerResponseDTO> createAnswer(@PathVariable("idActive") UUID formActId,
         @RequestBody AnswerCreateDTO answerCreateDTO) {
 
-        FormAct formAct = formActService.findById(formActId);
-        if (formAct == null) return ResponseEntity.badRequest().build();
-
-        Answer answerEntity = answerService.save(answerCreateDTO, formAct);
+        Answer answerEntity = answerService.save(answerCreateDTO, formActId);
         if (answerEntity == null) return ResponseEntity.badRequest().build();
 
         AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()

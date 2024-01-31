@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,6 +22,8 @@ import java.util.UUID;
 public class AnswerService{
     @Autowired
     AnswerRepository answerRepository;
+    @Autowired
+    FormActService formActService;
 
     private static final Logger logger = LoggerFactory.getLogger(InputService.class);
 
@@ -83,32 +86,34 @@ public class AnswerService{
         }
     }
 
-    /**
-     * Saves an Answer based on the provided AnswerCreateDTO and associated FormAct.
-     *
-     * @param answerDTO The AnswerCreateDTO containing information for creating the Answer.
-     * @param formAct   The FormAct associated with the Answer.
-     * @return The saved Answer object, or null if an issue occurs.
-     */
-    public Answer save(AnswerCreateDTO answerDTO, FormAct formAct) {
-        try {
-            if (answerDTO == null) {
-                logger.warn("Se intentó guardar una respuesta nula.");
-                return null;
-            }
 
-            Answer answer = Answer.builder()
-                    .id(UUID.fromString(answerDTO.getUuid()))
-                    .formAct(formAct)
-                    .date(answerDTO.getDate())
-                    .uuid(answerDTO.getUuid())
-                    .build();
+    public Answer save(AnswerCreateDTO answerDTO, UUID formActId) {
+    try {
+        FormAct formAct = formActService.findById(formActId);
 
-            return answerRepository.save(answer);
-        } catch (Exception e) {
-            logger.error("Error al guardar una respuesta: {}", e.getMessage());
+        if (answerDTO == null) {
+            logger.warn("Se intentó guardar una respuesta nula.");
             return null;
         }
+
+        Answer answer = Answer.builder()
+                .id(UUID.fromString(answerDTO.getUuid()))
+                .formAct(formAct)
+                .date(answerDTO.getDate())
+                .uuid(answerDTO.getUuid())
+                .build();
+
+        Answer savedAnswer = answerRepository.save(answer);
+
+        logger.info("Respuesta creada con éxito: {}", savedAnswer.getUuid());
+
+        return savedAnswer;
+    } catch (Exception e) {
+        logger.error("Error al guardar una respuesta: {}", e.getMessage());
+        return null;
+    }
+}
+
     }
 
 
