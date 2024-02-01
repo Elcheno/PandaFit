@@ -28,7 +28,7 @@ public class OutputService {
     @Autowired
     private UserRepository userRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(InputService.class);
+    private static final Logger logger = LoggerFactory.getLogger(OutputService.class);
 
 
     /*public Output findById(UUID id) {
