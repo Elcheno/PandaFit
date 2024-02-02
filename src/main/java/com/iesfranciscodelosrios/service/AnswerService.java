@@ -25,7 +25,7 @@ public class AnswerService{
     @Autowired
     FormActService formActService;
 
-    private static final Logger logger = LoggerFactory.getLogger(InputService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AnswerService.class);
 
     /**
      * Loads an Answer based on the specified date.
