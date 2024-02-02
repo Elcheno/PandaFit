@@ -15,12 +15,10 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode
 public class FormActResponseDTO {
-
     private UUID id;
-
     private LocalDateTime startDate;
-
     private LocalDateTime expirationDate;
-
+    private Form form;
+    private SchoolYear schoolYear;
 }
 

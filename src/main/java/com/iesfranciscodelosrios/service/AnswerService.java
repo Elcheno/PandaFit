@@ -111,8 +111,8 @@ public class AnswerService{
     } catch (Exception e) {
         logger.error("Error al guardar una respuesta: {}", e.getMessage());
         return null;
+        }
     }
-}
 
     /**
      * Deletes an Answer based on the provided AnswerDeleteDTO.

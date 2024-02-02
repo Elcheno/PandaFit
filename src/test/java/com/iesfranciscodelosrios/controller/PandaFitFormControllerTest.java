@@ -89,13 +89,11 @@ class PandaFitFormControllerTest {
                 .build();
 
         formUpdateDTO = FormUpdateDTO.builder()
-                .id(form.getId())
                 .name("UpdatedFormName")
                 .description("Updated Form Description")
                 .build();
 
         formDeleteDTO = FormDeleteDTO.builder()
-                .name(form.getName())
                 .build();
     }
 
@@ -136,7 +134,7 @@ class PandaFitFormControllerTest {
 
         String jsonRequest = objectMapper.writeValueAsString(formCreateDTO);
 
-        when(formService.save(any(Form.class)))
+        when(formService.save(any(FormCreateDTO.class)))
                 .thenReturn(form);
 
         ResultActions result = mockMvc.perform(post("/form/formulary")
@@ -157,7 +155,7 @@ class PandaFitFormControllerTest {
 
         String jsonRequest = objectMapper.writeValueAsString(formUpdateDTO);
         System.out.println(formUpdateDTO);
-        when(formService.save(any(Form.class)))
+        when(formService.update(any(FormUpdateDTO.class)))
                 .thenReturn(form);
 
         ResultActions result = mockMvc.perform(put("/form/formulary")
@@ -179,7 +177,7 @@ class PandaFitFormControllerTest {
 
         String jsonRequest = objectMapper.writeValueAsString(formDeleteDTO);
 
-        when(formService.delete(any(Form.class)))
+        when(formService.delete(any(FormDeleteDTO.class)))
                 .thenReturn(form);
 
         ResultActions result = mockMvc.perform(delete("/form/formulary")

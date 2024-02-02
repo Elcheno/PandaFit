@@ -15,7 +15,5 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode
 public class FormActDeleteDTO {
-
     private UUID id;
-
 }
