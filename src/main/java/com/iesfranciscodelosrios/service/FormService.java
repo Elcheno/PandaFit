@@ -55,10 +55,7 @@ public class FormService {
 
     public Form save(FormCreateDTO formCreateDTO) {
         Form form = Form.builder()
-                .id(formCreateDTO.getId())
                 .name(formCreateDTO.getName())
-                // .description(formCreateDTO.getDescription())
-                // .otherFields(formCreateDTO.getOtherFields())
                 .build();
 
         return formRepository.save(form);
@@ -66,10 +63,8 @@ public class FormService {
 
     public Form update(FormUpdateDTO formUpdateDTO) {
         Form form = Form.builder()
-                .id(formUpdateDTO.getId())
                 .name(formUpdateDTO.getName())
                 .description(formUpdateDTO.getDescription())
-                // .otherFields(formUpdateDTO.getOtherFields())
                 .build();
 
         return formRepository.save(form);
@@ -77,10 +72,7 @@ public class FormService {
 
     public Form delete(FormDeleteDTO formDeleteDTO) {
         Form form = Form.builder()
-        //        .id(formDeleteDTO.getId())
-                .name(formDeleteDTO.getName())
-                // .description(formDeleteDTO.getDescription())
-                // .otherFields(formDeleteDTO.getOtherFields())
+                .id(formDeleteDTO.getId())
                 .build();
 
         formRepository.delete(form);

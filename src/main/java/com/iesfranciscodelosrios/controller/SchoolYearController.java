@@ -111,6 +111,7 @@ public class SchoolYearController {
     public ResponseEntity<SchoolYearResponseDTO> createSchoolYear(@RequestBody SchoolYearCreateDTO schoolYearCreateDTO) {
         SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
                         .name(schoolYearCreateDTO.getName())
+                        .institution(institutionService.findById(schoolYearCreateDTO.getInstitutionId()))
                         .build());
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();

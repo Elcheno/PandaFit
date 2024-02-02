@@ -8,14 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class SchoolYearCreateDTO {
-
     private String name;
-
-
+    private UUID institutionId;
 }

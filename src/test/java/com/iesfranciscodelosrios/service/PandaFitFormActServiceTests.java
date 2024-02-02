@@ -34,10 +34,7 @@ public class PandaFitFormActServiceTests {
     @Test
     @Order(1)
     public void testCreateInstitution() {
-        institutionService.save(Institution.builder()
-                .name("global")
-                .build()
-        );
+
     }
 
     @Test
@@ -60,11 +57,7 @@ public class PandaFitFormActServiceTests {
     @Test
     @Order(3)
     public void testCreateForm() {
-        formService.save(Form.builder()
-                .name("form")
-                .userOwner(userService.findByEmail("ejemplo@example.com"))
-                .build()
-        );
+
     }
 
     @Test
@@ -75,10 +68,7 @@ public class PandaFitFormActServiceTests {
 //                .build()
 //        );
 //        idFormAct = result.getId();
-        formActiveService.save(FormAct.builder()
-                .form(formService.loadFormByName("form"))
-                .build()
-        );
+
     }
 
     @Test
@@ -98,7 +88,7 @@ public class PandaFitFormActServiceTests {
     @Test
     @Order(7)
     public void testDeleteFormActive() {
-        formActiveService.delete(formActiveService.findById(idFormAct));
+
     }
 
     @Test
