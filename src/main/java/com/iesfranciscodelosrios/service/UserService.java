@@ -8,6 +8,8 @@ import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.repository.UserRepository;
 import org.hibernate.exception.GenericJDBCException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,8 @@ import java.util.UUID;
 @Service
 public class UserService implements iServices<UserEntity> {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -27,56 +31,94 @@ public class UserService implements iServices<UserEntity> {
 
     @Override
     public UserEntity save(UserEntity user) {
-        return userRepository.save(user);
+        try {
+            logger.info("Guardando nuevo usuario: {}", user);
+            return userRepository.save(user);
+        } catch (Exception e) {
+            logger.error("Error al guardar el usuario: {}", e.getMessage());
+            throw new RuntimeException("Error al guardar el usuario: " + e.getMessage());
+        }
     }
 
     @Override
     public UserEntity findById(UUID id) {
-        return userRepository.findById(id)
-                .orElse(null);
+        try {
+            UserEntity result = userRepository.findById(id)
+                    .orElse(null);
+
+            if (result != null) {
+                logger.info("Buscando usuario por ID '{}': {}", id, result);
+            } else {
+                logger.info("No se encontró ningún usuario con el ID '{}'", id);
+            }
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar usuario por ID '{}': {}", id, e.getMessage());
+            throw new RuntimeException("Error al buscar usuario por ID: " + e.getMessage());
+        }
     }
 
     public UserEntity update(UserUpdateDTO userUpdateDTO) {
-        UserEntity userEntity = UserEntity.builder()
-                .id(userUpdateDTO.getId())
-                .email(userUpdateDTO.getEmail())
-                .password(userUpdateDTO.getPassword())
-                .build();
+        try {
+            UserEntity userEntity = UserEntity.builder()
+                    .id(userUpdateDTO.getId())
+                    .email(userUpdateDTO.getEmail())
+                    .password(userUpdateDTO.getPassword())
+                    .build();
 
-        return userRepository.save(userEntity);
+            logger.info("Actualizando el usuario con ID {}: {}", userUpdateDTO.getId(), userEntity);
+
+            return userRepository.save(userEntity);
+        } catch (Exception e) {
+            logger.error("Error al actualizar el usuario: {}", e.getMessage());
+            throw new RuntimeException("Error al actualizar el usuario: " + e.getMessage());
+        }
     }
 
     @Override
     public UserEntity delete(UserEntity user) {
-        return  null;
+        // El método original no implementa la eliminación, así que no hay operación de eliminación aquí
+        return null;
     }
 
-    public UserEntity delete(UUID id)  {
+    public UserEntity delete(UUID id) {
         if (id == null) return null;
         try {
-           // userRepository.deleteById(id);
             userRepository.forceDelete(id);
+            logger.info("Eliminando el usuario con ID: {}", id);
+        } catch (GenericJDBCException a) {
+            logger.error("Error al forzar la eliminación del usuario con ID '{}': {}", id, a.getMessage());
+            throw new RuntimeException("Error al forzar la eliminación del usuario: " + a.getMessage());
+        } catch (Exception e) {
+            logger.error("Error al eliminar el usuario: {}", e.getMessage());
+            throw new RuntimeException("Error al eliminar el usuario: " + e.getMessage());
         }
-        catch (GenericJDBCException a) {
-            System.out.println("consulta al fallo");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
 
         return null;
     }
 
     public UserEntity findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElse(null);
+        try {
+            UserEntity result = userRepository.findByEmail(email)
+                    .orElse(null);
+
+            if (result != null) {
+                logger.info("Buscando usuario por email '{}': {}", email, result);
+            } else {
+                logger.info("No se encontró ningún usuario con el email '{}'", email);
+            }
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar usuario por email '{}': {}", email, e.getMessage());
+            throw new RuntimeException("Error al buscar usuario por email: " + e.getMessage());
+        }
     }
 
     public Page<UserEntity> findAll(Pageable pageable) {
         try {
-            return  userRepository.findAll(
+            Page<UserEntity> result = userRepository.findAll(
                     PageRequest.of(
                             pageable.getPageNumber() > 0
                                     ? pageable.getPageNumber()
@@ -89,8 +131,13 @@ public class UserService implements iServices<UserEntity> {
                             pageable.getSort()
                     )
             );
+
+            logger.info("Buscando todos los usuarios paginados: {}", result);
+
+            return result;
         } catch (Exception e) {
-            return null;
+            logger.error("Error al buscar todos los usuarios paginados: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todos los usuarios paginados: " + e.getMessage());
         }
     }
 
@@ -99,7 +146,7 @@ public class UserService implements iServices<UserEntity> {
         if (institution == null) return null;
 
         try {
-            return userRepository.findAllByInstitution(
+            Page<UserEntity> result = userRepository.findAllByInstitution(
                     institution,
                     PageRequest.of(
                             pageable.getPageNumber() > 0
@@ -113,28 +160,26 @@ public class UserService implements iServices<UserEntity> {
                             pageable.getSort()
                     )
             );
+
+            logger.info("Buscando todos los usuarios de la institución '{}' paginados: {}", institution, result);
+
+            return result;
         } catch (Exception e) {
-            return null;
+            logger.error("Error al buscar todos los usuarios de la institución '{}' paginados: {}", institution, e.getMessage());
+            throw new RuntimeException("Error al buscar todos los usuarios de la institución paginados: " + e.getMessage());
         }
     }
 
-    public Page<UserEntity> findAllByRole(
-            String role,
-            Pageable pageable) {
-
-        Role rol;
-        try{
-            rol = Role.builder()
-                    .role(RoleType.valueOf(role))
-                    .build();
-
-            System.out.println(rol);
+    public Page<UserEntity> findAllByRole(String role, Pageable pageable) {
+        RoleType rol;
+        try {
+            rol = RoleType.valueOf(role);
         } catch (IllegalArgumentException e) {
             return null;
-        };
+        }
 
         try {
-            return userRepository.findAllByRole(
+            Page<UserEntity> result = userRepository.findAllByRole(
                     role,
                     PageRequest.of(
                             pageable.getPageNumber() > 0
@@ -148,30 +193,29 @@ public class UserService implements iServices<UserEntity> {
                             pageable.getSort()
                     )
             );
+
+            logger.info("Buscando todos los usuarios por rol '{}' paginados: {}", role, result);
+
+            return result;
         } catch (Exception e) {
-            return null;
+            logger.error("Error al buscar todos los usuarios por rol '{}' paginados: {}", role, e.getMessage());
+            throw new RuntimeException("Error al buscar todos los usuarios por rol paginados: " + e.getMessage());
         }
     }
 
-    public Page<UserEntity> findAllByInstitutionAndRole(
-            UUID institutionId,
-            String role,
-            Pageable pageable) {
-
+    public Page<UserEntity> findAllByInstitutionAndRole(UUID institutionId, String role, Pageable pageable) {
         Institution institution = institutionService.findById(institutionId);
         RoleType rol;
-        try{
+        try {
             rol = RoleType.valueOf(role);
         } catch (IllegalArgumentException e) {
             return null;
-        };
+        }
 
         if (institution == null) return null;
 
-        System.out.println(pageable.getSort().getOrderFor("email"));
-
         try {
-            return userRepository.findAllByInstitutionAndRole(
+            Page<UserEntity> result = userRepository.findAllByInstitutionAndRole(
                     institution.getId(),
                     role,
                     PageRequest.of(
@@ -186,8 +230,13 @@ public class UserService implements iServices<UserEntity> {
                             pageable.getSort()
                     )
             );
+
+            logger.info("Buscando todos los usuarios de la institución '{}' por rol '{}' paginados: {}", institution, role, result);
+
+            return result;
         } catch (Exception e) {
-            return null;
+            logger.error("Error al buscar todos los usuarios de la institución '{}' por rol '{}' paginados: {}", institution, role, e.getMessage());
+            throw new RuntimeException("Error al buscar todos los usuarios de la institución por rol paginados: " + e.getMessage());
         }
     }
 }
