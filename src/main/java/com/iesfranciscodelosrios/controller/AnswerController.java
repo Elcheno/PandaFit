@@ -3,25 +3,18 @@ package com.iesfranciscodelosrios.controller;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
-import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
-import com.iesfranciscodelosrios.model.entity.FormAct;
-import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.service.AnswerService;
-import com.iesfranciscodelosrios.service.FormActService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +22,7 @@ import java.util.UUID;
 public class AnswerController {
 
     @Autowired
+
     private AnswerService answerService;
 
     @GetMapping("/byDate/{date}")

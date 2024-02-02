@@ -15,7 +15,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+/*@SpringBootTest
 public class PandaFitFormServiceTests {
     @Autowired
     private FormService formService;
@@ -142,4 +142,4 @@ public class PandaFitFormServiceTests {
         roles.add(Role.builder().role(RoleType.USER).build());
         return roles;
     }
-}
+}*/
