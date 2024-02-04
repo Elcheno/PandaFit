@@ -34,7 +34,7 @@ public class SchoolYear {
     private String name;
 
     @NotNull(message = "La institución no puede ser nula")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "institution_id", nullable = false)
     @EqualsAndHashCode.Exclude
     private Institution institution;
