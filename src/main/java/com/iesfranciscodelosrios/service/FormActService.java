@@ -81,10 +81,6 @@ public class FormActService {
     public FormAct delete(FormActDeleteDTO formActDeleteDTO) {
         FormAct formAct = FormAct.builder()
                 .id(formActDeleteDTO.getId())
-        //        .startDate(formActDeleteDTO.getStartDate())
-        //        .expirationDate(formActDeleteDTO.getExpirationDate())
-        //        .form(formActDeleteDTO.getForm())
-        //        .schoolYear(formActDeleteDTO.getSchoolYear())
                 .build();
 
         formActRepository.delete(formAct);
@@ -105,6 +101,9 @@ public class FormActService {
                 .id(formAct.getId())
                 .startDate(formAct.getStartDate())
                 .expirationDate(formAct.getExpirationDate())
+                .form(formAct.getForm())
+                .schoolYear(formAct.getSchoolYear())
+                .answersList(formAct.getAnswersList())
                 .build();
     }
 }
