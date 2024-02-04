@@ -17,5 +17,4 @@ public class InputUpdateDTO {
     private String name;
     private String description;
     private String validator;
-    private String formula;
 }

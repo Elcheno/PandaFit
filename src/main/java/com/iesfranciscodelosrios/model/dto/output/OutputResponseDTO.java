@@ -13,8 +13,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class OutputResponseDTO {
+
     private UUID id;
+
     private String name;
+
+    private String description;
+
+    private String formula;
 
     private String result;
 }
