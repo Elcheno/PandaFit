@@ -37,9 +37,8 @@ public class OutputController {
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-        //        .description(output.getDescription())
-        //        .formula(output.getFormula())
-        //        .userOwner(output.getUserOwner())
+                .description(output.getDescription())
+                .formula(output.getFormula())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -59,9 +58,8 @@ public class OutputController {
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-        //        .description(output.getDescription())
-        //        .formula(output.getFormula())
-        //        .userOwner(output.getUserOwner())
+                .description(output.getDescription())
+                .formula(output.getFormula())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -105,6 +103,9 @@ public class OutputController {
             return OutputResponseDTO.builder()
                     .id(output.getId())
                     .name(output.getName())
+                    .description(output.getDescription())
+                    .formula(output.getFormula())
+                    .result(output.getResult())
                     .build();
         });
 
@@ -122,9 +123,8 @@ public class OutputController {
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-        //        .description(output.getDescription())
-        //        .formula(output.getFormula())
-        //        .userOwner(output.getUserOwner())
+                .description(output.getDescription())
+                .formula(output.getFormula())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -141,9 +141,8 @@ public class OutputController {
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-        //        .description(output.getDescription())
-        //        .formula(output.getFormula())
-        //        .userOwner(output.getUserOwner())
+                .description(output.getDescription())
+                .formula(output.getFormula())
                 .result(output.getResult())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -157,14 +156,13 @@ public class OutputController {
     @DeleteMapping("/output")
     public ResponseEntity<OutputResponseDTO> delete(@RequestBody OutputDeleteDTO outputDeleteDTO) {
         Output output = OutputService.delete(outputDeleteDTO);
-        OutputResponseDTO response = OutputResponseDTO.builder()
+        OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
-        //        .description(output.getDescription())
-        //        .formula(output.getFormula())
-        //        .userOwner(output.getUserOwner())
+                .description(output.getDescription())
+                .formula(output.getFormula())
                 .result(output.getResult())
                 .build();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(outputResponseDTO);
     }
 }

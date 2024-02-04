@@ -14,14 +14,13 @@ import java.util.UUID;
 @Builder
 public class OutputUpdateDTO {
     private UUID id;
-    private String name;
 
-    private String result;
+    private String name;
 
     private String description;
 
     private String formula;
 
-
+    private String result;
 
 }

@@ -170,6 +170,7 @@ public class OutputService {
                     .name(outputUpdateDTO.getName())
                     .description(outputUpdateDTO.getDescription())
                     .formula(outputUpdateDTO.getFormula())
+                    .result(outputUpdateDTO.getResult())
                     .build();
 
             Output updatedOutput = outputRepository.save(output);
