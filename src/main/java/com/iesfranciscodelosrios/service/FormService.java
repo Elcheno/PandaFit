@@ -9,6 +9,7 @@ import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.FormRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,8 @@ public class FormService {
 
     @Autowired
     FormRepository formRepository;
+    @Autowired
+    UserRepository userRepository;
 
     public Form loadFormByName(String name) {
         Optional<Form> form = formRepository.findByName(name);
@@ -59,7 +62,7 @@ public class FormService {
         Form form = Form.builder()
                 .name(formCreateDTO.getName())
                 .description(formCreateDTO.getDescription())
-                .userOwner(formCreateDTO.getUserOwner())
+                .userOwner(userRepository.findById(formCreateDTO.getUserId()).get())
                 .build();
 
         Set<FormAct> formActList = formCreateDTO.getFormActList();

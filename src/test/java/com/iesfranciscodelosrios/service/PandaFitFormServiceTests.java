@@ -88,14 +88,14 @@ public class PandaFitFormServiceTests {
         formCreateDTO = FormCreateDTO.builder()
                 .name("formName")
                 .description("Form create description")
-                .userOwner(userOwner)
+                .userId(userOwner.getId())
                 .formActList(formsAct)
                 .build();
 
         formCreateDTOEmpty = FormCreateDTO.builder()
                 .name("formName")
                 .description("Form create description")
-                .userOwner(userOwner)
+                .userId(userOwner.getId())
                 .formActList(formsActEmpty)
                 .build();
 
