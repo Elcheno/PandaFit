@@ -1,6 +1,10 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionCreateDTO;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionUpdateDTO;
+import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearCreateDTO;
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
@@ -43,9 +47,27 @@ public class SchoolYearService  {
     }
 
 
-    public SchoolYear save(SchoolYear schoolYear) {
+    /*public SchoolYear save(SchoolYear schoolYear) {
         try {
             logger.info("Guardando nuevo año escolar: {}", schoolYear);
+            return schoolYearRepository.save(schoolYear);
+        } catch (Exception e) {
+            logger.error("Error al guardar el año escolar: {}", e.getMessage());
+            throw new RuntimeException("Error al guardar el año escolar: " + e.getMessage());
+        }
+    }*/
+
+    public SchoolYear save(SchoolYearCreateDTO schoolYearCreateDTO) {
+        try {
+            if (schoolYearCreateDTO == null) return null;
+
+            SchoolYear schoolYear = SchoolYear.builder()
+                    .name(schoolYearCreateDTO.getName())
+                    .institution(schoolYearCreateDTO.getInstitution())
+                    .build();
+
+            logger.info("Guardando nuevo año escolar: {}", schoolYear);
+
             return schoolYearRepository.save(schoolYear);
         } catch (Exception e) {
             logger.error("Error al guardar el año escolar: {}", e.getMessage());
@@ -98,6 +120,25 @@ public class SchoolYearService  {
         } catch (Exception e) {
             logger.error("Error al buscar todos los años escolares de la institución '{}': {}", institution, e.getMessage());
             throw new RuntimeException("Error al buscar todos los años escolares de la institución: " + e.getMessage());
+        }
+    }
+
+    public SchoolYear update(SchoolYearUpdateDTO schoolYearUpdateDTO) {
+        try {
+            if (schoolYearUpdateDTO == null) return null;
+
+            SchoolYear schoolYear = SchoolYear.builder()
+                    .id(schoolYearUpdateDTO.getId())
+                    .name(schoolYearUpdateDTO.getName())
+                    .institution(schoolYearUpdateDTO.getInstitution())
+                    .build();
+
+            logger.info("Actualizando el año escolar con ID {}: {}", schoolYearUpdateDTO.getId(), schoolYear);
+
+            return schoolYearRepository.save(schoolYear);
+        } catch (Exception e) {
+            logger.error("Error al actualizar el año escolar: {}", e.getMessage());
+            throw new RuntimeException("Error al actualizar el año escolar: " + e.getMessage());
         }
     }
 }

@@ -110,10 +110,7 @@ public class SchoolYearController {
      */
     @PostMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> createSchoolYear(@RequestBody SchoolYearCreateDTO schoolYearCreateDTO) {
-        SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
-                        .name(schoolYearCreateDTO.getName())
-                        .institution(institutionService.findById(schoolYearCreateDTO.getInstitutionId()))
-                        .build());
+        SchoolYear schoolYear = schoolYearService.save(schoolYearCreateDTO);
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
 
@@ -156,10 +153,8 @@ public class SchoolYearController {
      */
     @PutMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> updateSchoolYear(@RequestBody SchoolYearUpdateDTO schoolYearUpdateDTO) {
-        SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
-                        .id(schoolYearUpdateDTO.getId())
-                        .name(schoolYearUpdateDTO.getName())
-                        .build());
+        SchoolYear schoolYear = schoolYearService.update(schoolYearUpdateDTO);
+
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
 
