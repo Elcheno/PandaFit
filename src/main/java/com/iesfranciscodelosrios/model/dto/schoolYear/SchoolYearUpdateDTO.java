@@ -20,6 +20,5 @@ public class SchoolYearUpdateDTO {
 
     private String name;
 
-    private Institution institution;
 
 }
