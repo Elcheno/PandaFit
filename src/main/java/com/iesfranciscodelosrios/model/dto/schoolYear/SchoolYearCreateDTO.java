@@ -16,5 +16,5 @@ import java.util.UUID;
 @Builder
 public class SchoolYearCreateDTO {
     private String name;
-    private Institution institution;
+    private UUID institutionId;
 }

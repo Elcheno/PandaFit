@@ -155,7 +155,6 @@ public class SchoolYearController {
     public ResponseEntity<SchoolYearResponseDTO> updateSchoolYear(@RequestBody SchoolYearUpdateDTO schoolYearUpdateDTO) {
         SchoolYear schoolYear = schoolYearService.update(schoolYearUpdateDTO);
 
-
         if (schoolYear == null) return ResponseEntity.badRequest().build();
 
         SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()

@@ -63,7 +63,6 @@ public class SchoolYearService  {
 
             SchoolYear schoolYear = SchoolYear.builder()
                     .name(schoolYearCreateDTO.getName())
-                    .institution(schoolYearCreateDTO.getInstitution())
                     .build();
 
             logger.info("Guardando nuevo año escolar: {}", schoolYear);
@@ -130,7 +129,6 @@ public class SchoolYearService  {
             SchoolYear schoolYear = SchoolYear.builder()
                     .id(schoolYearUpdateDTO.getId())
                     .name(schoolYearUpdateDTO.getName())
-                    .institution(schoolYearUpdateDTO.getInstitution())
                     .build();
 
             logger.info("Actualizando el año escolar con ID {}: {}", schoolYearUpdateDTO.getId(), schoolYear);
