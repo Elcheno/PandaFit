@@ -95,7 +95,7 @@ public class UserService implements iServices<UserEntity> {
             throw new RuntimeException("Error al eliminar el usuario: " + e.getMessage());
         }
 
-        return null;
+        return userRepository.findById(id).orElse(null);
     }
 
     public UserEntity findByEmail(String email) {
