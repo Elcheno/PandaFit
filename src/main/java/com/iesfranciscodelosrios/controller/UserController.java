@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
 
@@ -218,20 +217,11 @@ public class UserController {
         return ResponseEntity.ok(userResponseDTO);
     }
 
-    @Transactional
     @DeleteMapping("/users")
-    public ResponseEntity<UserResponseDTO> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
-        UserEntity user =  userService.delete(UserEntity.builder()
-                .id(userDeleteDTO.getId())
-                .build());
-
-        if (user == null) return ResponseEntity.badRequest().build();
-
-        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-                .id(user.getId())
-                .build();
-
-        return ResponseEntity.ok(userResponseDTO);
+    public ResponseEntity<UserDeleteDTO> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
+        if (userDeleteDTO.getId() == null) return ResponseEntity.badRequest().build();
+        userService.delete(userDeleteDTO.getId());
+        return ResponseEntity.ok(userDeleteDTO);
     }
 
 //    @DeleteMapping("/users")
