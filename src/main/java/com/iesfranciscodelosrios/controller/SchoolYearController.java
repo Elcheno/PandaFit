@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.controller;
 
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearCreateDTO;
+import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearResponseDTO;
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
@@ -127,17 +128,21 @@ public class SchoolYearController {
     /**
      * Deletes an existing SchoolYear.
      *
-     * @param schoolYearResponseDTO SchoolYearResponseDTO containing information for deleting an existing SchoolYear.
+     * @param schoolYearDeleteDTO SchoolYearResponseDTO containing information for deleting an existing SchoolYear.
      * @return ResponseEntity containing the deleted SchoolYearResponseDTO.
      */
     @DeleteMapping("/institution/schoolYear")
-    public ResponseEntity<SchoolYearResponseDTO> deleteSchoolYear(@RequestBody SchoolYearResponseDTO schoolYearResponseDTO) {
+    public ResponseEntity<SchoolYearResponseDTO> deleteSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
         SchoolYear schoolYear = schoolYearService.delete(SchoolYear.builder()
-                        .id(UUID.fromString(String.valueOf(schoolYearResponseDTO.getId())))
-                        .name(schoolYearResponseDTO.getName())
+                        .id(UUID.fromString(String.valueOf(schoolYearDeleteDTO.getId())))
                         .build());
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
+
+        SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
+                .id(schoolYear.getId())
+                .name(schoolYear.getName())
+                .build();
 
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
