@@ -211,7 +211,6 @@ public class UserController {
                 .id(userEntity.getId())
                 .email(userEntity.getEmail())
                 .password(userEntity.getPassword())
-                .role(userEntity.getRole().stream().map(roleType -> RoleType.valueOf(roleType.getRole().name())).collect(Collectors.toSet()))
                 .build();
 
         return ResponseEntity.ok(userResponseDTO);

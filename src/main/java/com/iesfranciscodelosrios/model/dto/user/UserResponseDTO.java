@@ -13,13 +13,8 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode
 public class UserResponseDTO {
-
     private UUID id;
-
     private String email;
-
     private String password;
-
     private Set<RoleType> role;
-
 }
