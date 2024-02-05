@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearDeleteDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
@@ -14,14 +15,14 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class SchoolYearService implements iServices<SchoolYear> {
+public class SchoolYearService  {
 
     private static final Logger logger = LoggerFactory.getLogger(SchoolYearService.class);
 
     @Autowired
     private SchoolYearRepository schoolYearRepository;
 
-    @Override
+
     public SchoolYear findById(UUID id) {
         try {
             SchoolYear result = schoolYearRepository.findById(id)
@@ -40,7 +41,7 @@ public class SchoolYearService implements iServices<SchoolYear> {
         }
     }
 
-    @Override
+
     public SchoolYear save(SchoolYear schoolYear) {
         try {
             logger.info("Guardando nuevo año escolar: {}", schoolYear);
@@ -51,12 +52,17 @@ public class SchoolYearService implements iServices<SchoolYear> {
         }
     }
 
-    @Override
-    public SchoolYear delete(SchoolYear schoolYear) {
-        try {
-            if (schoolYear == null) return null;
 
-            logger.info("Eliminando el año escolar: {}", schoolYear);
+    public SchoolYear delete(SchoolYearDeleteDTO schoolYearDeleteDTO) {
+        try {
+            if (schoolYearDeleteDTO == null) return null;
+
+            SchoolYear schoolYear = SchoolYear.builder()
+                            .id(UUID.fromString(String.valueOf(schoolYearDeleteDTO.getId())))
+                            .build();
+
+            logger.info("Eliminando el año escolar con ID {}: {}", schoolYearDeleteDTO.getId(), schoolYear);
+
             schoolYearRepository.delete(schoolYear);
 
             return schoolYear;
