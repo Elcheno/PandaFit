@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -52,20 +53,15 @@ public class SchoolYearService  {
         }
     }
 
-
-    public SchoolYear delete(SchoolYearDeleteDTO schoolYearDeleteDTO) {
+    @Transactional
+    public void delete(SchoolYearDeleteDTO schoolYearDeleteDTO) {
         try {
-            if (schoolYearDeleteDTO == null) return null;
+            if (schoolYearDeleteDTO == null) return;
 
-            SchoolYear schoolYear = SchoolYear.builder()
-                            .id(UUID.fromString(String.valueOf(schoolYearDeleteDTO.getId())))
-                            .build();
+            logger.info("Eliminando el año escolar con ID {}: {}", schoolYearDeleteDTO.getId());
 
-            logger.info("Eliminando el año escolar con ID {}: {}", schoolYearDeleteDTO.getId(), schoolYear);
+            schoolYearRepository.forceDelete(schoolYearDeleteDTO.getId());
 
-            schoolYearRepository.delete(schoolYear);
-
-            return schoolYear;
         } catch (Exception e) {
             logger.error("Error al eliminar el año escolar: {}", e.getMessage());
             throw new RuntimeException("Error al eliminar el año escolar: " + e.getMessage());
