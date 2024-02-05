@@ -15,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -82,6 +84,7 @@ public class UserService implements iServices<UserEntity> {
         return null;
     }
 
+    @Transactional
     public UserEntity delete(UUID id) {
         if (id == null) return null;
         try {
@@ -95,7 +98,7 @@ public class UserService implements iServices<UserEntity> {
             throw new RuntimeException("Error al eliminar el usuario: " + e.getMessage());
         }
 
-        return userRepository.findById(id).orElse(null);
+        return null;
     }
 
     public UserEntity findByEmail(String email) {
