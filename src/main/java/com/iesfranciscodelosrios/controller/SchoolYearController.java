@@ -133,9 +133,7 @@ public class SchoolYearController {
      */
     @DeleteMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> deleteSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
-        SchoolYear schoolYear = schoolYearService.delete(SchoolYear.builder()
-                        .id(UUID.fromString(String.valueOf(schoolYearDeleteDTO.getId())))
-                        .build());
+        SchoolYear schoolYear = schoolYearService.delete(schoolYearDeleteDTO);
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
 
