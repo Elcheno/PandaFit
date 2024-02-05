@@ -36,7 +36,7 @@ public class Form {
     @NotNull(message = "El propietario del formulario no puede ser nulo")
     private UserEntity userOwner;
 
-    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "form")
     private Set<FormAct> formActList;
 
     @Override

@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -35,14 +36,18 @@ public class PandaFitFormServiceTests {
     private Form form;
     private FormAct formAct;
     private LocalDateTime testDate = LocalDateTime.of(2024, 1, 22, 20, 29, 17, 835885);
+    private FormCreateDTO formCreateDTOEmpty;
     private FormCreateDTO formCreateDTO;
     private Set<Role> role = new HashSet<>();
     private Institution institution;
     private FormDeleteDTO formDeleteDTO;
     private FormUpdateDTO formUpdateDTO;
+    private FormAct formAct1;
+    private FormAct formAct2;
 
 
     private void beforeEach() {
+        HashSet<FormAct> formsActEmpty = new HashSet<>();
         HashSet<FormAct> formsAct = new HashSet<>();
 
         role.add(Role.builder()
@@ -56,21 +61,6 @@ public class PandaFitFormServiceTests {
                 .role(role)
                 .build();
 
-        formAct = FormAct.builder()
-                .id(UUID.randomUUID())
-                .startDate(testDate)
-                .expirationDate(LocalDateTime.now().plusDays(7))
-                .form(form)
-                .build();
-
-        /*formAct = formActService.save(FormActCreateDTO.builder()
-                .startDate(testDate)
-                .expirationDate(LocalDateTime.now().plusDays(7))
-                .form(form)
-                .build());*/
-
-        formsAct.add(formAct);
-
         form = Form.builder()
                 .id(UUID.randomUUID())
                 .name("formName")
@@ -79,11 +69,34 @@ public class PandaFitFormServiceTests {
                 .formActList(formsAct)
                 .build();
 
+        formAct1 = FormAct.builder()
+                .startDate(testDate)
+                .expirationDate(LocalDateTime.now().plusDays(7))
+                .form(form)
+                .build();
+
+        formAct2 = FormAct.builder()
+                .startDate(testDate)
+                .expirationDate(LocalDateTime.now().plusDays(14)) // Diferente vencimiento para distinguir
+                .form(form)
+                .build();
+
+        formsAct.add(formAct1);
+        formsAct.add(formAct2);
+
+
         formCreateDTO = FormCreateDTO.builder()
                 .name("formName")
                 .description("Form create description")
                 .userOwner(userOwner)
                 .formActList(formsAct)
+                .build();
+
+        formCreateDTOEmpty = FormCreateDTO.builder()
+                .name("formName")
+                .description("Form create description")
+                .userOwner(userOwner)
+                .formActList(formsActEmpty)
                 .build();
 
         formDeleteDTO = FormDeleteDTO.builder()
@@ -95,7 +108,7 @@ public class PandaFitFormServiceTests {
                 .name("formName")
                 .description("Form update description")
                 .userOwner(userOwner)
-                .formActList(formsAct)
+                .formActList(formsActEmpty)
                 .build();
 
         institution = institutionService.save(InstitutionCreateDTO.builder()
@@ -107,7 +120,25 @@ public class PandaFitFormServiceTests {
 
     @Test
     @Transactional
-    public void testSaveForm() {
+    public void testSaveFormWithoutFormAct() {
+        beforeEach();
+
+        // Verificar si ya existe un formulario con el mismo nombre
+        Form existingForm = formService.loadFormByName("formName");
+        assertNull(existingForm, "Ya existe un formulario con el nombre formName");
+
+        Form savedForm = formService.save(formCreateDTOEmpty);
+
+        assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
+        assertEquals("formName", savedForm.getName(), "El nombre debe ser igual");
+        assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
+        assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
+        System.out.println(savedForm);
+    }
+
+    @Test
+    @Transactional
+    public void testSaveFormWithFormAct() {
         beforeEach();
 
         // Verificar si ya existe un formulario con el mismo nombre
@@ -116,10 +147,20 @@ public class PandaFitFormServiceTests {
 
         Form savedForm = formService.save(formCreateDTO);
 
+        System.out.println(savedForm);
+
         assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
         assertEquals("formName", savedForm.getName(), "El nombre debe ser igual");
         assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
         assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
+
+        // Verificar que los FormAct también se han guardado
+        assertNotNull(formAct1.getId(), "ID de FormAct1 debería generarse después de guardar");
+        assertNotNull(formAct2.getId(), "ID de FormAct2 debería generarse después de guardar");
+
+        // Verificar que los FormAct están asociados al Form
+        assertEquals(savedForm, formAct1.getForm(), "FormAct1 debería estar asociado al Form");
+        assertEquals(savedForm, formAct2.getForm(), "FormAct2 debería estar asociado al Form");
     }
 
     @Test
