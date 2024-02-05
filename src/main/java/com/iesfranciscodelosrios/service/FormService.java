@@ -5,6 +5,7 @@ import com.iesfranciscodelosrios.model.dto.form.FormDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.form.FormResponseDTO;
 import com.iesfranciscodelosrios.model.dto.form.FormUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Form;
+import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.FormRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -58,9 +60,15 @@ public class FormService {
                 .name(formCreateDTO.getName())
                 .description(formCreateDTO.getDescription())
                 .userOwner(formCreateDTO.getUserOwner())
-                .formActList(formCreateDTO.getFormActList())
                 .build();
 
+        Set<FormAct> formActList = formCreateDTO.getFormActList();
+        if (formActList != null && !formActList.isEmpty()) {
+            for (FormAct formAct : formActList) {
+                formAct.setForm(form);
+            }
+            form.setFormActList(formActList);
+        }
         return formRepository.save(form);
     }
 

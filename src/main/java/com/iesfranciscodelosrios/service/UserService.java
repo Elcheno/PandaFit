@@ -7,6 +7,7 @@ import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.repository.UserRepository;
+import org.apache.catalina.User;
 import org.hibernate.exception.GenericJDBCException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,12 +62,17 @@ public class UserService implements iServices<UserEntity> {
         }
     }
 
+    @Transactional
     public UserEntity update(UserUpdateDTO userUpdateDTO) {
         try {
+            UserEntity userToUptdate = findById(userUpdateDTO.getId());
+
             UserEntity userEntity = UserEntity.builder()
                     .id(userUpdateDTO.getId())
                     .email(userUpdateDTO.getEmail())
                     .password(userUpdateDTO.getPassword())
+                    .institution(userToUptdate.getInstitution())
+                    .role(userToUptdate.getRole())
                     .build();
 
             logger.info("Actualizando el usuario con ID {}: {}", userUpdateDTO.getId(), userEntity);
