@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
@@ -98,6 +99,25 @@ public class SchoolYearService  {
         } catch (Exception e) {
             logger.error("Error al buscar todos los años escolares de la institución '{}': {}", institution, e.getMessage());
             throw new RuntimeException("Error al buscar todos los años escolares de la institución: " + e.getMessage());
+        }
+    }
+
+    public SchoolYear update(SchoolYearUpdateDTO schoolYearUpdateDTO) {
+        try {
+            SchoolYear schoolYearToUpdate = findById(schoolYearUpdateDTO.getId());
+
+            SchoolYear schoolYear = SchoolYear.builder()
+                    .id(schoolYearUpdateDTO.getId())
+                    .name(schoolYearUpdateDTO.getName())
+                    .institution(schoolYearToUpdate.getInstitution())
+                    .build();
+
+            logger.info("Actualizando el año escolar con ID {}: {}", schoolYearUpdateDTO.getId(), schoolYear);
+
+            return schoolYearRepository.save(schoolYear);
+        } catch (Exception e) {
+            logger.error("Error al actualizar el año escolar: {}", e.getMessage());
+            throw new RuntimeException("Error al actualizar el año escolar: " + e.getMessage());
         }
     }
 }
