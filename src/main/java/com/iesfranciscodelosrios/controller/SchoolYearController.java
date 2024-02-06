@@ -132,17 +132,20 @@ public class SchoolYearController {
      * @return ResponseEntity containing the deleted SchoolYearResponseDTO.
      */
     @DeleteMapping("/institution/schoolYear")
-    public ResponseEntity<SchoolYearResponseDTO> deleteSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
-        SchoolYear schoolYear = schoolYearService.delete(schoolYearDeleteDTO);
+    public ResponseEntity<SchoolYearDeleteDTO> deleteSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        System.out.println(schoolYearDeleteDTO);
 
-        if (schoolYear == null) return ResponseEntity.badRequest().build();
+        schoolYearService.delete(schoolYearDeleteDTO);
 
-        SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
-                .id(schoolYear.getId())
-                .name(schoolYear.getName())
-                .build();
+//        if (schoolYear == null) return ResponseEntity.badRequest().build();
 
-        return ResponseEntity.ok(schoolYearResponseDTO);
+//        SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
+//                .id(schoolYear.getId())
+//                .name(schoolYear.getName())
+//                .build();
+
+        return ResponseEntity.ok(schoolYearDeleteDTO);
     }
 
     /**

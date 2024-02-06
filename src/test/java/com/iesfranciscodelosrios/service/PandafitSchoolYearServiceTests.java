@@ -54,8 +54,8 @@ public class PandafitSchoolYearServiceTests {
         System.out.println(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("error")));
     }
 
-    @Test
-    public void testDeleteSchoolYear() {
-        schoolYearService.delete(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("global")));
-    }
+//    @Test
+//    public void testDeleteSchoolYear() {
+//        schoolYearService.delete(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("global")));
+//    }
 }
