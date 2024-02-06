@@ -17,5 +17,4 @@ public class FormCreateDTO {
     private String name;
     private String description;
     private UUID userId;
-    private Set<FormAct> formActList;
 }

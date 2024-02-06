@@ -8,6 +8,7 @@ import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
+import com.iesfranciscodelosrios.repository.FormActRepository;
 import com.iesfranciscodelosrios.repository.FormRepository;
 import com.iesfranciscodelosrios.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -27,6 +29,8 @@ public class FormService {
     FormRepository formRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    FormActRepository formActRepository;
 
     public Form loadFormByName(String name) {
         Optional<Form> form = formRepository.findByName(name);
@@ -65,13 +69,6 @@ public class FormService {
                 .userOwner(userRepository.findById(formCreateDTO.getUserId()).get())
                 .build();
 
-        Set<FormAct> formActList = formCreateDTO.getFormActList();
-        if (formActList != null && !formActList.isEmpty()) {
-            for (FormAct formAct : formActList) {
-                formAct.setForm(form);
-            }
-            form.setFormActList(formActList);
-        }
         return formRepository.save(form);
     }
 
@@ -80,8 +77,20 @@ public class FormService {
 
         formToUpdate.setName(formUpdateDTO.getName());
         formToUpdate.setDescription(formUpdateDTO.getDescription());
-        formToUpdate.setUserOwner(formUpdateDTO.getUserOwner());
-        formToUpdate.setFormActList(formUpdateDTO.getFormActList());
+        formToUpdate.setUserOwner(userRepository.findById(formUpdateDTO.getUserId()).get());
+
+
+        //Pendiente de probar, parece estar bien
+        Set<FormAct> result = new HashSet<>();
+
+        if(formUpdateDTO.getFormActUidList() != null) {
+            for(UUID id : formUpdateDTO.getFormActUidList()) {
+                FormAct formAct = formActRepository.findById(id).get();
+                result.add(formAct);
+            }
+        }
+
+        formToUpdate.setFormActList(result);
 
         return formRepository.save(formToUpdate);
     }

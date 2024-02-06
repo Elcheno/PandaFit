@@ -89,14 +89,6 @@ public class PandaFitFormServiceTests {
                 .name("formName")
                 .description("Form create description")
                 .userId(userOwner.getId())
-                .formActList(formsAct)
-                .build();
-
-        formCreateDTOEmpty = FormCreateDTO.builder()
-                .name("formName")
-                .description("Form create description")
-                .userId(userOwner.getId())
-                .formActList(formsActEmpty)
                 .build();
 
         formDeleteDTO = FormDeleteDTO.builder()
@@ -107,7 +99,7 @@ public class PandaFitFormServiceTests {
                 .id(form.getId())
                 .name("formName")
                 .description("Form update description")
-                .userOwner(userOwner)
+                .userId(userOwner.getId())
                 .formActList(formsActEmpty)
                 .build();
 
@@ -120,7 +112,7 @@ public class PandaFitFormServiceTests {
 
     @Test
     @Transactional
-    public void testSaveFormWithoutFormAct() {
+    public void testSaveFormAct() {
         beforeEach();
 
         // Verificar si ya existe un formulario con el mismo nombre
@@ -134,33 +126,6 @@ public class PandaFitFormServiceTests {
         assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
         assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
         System.out.println(savedForm);
-    }
-
-    @Test
-    @Transactional
-    public void testSaveFormWithFormAct() {
-        beforeEach();
-
-        // Verificar si ya existe un formulario con el mismo nombre
-        Form existingForm = formService.loadFormByName("formName");
-        assertNull(existingForm, "Ya existe un formulario con el nombre formName");
-
-        Form savedForm = formService.save(formCreateDTO);
-
-        System.out.println(savedForm);
-
-        assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
-        assertEquals("formName", savedForm.getName(), "El nombre debe ser igual");
-        assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
-        assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
-
-        // Verificar que los FormAct también se han guardado
-        assertNotNull(formAct1.getId(), "ID de FormAct1 debería generarse después de guardar");
-        assertNotNull(formAct2.getId(), "ID de FormAct2 debería generarse después de guardar");
-
-        // Verificar que los FormAct están asociados al Form
-        assertEquals(savedForm, formAct1.getForm(), "FormAct1 debería estar asociado al Form");
-        assertEquals(savedForm, formAct2.getForm(), "FormAct2 debería estar asociado al Form");
     }
 
     @Test
