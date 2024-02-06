@@ -156,10 +156,7 @@ public class SchoolYearController {
      */
     @PutMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> updateSchoolYear(@RequestBody SchoolYearUpdateDTO schoolYearUpdateDTO) {
-        SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
-                        .id(schoolYearUpdateDTO.getId())
-                        .name(schoolYearUpdateDTO.getName())
-                        .build());
+        SchoolYear schoolYear = schoolYearService.update(schoolYearUpdateDTO);
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
 
