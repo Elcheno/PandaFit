@@ -7,6 +7,7 @@ import com.iesfranciscodelosrios.model.dto.form.FormUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Institution;
+import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.FormActRepository;
 import com.iesfranciscodelosrios.repository.FormRepository;

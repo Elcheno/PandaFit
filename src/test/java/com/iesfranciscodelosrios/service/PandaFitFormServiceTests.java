@@ -47,19 +47,26 @@ public class PandaFitFormServiceTests {
 
 
     private void beforeEach() {
-        HashSet<FormAct> formsActEmpty = new HashSet<>();
-        HashSet<FormAct> formsAct = new HashSet<>();
-
         role.add(Role.builder()
                 .role(RoleType.USER)
                 .build());
 
         userOwner = UserEntity.builder()
+                .id(UUID.randomUUID())
                 .email("email@example.com")
                 .password("Pasword123!")
                 .institution(institution)
                 .role(role)
                 .build();
+
+        userService.save(userOwner);
+
+        institution = institutionService.save(InstitutionCreateDTO.builder()
+                .name("Institution1")
+                .build());
+
+        // Ahora crearemos los FormAct y el Form después de guardar el usuario propietario
+        HashSet<FormAct> formsAct = new HashSet<>();
 
         form = Form.builder()
                 .id(UUID.randomUUID())
@@ -77,13 +84,14 @@ public class PandaFitFormServiceTests {
 
         formAct2 = FormAct.builder()
                 .startDate(testDate)
-                .expirationDate(LocalDateTime.now().plusDays(14)) // Diferente vencimiento para distinguir
+                .expirationDate(LocalDateTime.now().plusDays(14))
                 .form(form)
                 .build();
 
         formsAct.add(formAct1);
         formsAct.add(formAct2);
 
+        HashSet<UUID> formActUidList = new HashSet<>(Arrays.asList(formAct1.getId(), formAct2.getId()));
 
         formCreateDTO = FormCreateDTO.builder()
                 .name("formName")
@@ -100,19 +108,31 @@ public class PandaFitFormServiceTests {
                 .name("formName")
                 .description("Form update description")
                 .userId(userOwner.getId())
-                .formActList(formsActEmpty)
+                .formActUidList(formActUidList)
                 .build();
-
-        institution = institutionService.save(InstitutionCreateDTO.builder()
-                .name("Institution1")
-                .build());
-
-        userService.save(userOwner);
     }
 
     @Test
     @Transactional
-    public void testSaveFormAct() {
+    public void testSaveForm() {
+        beforeEach();
+
+        // Verificar si ya existe un formulario con el mismo nombre
+        Form existingForm = formService.loadFormByName("formName");
+        assertNull(existingForm, "Ya existe un formulario con el nombre formName");
+
+        Form savedForm = formService.save(formCreateDTO);
+
+        assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
+        assertEquals("formName", savedForm.getName(), "El nombre debe ser igual");
+        assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
+        assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
+        System.out.println(savedForm);
+    }
+
+    @Test
+    @Transactional
+    public void testUpdate() {
         beforeEach();
 
         // Verificar si ya existe un formulario con el mismo nombre
