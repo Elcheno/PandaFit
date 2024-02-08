@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.model.dto.input;
 
 import com.iesfranciscodelosrios.model.entity.UserEntity;
+import com.iesfranciscodelosrios.model.type.TypeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,13 @@ public class InputCreateDTO {
 
     private String description;
 
-    private String validator;
+    private TypeType type;
+
+    private Boolean decimal;
+
+    private Number decimals;
+
+    private String unit;
 
     private UUID userOwnerId;
 

@@ -14,8 +14,4 @@ public class InputDeleteDTO {
 
     private UUID id;
 
-    private String name;
-
-
-
 }

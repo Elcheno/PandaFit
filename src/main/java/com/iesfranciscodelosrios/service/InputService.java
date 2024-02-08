@@ -116,7 +116,10 @@ public class InputService {
             Input input = Input.builder()
                     .name(inputCreateDTO.getName())
                     .description(inputCreateDTO.getDescription())
-                    .validator(inputCreateDTO.getValidator())
+                    .type(inputCreateDTO.getType())
+                    .decimal(inputCreateDTO.getDecimal())
+                    .decimals(inputCreateDTO.getDecimals())
+                    .unit(inputCreateDTO.getUnit())
                     .userOwner(userOwner)
                     .build();
 
@@ -142,11 +145,17 @@ public class InputService {
      */
     public Input update(InputUpdateDTO inputUpdateDTO) {
         try {
+            Input inputToUpdate = findById(inputUpdateDTO.getId());
+
             Input input = Input.builder()
                     .id(inputUpdateDTO.getId())
                     .name(inputUpdateDTO.getName())
                     .description(inputUpdateDTO.getDescription())
-                    .validator(inputUpdateDTO.getValidator())
+                    .type(inputUpdateDTO.getType())
+                    .decimal(inputUpdateDTO.getDecimal())
+                    .decimals(inputUpdateDTO.getDecimals())
+                    .unit(inputUpdateDTO.getUnit())
+                    .userOwner(inputToUpdate.getUserOwner())
                     .build();
 
             logger.info("Actualizando el input con ID {}: {}", inputUpdateDTO.getId(), input);
