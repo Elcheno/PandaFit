@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.model.dto.input;
 
 import com.iesfranciscodelosrios.model.entity.UserEntity;
+import com.iesfranciscodelosrios.model.type.TypeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,7 +18,17 @@ import java.util.UUID;
 @Builder
 public class InputResponseDTO {
     private UUID id;
+
     private String name;
+
     private String description;
-    private String validator;
+
+    private TypeType type;
+
+    private Boolean decimal;
+
+    private Number decimals;
+
+    private String unit;
+
 }

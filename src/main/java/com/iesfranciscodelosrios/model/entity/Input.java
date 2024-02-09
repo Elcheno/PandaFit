@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.model.entity;
 
+import com.iesfranciscodelosrios.model.type.TypeType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,9 +30,18 @@ public class Input {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "validator")
-    @NotBlank(message = "El validador no puede estar vacío")
-    private String validator;
+    @NotNull(message = "El tipo del valor no puede ser nulo")
+    @Enumerated(EnumType.STRING)
+    private TypeType type;
+
+    @Column(name = "decimal")
+    private Boolean decimal;
+
+    @Column(name = "decimals")
+    private Number decimals;
+
+    @Column(name = "unit")
+    private String unit;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_owner_id", nullable = false)
