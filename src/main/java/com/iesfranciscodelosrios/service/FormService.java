@@ -95,22 +95,30 @@ public class FormService {
         return formRepository.save(formToUpdate);
     }
 
-    public Form delete(FormDeleteDTO formDeleteDTO) {
-        Form form = Form.builder()
-                .id(formDeleteDTO.getId())
-                .build();
-
-        formRepository.delete(form);
-        return form;
+    public boolean delete(FormDeleteDTO formDeleteDTO) {
+        Optional<Form> formOptional = formRepository.findById(formDeleteDTO.getId());
+        if (formOptional.isPresent()) {
+            formRepository.deleteById(formDeleteDTO.getId());
+            return true; // Se eliminó exitosamente
+        }
+        return false; // Formulario no encontrado
     }
 
     public FormResponseDTO mapToResponseDTO(Form form) {
+        Set<UUID> formActUidList = new HashSet<>();
+
+        if(form.getFormActList() != null){
+            for (FormAct formAct : form.getFormActList()) {
+                formActUidList.add(form.getId());
+            }
+        }
+
         return FormResponseDTO.builder()
                 .id(form.getId())
                 .name(form.getName())
                 .description(form.getDescription())
-                .userOwner(form.getUserOwner())
-                .formActList(form.getFormActList())
+                .userOwner(form.getUserOwner().getId())
+                .formActList(formActUidList)
                 .build();
     }
 }
