@@ -39,7 +39,10 @@ public class InputController {
                 .id(input.getId())
                 .name(input.getName())
                 .description(input.getDescription())
-                .validator(input.getValidator())
+                .type(input.getType())
+                .decimal(input.getDecimal())
+                .decimals(input.getDecimals())
+                .unit(input.getUnit())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }
@@ -60,7 +63,10 @@ public class InputController {
                 .id(input.getId())
                 .name(input.getName())
                 .description(input.getDescription())
-                .validator(input.getValidator())
+                .type(input.getType())
+                .decimal(input.getDecimal())
+                .decimals(input.getDecimals())
+                .unit(input.getUnit())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }
@@ -76,7 +82,10 @@ public class InputController {
                     .id(input.getId())
                     .name(input.getName())
                     .description(input.getDescription())
-                    .validator(input.getValidator())
+                    .type(input.getType())
+                    .decimal(input.getDecimal())
+                    .decimals(input.getDecimals())
+                    .unit(input.getUnit())
                     .build();
         });
 
@@ -125,7 +134,10 @@ public class InputController {
                 .id(input.getId())
                 .name(input.getName())
                 .description(input.getDescription())
-                .validator(input.getValidator())
+                .type(input.getType())
+                .decimal(input.getDecimal())
+                .decimals(input.getDecimals())
+                .unit(input.getUnit())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }
@@ -143,7 +155,10 @@ public class InputController {
                 .id(input.getId())
                 .name(input.getName())
                 .description(input.getDescription())
-                .validator(input.getValidator())
+                .type(input.getType())
+                .decimal(input.getDecimal())
+                .decimals(input.getDecimals())
+                .unit(input.getUnit())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }
@@ -161,7 +176,10 @@ public class InputController {
                 .id(input.getId())
                 .name(input.getName())
                 .description(input.getDescription())
-                .validator(input.getValidator())
+                .type(input.getType())
+                .decimal(input.getDecimal())
+                .decimals(input.getDecimals())
+                .unit(input.getUnit())
                 .build();
         return ResponseEntity.ok(inputResponseDTO);
     }

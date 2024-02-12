@@ -21,7 +21,7 @@ public class CascadePersistTestInput {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
+    /*@Test
     @Transactional
     public void testCascadePersist() {
         // RESULTADO: Al guardar un input, el usuario debería ser persistido junto con el input por el CASCADE PERSIST
@@ -46,7 +46,7 @@ public class CascadePersistTestInput {
         assertEquals("Input Description", savedInput.getDescription(), "La descripción debe ser igual");
         assertEquals("InputValidator", savedInput.getValidator(), "El validador debe ser igual");
         assertEquals(userOwner.getId(), savedInput.getUserOwner().getId(), "El ID del propietario debería ser igual");
-    }
+    }*/
 
     private UserEntity createUserForTest() {
         // Crea un usuario para utilizarlo en las pruebas

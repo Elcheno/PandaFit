@@ -39,6 +39,9 @@ class PandaFitFormControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private FormService formService;
 
@@ -172,21 +175,26 @@ class PandaFitFormControllerTest {
     @Test
     @Order(5)
     void deleteForm() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
+        // Configurar el DTO de eliminación
+        FormDeleteDTO formDeleteDTO = FormDeleteDTO.builder()
+                .id(form.getId())
+                .build();
 
+        // Convertir el DTO a JSON
         String jsonRequest = objectMapper.writeValueAsString(formDeleteDTO);
 
+        // Configurar el servicio para devolver true
         when(formService.delete(any(FormDeleteDTO.class)))
-                .thenReturn(form);
+                .thenReturn(true);
 
+        // Realizar la solicitud de eliminación al controlador
         ResultActions result = mockMvc.perform(delete("/form/formulary")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRequest));
 
+        // Verificar la respuesta
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(form.getId().toString()));
+                .andExpect(content().string("Formulario eliminado correctamente"));
     }
-
 }

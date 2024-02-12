@@ -7,14 +7,20 @@ import com.iesfranciscodelosrios.model.dto.form.FormUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Institution;
+import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
+import com.iesfranciscodelosrios.repository.FormActRepository;
 import com.iesfranciscodelosrios.repository.FormRepository;
+import com.iesfranciscodelosrios.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -24,19 +30,52 @@ public class FormService {
 
     @Autowired
     FormRepository formRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    FormActRepository formActRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(FormService.class);
 
     public Form loadFormByName(String name) {
-        Optional<Form> form = formRepository.findByName(name);
-        return form.orElse(null);
+        try {
+            Form result = formRepository.findByName(name)
+                .orElse(null);
+
+            if (result != null){
+                logger.info("Buscando formulario por nombre '{}': {}", name, result);
+            } else {
+                logger.error("No de encontró ningún formualario con el nombre '{}'", name);
+            }
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar el formulario por nombre '{}': {}", name, e.getMessage());
+            throw new RuntimeException("Error al buscar el formulario por nombre:" + e.getMessage());
+        }
     }
 
     public Form findById(UUID id) {
-        Optional<Form> form = formRepository.findById(id);
-        return form.orElse(null);
+        try {
+            Form result = formRepository.findById(id)
+                .orElse(null);
+
+            if (result != null){
+                logger.info("Buscando formulario por ID '{}': {}", id, result);
+            } else {
+                logger.error("No se encontró ningún formulario con el ID '{}'", id);
+            }
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar el formulario por ID '{}': {}", id, e.getMessage());
+            throw new RuntimeException("Error al buscar el formulario por ID: " + e.getMessage());
+        }
     }
 
     public Page<Form> findAll(Pageable pageable) {
         try {
+            logger.info("Buscando todos los formularios.");
             return formRepository.findAll(
                     PageRequest.of(
                             pageable.getPageNumber() > 0
@@ -51,54 +90,93 @@ public class FormService {
                     )
             );
         } catch (Exception e) {
-            return null;
+            logger.error("Error al buscar todos los formularios.\n" + e.getMessage());
+            throw new RuntimeException("Error al buscar todos los formularios.\n" + e.getMessage());
         }
     }
 
     public Form save(FormCreateDTO formCreateDTO) {
-        Form form = Form.builder()
-                .name(formCreateDTO.getName())
-                .description(formCreateDTO.getDescription())
-                .userOwner(formCreateDTO.getUserOwner())
-                .build();
-
-        Set<FormAct> formActList = formCreateDTO.getFormActList();
-        if (formActList != null && !formActList.isEmpty()) {
-            for (FormAct formAct : formActList) {
-                formAct.setForm(form);
-            }
-            form.setFormActList(formActList);
+        try {
+            logger.info("Creando el formulario a partir del DTO: {}", formCreateDTO);
+            Form form = Form.builder()
+                    .name(formCreateDTO.getName())
+                    .description(formCreateDTO.getDescription())
+                    .userOwner(userRepository.findById(formCreateDTO.getUserId()).get())
+                    .build();
+            logger.info("Guardando formulario: {}", form);
+            return formRepository.save(form);
+        } catch (Exception e) {
+            logger.error("Error al guardar el formulario: {}", e.getMessage());
+            throw new RuntimeException("Error al guardar el formulario" + e.getMessage());
         }
-        return formRepository.save(form);
     }
 
     public Form update(FormUpdateDTO formUpdateDTO) {
-        Form formToUpdate = formRepository.findById(formUpdateDTO.getId()).get();
+        try {
+            logger.info("Buscando el formulario a actualizar con ID '{}'", formUpdateDTO.getId());
+            Form formToUpdate = formRepository.findById(formUpdateDTO.getId()).get();
 
-        formToUpdate.setName(formUpdateDTO.getName());
-        formToUpdate.setDescription(formUpdateDTO.getDescription());
-        formToUpdate.setUserOwner(formUpdateDTO.getUserOwner());
-        formToUpdate.setFormActList(formUpdateDTO.getFormActList());
+            if (formToUpdate != null) {
+                formToUpdate.setName(formUpdateDTO.getName());
+                formToUpdate.setDescription(formUpdateDTO.getDescription());
+                formToUpdate.setUserOwner(userRepository.findById(formUpdateDTO.getUserId()).get());
 
-        return formRepository.save(formToUpdate);
+                Set<FormAct> formActList = new HashSet<>();
+
+                for (UUID id : formUpdateDTO.getFormActUidList()) {
+                    formActList.add(formActRepository.findById(id).get());
+                }
+
+                formToUpdate.setFormActList(formActList);
+
+                logger.info("Actualizando el formulario: {}", formToUpdate);
+                return formRepository.save(formToUpdate);
+            } else {
+                logger.error("El formulario a actualizar con ID '{}' no existe", formUpdateDTO.getId());
+                return null;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(("Error al actualizar el formulario.\n") + e.getMessage());
+        }
     }
 
-    public Form delete(FormDeleteDTO formDeleteDTO) {
-        Form form = Form.builder()
-                .id(formDeleteDTO.getId())
-                .build();
-
-        formRepository.delete(form);
-        return form;
+    public boolean delete(FormDeleteDTO formDeleteDTO) {
+        try {
+            Optional<Form> formOptional = formRepository.findById(formDeleteDTO.getId());
+            if (formOptional.isPresent()) {
+                logger.info("Eliminando el formulario con ID: {}: {}", formDeleteDTO.getId(), formOptional.get());
+                formRepository.deleteById(formDeleteDTO.getId());
+                return true;
+            }
+            logger.error("No se pudo eliminar el formulario con ID'{}' : {}", formDeleteDTO.getId(), formOptional.get());
+            return false;
+        } catch (Exception e) {
+            logger.error("Error al eliminar el formulario: {}", e.getMessage());
+            throw new RuntimeException("Error al eliminar el formulario.\n" + e.getMessage());
+        }
     }
 
     public FormResponseDTO mapToResponseDTO(Form form) {
-        return FormResponseDTO.builder()
-                .id(form.getId())
-                .name(form.getName())
-                .description(form.getDescription())
-                .userOwner(form.getUserOwner())
-                .formActList(form.getFormActList())
-                .build();
+        try {
+            logger.info("Creando la response de {}", form);
+            Set<UUID> formActUidList = new HashSet<>();
+
+            if(form.getFormActList() != null){
+                for (FormAct formAct : form.getFormActList()) {
+                    formActUidList.add(form.getId());
+                }
+            }
+
+            return FormResponseDTO.builder()
+                    .id(form.getId())
+                    .name(form.getName())
+                    .description(form.getDescription())
+                    .userOwner(form.getUserOwner().getId())
+                    .formActList(formActUidList)
+                    .build();
+        } catch (Exception e) {
+            logger.error("Error al crear la response {}", form);
+            throw new RuntimeException("Error al crear la response " + e.getMessage());
+        }
     }
 }
