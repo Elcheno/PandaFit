@@ -76,6 +76,8 @@ public class PandaFitFormServiceTests {
                 .formActList(formsAct)
                 .build();
 
+
+
         formAct1 = FormAct.builder()
                 .startDate(testDate)
                 .expirationDate(LocalDateTime.now().plusDays(7))
@@ -192,12 +194,13 @@ public class PandaFitFormServiceTests {
     @Test
     @Transactional
     public void testDeleteForm() {
-        beforeEach();
+        // Ejecutar el método delete
+        boolean result = formService.delete(formDeleteDTO);
 
-        Form deletedForm = formService.delete(formDeleteDTO);
-        assertNotNull(deletedForm, "El formulario eliminado no debería ser nulo");
-        assertEquals("formName", deletedForm.getName(), "El nombre debe ser igual");
-        Form loadedForm = formService.loadFormByName("formName");
-        assertFalse(loadedForm != null, "El formulario debería ser eliminado de la base de datos");
+        // Verificar si el formulario se eliminó correctamente
+        assertTrue(result, "El formulario debería ser eliminado correctamente");
+
+        // Verificar que el formulario ya no exista en la base de datos
+        assertNull(formService.findById(form.getId()), "El formulario debería ser eliminado de la base de datos");
     }
 }
