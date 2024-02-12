@@ -15,9 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class SchoolYearResponseDTO {
-
     private UUID id;
-
     private String name;
-
+    private UUID institutionId;
+    private Set<UUID> formActIdList;
 }
