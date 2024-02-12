@@ -1,10 +1,15 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearCreateDTO;
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearResponseDTO;
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearUpdateDTO;
+import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
+import com.iesfranciscodelosrios.repository.FormActRepository;
+import com.iesfranciscodelosrios.repository.InstitutionRepository;
 import com.iesfranciscodelosrios.repository.SchoolYearRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +19,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class SchoolYearService  {
 
     private static final Logger logger = LoggerFactory.getLogger(SchoolYearService.class);
-
     @Autowired
     private SchoolYearRepository schoolYearRepository;
-
+    @Autowired
+    private InstitutionRepository institutionRepository;
+    @Autowired
+    private FormActRepository formActRepository;
 
     public SchoolYear findById(UUID id) {
         try {
@@ -43,10 +53,14 @@ public class SchoolYearService  {
         }
     }
 
-
-    public SchoolYear save(SchoolYear schoolYear) {
+    public SchoolYear save(SchoolYearCreateDTO schoolYearCreateDTO) {
         try {
-            logger.info("Guardando nuevo año escolar: {}", schoolYear);
+            logger.info("Creando el año escolar a partir del DTO: {}", schoolYearCreateDTO);
+            SchoolYear schoolYear = SchoolYear.builder()
+                    .name(schoolYearCreateDTO.getName())
+                    .institution(institutionRepository.findById(schoolYearCreateDTO.getInstitutionId()).get())
+                    .build();
+            logger.info("Guardando el año escolar: {}", schoolYear);
             return schoolYearRepository.save(schoolYear);
         } catch (Exception e) {
             logger.error("Error al guardar el año escolar: {}", e.getMessage());
@@ -55,17 +69,20 @@ public class SchoolYearService  {
     }
 
     @Transactional
-    public void delete(SchoolYearDeleteDTO schoolYearDeleteDTO) {
+    public boolean delete(SchoolYearDeleteDTO schoolYearDeleteDTO) {
         try {
-            if (schoolYearDeleteDTO == null) return;
-
-            logger.info("Eliminando el año escolar con ID {}: {}", schoolYearDeleteDTO.getId());
-
-            schoolYearRepository.forceDelete(schoolYearDeleteDTO.getId());
-
-        } catch (Exception e) {
-            logger.error("Error al eliminar el año escolar: {}", e.getMessage());
-            throw new RuntimeException("Error al eliminar el año escolar: " + e.getMessage());
+            Optional<SchoolYear> schoolYearOptional = schoolYearRepository.findById(schoolYearDeleteDTO.getId());
+            if (schoolYearOptional.isPresent()){
+                logger.info("Eliminando el año escolar con ID '{}' : {}", schoolYearDeleteDTO.getId(), schoolYearOptional.get());
+                schoolYearRepository.forceDelete(schoolYearDeleteDTO.getId());
+                return true;
+            }else{
+                logger.error("No se pudo eliminar el año escolar con ID '{}' : {}",schoolYearDeleteDTO.getId(), schoolYearOptional);
+                return false;
+            }
+        }catch (Exception e){
+            logger.error("Error al eliminar el formulario: {}", e.getMessage());
+            throw new RuntimeException("Error al eliminar el formulario.\n" + e.getMessage());
         }
     }
 
@@ -104,20 +121,57 @@ public class SchoolYearService  {
 
     public SchoolYear update(SchoolYearUpdateDTO schoolYearUpdateDTO) {
         try {
+            logger.info("Buscando el año escolar a actualizar con ID '{}'", schoolYearUpdateDTO.getId());
             SchoolYear schoolYearToUpdate = findById(schoolYearUpdateDTO.getId());
 
-            SchoolYear schoolYear = SchoolYear.builder()
-                    .id(schoolYearUpdateDTO.getId())
-                    .name(schoolYearUpdateDTO.getName())
-                    .institution(schoolYearToUpdate.getInstitution())
-                    .build();
+            if (schoolYearToUpdate != null){
+                schoolYearToUpdate.setName(schoolYearUpdateDTO.getName());
+                schoolYearToUpdate.setInstitution(institutionRepository.findById(schoolYearUpdateDTO.getInstitutionId()).get());
 
-            logger.info("Actualizando el año escolar con ID {}: {}", schoolYearUpdateDTO.getId(), schoolYear);
+                Set<FormAct> formActList = new HashSet<>();
 
-            return schoolYearRepository.save(schoolYear);
+                if (schoolYearUpdateDTO.getFormActIdList() == null || schoolYearUpdateDTO.getFormActIdList().isEmpty() || schoolYearUpdateDTO.getFormActIdList().size() < 1) {
+                    logger.info("La lista de formActIdList se encuentra vacia");
+                } else {
+                    for (UUID formActId : schoolYearUpdateDTO.getFormActIdList()) {
+                        formActList.add(formActRepository.findById(formActId).get());
+                        schoolYearToUpdate.setFormActList(formActList);
+                    }
+                }
+
+                logger.info("Actualizando el año escolar: {}", schoolYearToUpdate);
+                return schoolYearRepository.save(schoolYearToUpdate);
+            }else {
+                logger.error("El año escolar a actualizar con ID '{}' no existe", schoolYearUpdateDTO.getId());
+                return null;
+            }
         } catch (Exception e) {
             logger.error("Error al actualizar el año escolar: {}", e.getMessage());
-            throw new RuntimeException("Error al actualizar el año escolar: " + e.getMessage());
+            throw new RuntimeException("Error al actualizar el año escolar.\n" + e.getMessage());
+        }
+    }
+
+    public SchoolYearResponseDTO mapToResponseDTO(SchoolYear schoolYear){
+        try{
+            logger.info("Creando la response de {}", schoolYear);
+            Set<UUID> formActUidList = new HashSet<>();
+
+            if(schoolYear.getFormActList() != null) {
+                for (FormAct formAct : schoolYear.getFormActList()) {
+                    formActUidList.add(schoolYear.getId());
+                }
+            }
+
+            return SchoolYearResponseDTO.builder()
+                    .id(schoolYear.getId())
+                    .name(schoolYear.getName())
+                    .institutionId(schoolYear.getInstitution().getId())
+                    .formActIdList(formActUidList)
+                    .build();
+
+        } catch (Exception e){
+            logger.error("Error al crear la response {}", schoolYear);
+            throw new RuntimeException("Error al crear la response " + e.getMessage());
         }
     }
 }

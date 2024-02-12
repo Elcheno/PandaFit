@@ -37,11 +37,7 @@ public class SchoolYearController {
 
         if (schoolYear == null) return ResponseEntity.notFound().build();
 
-        SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
-                .id(schoolYear.getId())
-                .name(schoolYear.getName())
-                .build();
-
+        SchoolYearResponseDTO schoolYearResponseDTO = schoolYearService.mapToResponseDTO(schoolYear);
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
@@ -65,11 +61,7 @@ public class SchoolYearController {
 
         if (schoolYear == null) return ResponseEntity.notFound().build();
 
-        SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
-                .id(schoolYear.getId())
-                .name(schoolYear.getName())
-                .build();
-
+        SchoolYearResponseDTO schoolYearResponseDTO = schoolYearService.mapToResponseDTO(schoolYear);
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
@@ -93,12 +85,7 @@ public class SchoolYearController {
 
         if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<SchoolYearResponseDTO> response = result.map(schoolYear -> SchoolYearResponseDTO.builder()
-                .id(schoolYear.getId())
-                .name(schoolYear.getName())
-                .build()
-        );
-
+        Page<SchoolYearResponseDTO> response = result.map(schoolYearService::mapToResponseDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -110,18 +97,11 @@ public class SchoolYearController {
      */
     @PostMapping("/institution/schoolYear")
     public ResponseEntity<SchoolYearResponseDTO> createSchoolYear(@RequestBody SchoolYearCreateDTO schoolYearCreateDTO) {
-        SchoolYear schoolYear = schoolYearService.save(SchoolYear.builder()
-                        .name(schoolYearCreateDTO.getName())
-                        .institution(institutionService.findById(schoolYearCreateDTO.getInstitutionId()))
-                        .build());
+        SchoolYear schoolYear = schoolYearService.save(schoolYearCreateDTO);
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
 
-        SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
-                .id(schoolYear.getId())
-                .name(schoolYear.getName())
-                .build();
-
+        SchoolYearResponseDTO schoolYearResponseDTO = schoolYearService.mapToResponseDTO(schoolYear);
         return ResponseEntity.ok(schoolYearResponseDTO);
     }
 
@@ -132,20 +112,14 @@ public class SchoolYearController {
      * @return ResponseEntity containing the deleted SchoolYearResponseDTO.
      */
     @DeleteMapping("/institution/schoolYear")
-    public ResponseEntity<SchoolYearDeleteDTO> deleteSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        System.out.println(schoolYearDeleteDTO);
+    public ResponseEntity<String> deleteSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
+        boolean deleted = schoolYearService.delete(schoolYearDeleteDTO);
 
-        schoolYearService.delete(schoolYearDeleteDTO);
-
-//        if (schoolYear == null) return ResponseEntity.badRequest().build();
-
-//        SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
-//                .id(schoolYear.getId())
-//                .name(schoolYear.getName())
-//                .build();
-
-        return ResponseEntity.ok(schoolYearDeleteDTO);
+        if (deleted) {
+            return ResponseEntity.ok("SchoolYear eliminado correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /**
@@ -160,10 +134,7 @@ public class SchoolYearController {
 
         if (schoolYear == null) return ResponseEntity.badRequest().build();
 
-        SchoolYearResponseDTO schoolYearResponseDTO = SchoolYearResponseDTO.builder()
-                .id(schoolYear.getId())
-                .name(schoolYear.getName())
-                .build();
+        SchoolYearResponseDTO schoolYearResponseDTO = schoolYearService.mapToResponseDTO(schoolYear);
 
         return ResponseEntity.ok(schoolYearResponseDTO);
 
