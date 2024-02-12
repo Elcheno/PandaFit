@@ -12,7 +12,5 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class SchoolYearDeleteDTO {
-
     private UUID id;
-
 }
