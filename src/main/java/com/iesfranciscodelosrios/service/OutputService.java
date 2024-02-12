@@ -126,17 +126,13 @@ public class OutputService {
             UserEntity userOwner = userRepository.findById(outputCreateDTO.getUserOwnerId())
                     .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
 
-            if (outputCreateDTO.getResult() == null) {
-                logger.error("Error al guardar el output: El campo 'result' no puede ser nulo");
-                throw new IllegalArgumentException("El campo 'result' no puede ser nulo");
-            }
-
             Output output = Output.builder()
                     .name(outputCreateDTO.getName())
                     .description(outputCreateDTO.getDescription())
                     .formula(outputCreateDTO.getFormula())
                     .userOwner(userOwner)
-                    .result(outputCreateDTO.getResult())
+                    .umbralList(outputCreateDTO.getUmbralList())
+                    .unit(outputCreateDTO.getUnit())
                     .build();
 
             Output savedOutput = outputRepository.save(output);
@@ -170,7 +166,6 @@ public class OutputService {
                     .name(outputUpdateDTO.getName())
                     .description(outputUpdateDTO.getDescription())
                     .formula(outputUpdateDTO.getFormula())
-                    .result(outputUpdateDTO.getResult())
                     .build();
 
             Output updatedOutput = outputRepository.save(output);

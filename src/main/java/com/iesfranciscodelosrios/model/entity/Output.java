@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.model.entity;
 
+import com.iesfranciscodelosrios.utils.HashMapConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +10,9 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.Map;
 
 @Data
 @EqualsAndHashCode
@@ -42,8 +45,12 @@ public class Output {
     @Cascade(CascadeType.PERSIST)
     private UserEntity userOwner;
 
-    @Column(name = "result")
-    private String result;
+    @Convert(converter = HashMapConverter.class)
+    private Set<Object> umbralList;
+
+    @NotBlank(message = "Las unidades no puede estar en blanco")
+    @Column(name = "unit")
+    private String unit;
 
     @Override
     public int hashCode() {

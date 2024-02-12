@@ -21,6 +21,4 @@ public class OutputUpdateDTO {
 
     private String formula;
 
-    private String result;
-
 }

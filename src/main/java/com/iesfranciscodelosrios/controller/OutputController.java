@@ -39,7 +39,8 @@ public class OutputController {
                 .name(output.getName())
                 .description(output.getDescription())
                 .formula(output.getFormula())
-                .result(output.getResult())
+                .umbralList(output.getUmbralList())
+                .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
     }
@@ -60,7 +61,8 @@ public class OutputController {
                 .name(output.getName())
                 .description(output.getDescription())
                 .formula(output.getFormula())
-                .result(output.getResult())
+                .umbralList(output.getUmbralList())
+                .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
     }
@@ -105,7 +107,8 @@ public class OutputController {
                     .name(output.getName())
                     .description(output.getDescription())
                     .formula(output.getFormula())
-                    .result(output.getResult())
+                    .umbralList(output.getUmbralList())
+                    .unit(output.getUnit())
                     .build();
         });
 
@@ -119,13 +122,15 @@ public class OutputController {
      */
     @PostMapping("/output")
     public ResponseEntity<OutputResponseDTO> save(@RequestBody OutputCreateDTO outputCreateDTO) {
+        System.out.println(outputCreateDTO);
         Output output = OutputService.save(outputCreateDTO);
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
                 .name(output.getName())
                 .description(output.getDescription())
                 .formula(output.getFormula())
-                .result(output.getResult())
+                .umbralList(output.getUmbralList())
+                .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
     }
@@ -143,7 +148,8 @@ public class OutputController {
                 .name(output.getName())
                 .description(output.getDescription())
                 .formula(output.getFormula())
-                .result(output.getResult())
+                .umbralList(output.getUmbralList())
+                .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
     }
@@ -161,7 +167,8 @@ public class OutputController {
                 .name(output.getName())
                 .description(output.getDescription())
                 .formula(output.getFormula())
-                .result(output.getResult())
+                .umbralList(output.getUmbralList())
+                .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
     }
