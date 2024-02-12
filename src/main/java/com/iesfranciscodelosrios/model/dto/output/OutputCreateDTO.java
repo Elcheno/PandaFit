@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -24,5 +26,7 @@ public class OutputCreateDTO {
 
     private UUID userOwnerId;
 
-    private String result;
+    private Set<Object> umbralList;
+
+    private String unit;
 }

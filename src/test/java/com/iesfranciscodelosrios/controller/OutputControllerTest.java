@@ -130,11 +130,10 @@ public class OutputControllerTest {
         // Arrange
         OutputDeleteDTO deleteDTO = new OutputDeleteDTO();
         deleteDTO.setId(UUID.randomUUID());
-        deleteDTO.setName("Delete Output");
+
 
         Output output = new Output();
         output.setId(deleteDTO.getId());
-        output.setName(deleteDTO.getName());
 
         when(outputService.delete(any(OutputDeleteDTO.class))).thenReturn(output);
 

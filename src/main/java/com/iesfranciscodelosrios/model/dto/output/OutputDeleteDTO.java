@@ -15,5 +15,4 @@ public class OutputDeleteDTO {
 
     private UUID id;
 
-    private String name;
 }

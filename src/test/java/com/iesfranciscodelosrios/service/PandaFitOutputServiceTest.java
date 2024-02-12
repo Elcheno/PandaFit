@@ -45,7 +45,6 @@ public class PandaFitOutputServiceTest {
                 .description("Output Description")
                 .formula("OutputFormula")
                 .userOwnerId(userOwner.getId())
-                .result("OutputResult")
                 .build();
 
         // When
@@ -57,7 +56,6 @@ public class PandaFitOutputServiceTest {
         assertEquals("Output Description", savedOutput.getDescription(), "La descripción debe ser igual");
         assertEquals("OutputFormula", savedOutput.getFormula(), "La fórmula debe ser igual");
         assertEquals(userOwner, savedOutput.getUserOwner(), "El propietario del usuario debe ser igual");
-        assertEquals("OutputResult", savedOutput.getResult(), "El resultado debe ser igual");
     }
 
 
@@ -71,7 +69,6 @@ public class PandaFitOutputServiceTest {
                 .description("Output Description")
                 .formula("OutputFormula")
                 .userOwnerId(userOwner.getId())  // Utiliza el ID del propietario
-                .result("OutputResult")
                 .build();
 
         // Save the output using the service
@@ -95,7 +92,6 @@ public class PandaFitOutputServiceTest {
                 .description("Output Description")
                 .formula("OutputFormula")
                 .userOwnerId(userOwner.getId())  // Utiliza el ID del propietario
-                .result("OutputResult")
                 .build();
 
         // Save the output using the service
@@ -103,7 +99,6 @@ public class PandaFitOutputServiceTest {
 
         OutputDeleteDTO outputDeleteDTO = OutputDeleteDTO.builder()
                 .id(savedOutput.getId())
-                .name(savedOutput.getName())
                 .build();
 
         // When

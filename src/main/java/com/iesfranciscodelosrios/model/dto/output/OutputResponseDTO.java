@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -22,5 +24,7 @@ public class OutputResponseDTO {
 
     private String formula;
 
-    private String result;
+    private Set<Object> umbralList;
+
+    private String unit;
 }

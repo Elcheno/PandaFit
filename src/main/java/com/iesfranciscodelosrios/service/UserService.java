@@ -32,6 +32,7 @@ public class UserService implements iServices<UserEntity> {
     @Autowired
     private InstitutionService institutionService;
 
+    @Transactional
     @Override
     public UserEntity save(UserEntity user) {
         try {
