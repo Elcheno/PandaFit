@@ -75,12 +75,13 @@ public class FormController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<FormResponseDTO> deleteForm(@RequestBody() FormDeleteDTO formDeleteDTO){
-        Form formEntity = formService.delete(formDeleteDTO);
+    public ResponseEntity<String> deleteForm(@RequestBody FormDeleteDTO formDeleteDTO) {
+        boolean deleted = formService.delete(formDeleteDTO);
 
-        if (formEntity == null) return ResponseEntity.badRequest().build();
-
-        FormResponseDTO formResponseDTO = formService.mapToResponseDTO(formEntity);
-        return ResponseEntity.ok(formResponseDTO);
+        if (deleted) {
+            return ResponseEntity.ok("Formulario eliminado correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

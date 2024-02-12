@@ -18,6 +18,6 @@ public class FormResponseDTO {
     private UUID id;
     private String name;
     private String description;
-    private UserEntity userOwner;
-    private Set<FormAct> formActList;
+    private UUID userOwner;
+    private Set<UUID> formActList;
 }

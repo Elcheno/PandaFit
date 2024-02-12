@@ -47,19 +47,26 @@ public class PandaFitFormServiceTests {
 
 
     private void beforeEach() {
-        HashSet<FormAct> formsActEmpty = new HashSet<>();
-        HashSet<FormAct> formsAct = new HashSet<>();
-
         role.add(Role.builder()
                 .role(RoleType.USER)
                 .build());
 
+        institution = institutionService.save(InstitutionCreateDTO.builder()
+                .name("Institution1")
+                .build());
+
         userOwner = UserEntity.builder()
+                .id(UUID.randomUUID())
                 .email("email@example.com")
                 .password("Pasword123!")
                 .institution(institution)
                 .role(role)
                 .build();
+
+        userService.save(userOwner);
+
+        // Ahora crearemos los FormAct y el Form después de guardar el usuario propietario
+        HashSet<FormAct> formsAct = new HashSet<>();
 
         form = Form.builder()
                 .id(UUID.randomUUID())
@@ -69,6 +76,8 @@ public class PandaFitFormServiceTests {
                 .formActList(formsAct)
                 .build();
 
+
+
         formAct1 = FormAct.builder()
                 .startDate(testDate)
                 .expirationDate(LocalDateTime.now().plusDays(7))
@@ -77,26 +86,19 @@ public class PandaFitFormServiceTests {
 
         formAct2 = FormAct.builder()
                 .startDate(testDate)
-                .expirationDate(LocalDateTime.now().plusDays(14)) // Diferente vencimiento para distinguir
+                .expirationDate(LocalDateTime.now().plusDays(14))
                 .form(form)
                 .build();
 
         formsAct.add(formAct1);
         formsAct.add(formAct2);
 
+        HashSet<UUID> formActUidList = new HashSet<>(Arrays.asList(formAct1.getId(), formAct2.getId()));
 
         formCreateDTO = FormCreateDTO.builder()
                 .name("formName")
                 .description("Form create description")
-                .userOwner(userOwner)
-                .formActList(formsAct)
-                .build();
-
-        formCreateDTOEmpty = FormCreateDTO.builder()
-                .name("formName")
-                .description("Form create description")
-                .userOwner(userOwner)
-                .formActList(formsActEmpty)
+                .userId(userOwner.getId())
                 .build();
 
         formDeleteDTO = FormDeleteDTO.builder()
@@ -105,63 +107,65 @@ public class PandaFitFormServiceTests {
 
         formUpdateDTO = FormUpdateDTO.builder()
                 .id(form.getId())
-                .name("formName")
-                .description("Form update description")
-                .userOwner(userOwner)
-                .formActList(formsActEmpty)
+                .name("formUpdated")
+                .description("Form updated description")
+                .userId(userOwner.getId())
+                .formActUidList(formActUidList)
                 .build();
-
-        institution = institutionService.save(InstitutionCreateDTO.builder()
-                .name("Institution1")
-                .build());
-
-        userService.save(userOwner);
     }
 
     @Test
     @Transactional
-    public void testSaveFormWithoutFormAct() {
+    public void testSaveForm() {
         beforeEach();
 
         // Verificar si ya existe un formulario con el mismo nombre
         Form existingForm = formService.loadFormByName("formName");
         assertNull(existingForm, "Ya existe un formulario con el nombre formName");
 
-        Form savedForm = formService.save(formCreateDTOEmpty);
-
-        assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
-        assertEquals("formName", savedForm.getName(), "El nombre debe ser igual");
-        assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
-        assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
-        System.out.println(savedForm);
-    }
-
-    @Test
-    @Transactional
-    public void testSaveFormWithFormAct() {
-        beforeEach();
-
-        // Verificar si ya existe un formulario con el mismo nombre
-        Form existingForm = formService.loadFormByName("formName");
-        assertNull(existingForm, "Ya existe un formulario con el nombre formName");
-
+        System.out.println("Dirección de memoria de userOwner antes de guardar: " + System.identityHashCode(userOwner));
         Form savedForm = formService.save(formCreateDTO);
-
-        System.out.println(savedForm);
+        System.out.println("Dirección de memoria de userOwner después de guardar: " + System.identityHashCode(userOwner));
 
         assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
         assertEquals("formName", savedForm.getName(), "El nombre debe ser igual");
         assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
+//      Por algún motivo da error aunque es exactamnete el mismo objeto
         assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
-
-        // Verificar que los FormAct también se han guardado
-        assertNotNull(formAct1.getId(), "ID de FormAct1 debería generarse después de guardar");
-        assertNotNull(formAct2.getId(), "ID de FormAct2 debería generarse después de guardar");
-
-        // Verificar que los FormAct están asociados al Form
-        assertEquals(savedForm, formAct1.getForm(), "FormAct1 debería estar asociado al Form");
-        assertEquals(savedForm, formAct2.getForm(), "FormAct2 debería estar asociado al Form");
+        System.out.println(savedForm);
     }
+
+    @Test
+    @Transactional
+    public void testUpdate() {
+        beforeEach();
+
+        // Guardar un formulario inicial
+        Form initialForm = formService.save(formCreateDTO);
+        // Verificar que el formulario se guardó correctamente
+        assertNotNull(initialForm.getId(), "El ID del formulario no debería ser nulo después de guardar");
+
+        // Verificar que el formulario existe antes de la actualización
+        Form existingForm = formService.loadFormByName("formName");
+        assertNotNull(existingForm, "El formulario a actualizar no existe");
+
+        // Ejecutar la actualización del formulario
+        Form updatedForm = formService.update(formUpdateDTO);
+
+        // Verificar que la actualización se realizó correctamente
+        assertNotNull(updatedForm.getId(), "El ID del formulario actualizado no debería ser nulo después de la actualización");
+        assertEquals(initialForm.getId(), updatedForm.getId(), "El ID del formulario actualizado debería ser el mismo que el original");
+        assertEquals(formUpdateDTO.getName(), updatedForm.getName(), "El nombre del formulario actualizado debe ser igual al nombre especificado en formUpdateDTO");
+        assertEquals(formUpdateDTO.getDescription(), updatedForm.getDescription(), "La descripción del formulario actualizado debe ser igual a la descripción especificada en formUpdateDTO");
+        assertEquals(userOwner, updatedForm.getUserOwner(), "El propietario del usuario del formulario actualizado debe ser igual al propietario especificado en formUpdateDTO");
+        assertEquals(formUpdateDTO.getFormActUidList().size(), updatedForm.getFormActList().size(), "La cantidad de FormAct asociados al formulario actualizado debe ser igual a la cantidad especificada en formUpdateDTO");
+
+        // Verificar que los FormAct asociados al formulario actualizado sean los mismos que los especificados en formUpdateDTO
+        for (FormAct formAct : updatedForm.getFormActList()) {
+            assertTrue(formUpdateDTO.getFormActUidList().contains(formAct.getId()), "El formulario actualizado debería contener los mismos FormAct que los especificados en formUpdateDTO");
+        }
+    }
+
 
     @Test
     @Transactional
@@ -190,12 +194,13 @@ public class PandaFitFormServiceTests {
     @Test
     @Transactional
     public void testDeleteForm() {
-        beforeEach();
+        // Ejecutar el método delete
+        boolean result = formService.delete(formDeleteDTO);
 
-        Form deletedForm = formService.delete(formDeleteDTO);
-        assertNotNull(deletedForm, "El formulario eliminado no debería ser nulo");
-        assertEquals("formName", deletedForm.getName(), "El nombre debe ser igual");
-        Form loadedForm = formService.loadFormByName("formName");
-        assertFalse(loadedForm != null, "El formulario debería ser eliminado de la base de datos");
+        // Verificar si el formulario se eliminó correctamente
+        assertTrue(result, "El formulario debería ser eliminado correctamente");
+
+        // Verificar que el formulario ya no exista en la base de datos
+        assertNull(formService.findById(form.getId()), "El formulario debería ser eliminado de la base de datos");
     }
 }
