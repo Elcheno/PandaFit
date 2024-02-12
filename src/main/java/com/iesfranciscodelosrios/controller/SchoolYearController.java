@@ -116,7 +116,7 @@ public class SchoolYearController {
         boolean deleted = schoolYearService.delete(schoolYearDeleteDTO);
 
         if (deleted) {
-            return ResponseEntity.ok("Año escolar eliminado correctamente");
+            return ResponseEntity.ok("SchoolYear eliminado correctamente");
         } else {
             return ResponseEntity.notFound().build();
         }

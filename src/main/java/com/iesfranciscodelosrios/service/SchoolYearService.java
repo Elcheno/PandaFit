@@ -53,7 +53,6 @@ public class SchoolYearService  {
         }
     }
 
-
     public SchoolYear save(SchoolYearCreateDTO schoolYearCreateDTO) {
         try {
             logger.info("Creando el año escolar a partir del DTO: {}", schoolYearCreateDTO);
@@ -75,7 +74,7 @@ public class SchoolYearService  {
             Optional<SchoolYear> schoolYearOptional = schoolYearRepository.findById(schoolYearDeleteDTO.getId());
             if (schoolYearOptional.isPresent()){
                 logger.info("Eliminando el año escolar con ID '{}' : {}", schoolYearDeleteDTO.getId(), schoolYearOptional.get());
-                schoolYearRepository.deleteById(schoolYearDeleteDTO.getId());
+                schoolYearRepository.forceDelete(schoolYearDeleteDTO.getId());
                 return true;
             }else{
                 logger.error("No se pudo eliminar el año escolar con ID '{}' : {}",schoolYearDeleteDTO.getId(), schoolYearOptional);
@@ -131,11 +130,14 @@ public class SchoolYearService  {
 
                 Set<FormAct> formActList = new HashSet<>();
 
-                for (UUID id : schoolYearUpdateDTO.getFormActIdList()) {
-                    formActList.add(formActRepository.findById(id).get());
+                if (schoolYearUpdateDTO.getFormActIdList() == null || schoolYearUpdateDTO.getFormActIdList().isEmpty() || schoolYearUpdateDTO.getFormActIdList().size() < 1) {
+                    logger.info("La lista de formActIdList se encuentra vacia");
+                } else {
+                    for (UUID formActId : schoolYearUpdateDTO.getFormActIdList()) {
+                        formActList.add(formActRepository.findById(formActId).get());
+                        schoolYearToUpdate.setFormActList(formActList);
+                    }
                 }
-
-                schoolYearToUpdate.setFormActList(formActList);
 
                 logger.info("Actualizando el año escolar: {}", schoolYearToUpdate);
                 return schoolYearRepository.save(schoolYearToUpdate);
