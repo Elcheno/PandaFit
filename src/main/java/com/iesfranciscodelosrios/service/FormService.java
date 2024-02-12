@@ -74,24 +74,23 @@ public class FormService {
     }
 
     public Form update(FormUpdateDTO formUpdateDTO) {
+        System.out.println(formUpdateDTO);
+
         Form formToUpdate = formRepository.findById(formUpdateDTO.getId()).get();
+
+        System.out.println(formToUpdate);
 
         formToUpdate.setName(formUpdateDTO.getName());
         formToUpdate.setDescription(formUpdateDTO.getDescription());
         formToUpdate.setUserOwner(userRepository.findById(formUpdateDTO.getUserId()).get());
 
+        Set<FormAct> formActList = new HashSet<>();
 
-        //Pendiente de probar, parece estar bien
-        Set<FormAct> result = new HashSet<>();
-
-        if(formUpdateDTO.getFormActUidList() != null) {
-            for(UUID id : formUpdateDTO.getFormActUidList()) {
-                FormAct formAct = formActRepository.findById(id).get();
-                result.add(formAct);
-            }
+        for (UUID id : formUpdateDTO.getFormActUidList()) {
+            formActList.add(formActRepository.findById(id).get());
         }
 
-        formToUpdate.setFormActList(result);
+        formToUpdate.setFormActList(formActList);
 
         return formRepository.save(formToUpdate);
     }

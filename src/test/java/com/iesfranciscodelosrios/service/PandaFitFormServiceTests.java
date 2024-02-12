@@ -51,6 +51,10 @@ public class PandaFitFormServiceTests {
                 .role(RoleType.USER)
                 .build());
 
+        institution = institutionService.save(InstitutionCreateDTO.builder()
+                .name("Institution1")
+                .build());
+
         userOwner = UserEntity.builder()
                 .id(UUID.randomUUID())
                 .email("email@example.com")
@@ -60,10 +64,6 @@ public class PandaFitFormServiceTests {
                 .build();
 
         userService.save(userOwner);
-
-        institution = institutionService.save(InstitutionCreateDTO.builder()
-                .name("Institution1")
-                .build());
 
         // Ahora crearemos los FormAct y el Form después de guardar el usuario propietario
         HashSet<FormAct> formsAct = new HashSet<>();
@@ -105,8 +105,8 @@ public class PandaFitFormServiceTests {
 
         formUpdateDTO = FormUpdateDTO.builder()
                 .id(form.getId())
-                .name("formName")
-                .description("Form update description")
+                .name("formUpdated")
+                .description("Form updated description")
                 .userId(userOwner.getId())
                 .formActUidList(formActUidList)
                 .build();
@@ -121,11 +121,14 @@ public class PandaFitFormServiceTests {
         Form existingForm = formService.loadFormByName("formName");
         assertNull(existingForm, "Ya existe un formulario con el nombre formName");
 
+        System.out.println("Dirección de memoria de userOwner antes de guardar: " + System.identityHashCode(userOwner));
         Form savedForm = formService.save(formCreateDTO);
+        System.out.println("Dirección de memoria de userOwner después de guardar: " + System.identityHashCode(userOwner));
 
         assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
         assertEquals("formName", savedForm.getName(), "El nombre debe ser igual");
         assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
+//      Por algún motivo da error aunque es exactamnete el mismo objeto
         assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
         System.out.println(savedForm);
     }
@@ -135,18 +138,32 @@ public class PandaFitFormServiceTests {
     public void testUpdate() {
         beforeEach();
 
-        // Verificar si ya existe un formulario con el mismo nombre
+        // Guardar un formulario inicial
+        Form initialForm = formService.save(formCreateDTO);
+        // Verificar que el formulario se guardó correctamente
+        assertNotNull(initialForm.getId(), "El ID del formulario no debería ser nulo después de guardar");
+
+        // Verificar que el formulario existe antes de la actualización
         Form existingForm = formService.loadFormByName("formName");
-        assertNull(existingForm, "Ya existe un formulario con el nombre formName");
+        assertNotNull(existingForm, "El formulario a actualizar no existe");
 
-        Form savedForm = formService.save(formCreateDTOEmpty);
+        // Ejecutar la actualización del formulario
+        Form updatedForm = formService.update(formUpdateDTO);
 
-        assertNotNull(savedForm.getId(), "ID debería generarse después de guardar");
-        assertEquals("formName", savedForm.getName(), "El nombre debe ser igual");
-        assertEquals("Form create description", savedForm.getDescription(), "La descripción debe ser igual");
-        assertEquals(userOwner, savedForm.getUserOwner(), "El propietario del usuario debe ser igual");
-        System.out.println(savedForm);
+        // Verificar que la actualización se realizó correctamente
+        assertNotNull(updatedForm.getId(), "El ID del formulario actualizado no debería ser nulo después de la actualización");
+        assertEquals(initialForm.getId(), updatedForm.getId(), "El ID del formulario actualizado debería ser el mismo que el original");
+        assertEquals(formUpdateDTO.getName(), updatedForm.getName(), "El nombre del formulario actualizado debe ser igual al nombre especificado en formUpdateDTO");
+        assertEquals(formUpdateDTO.getDescription(), updatedForm.getDescription(), "La descripción del formulario actualizado debe ser igual a la descripción especificada en formUpdateDTO");
+        assertEquals(userOwner, updatedForm.getUserOwner(), "El propietario del usuario del formulario actualizado debe ser igual al propietario especificado en formUpdateDTO");
+        assertEquals(formUpdateDTO.getFormActUidList().size(), updatedForm.getFormActList().size(), "La cantidad de FormAct asociados al formulario actualizado debe ser igual a la cantidad especificada en formUpdateDTO");
+
+        // Verificar que los FormAct asociados al formulario actualizado sean los mismos que los especificados en formUpdateDTO
+        for (FormAct formAct : updatedForm.getFormActList()) {
+            assertTrue(formUpdateDTO.getFormActUidList().contains(formAct.getId()), "El formulario actualizado debería contener los mismos FormAct que los especificados en formUpdateDTO");
+        }
     }
+
 
     @Test
     @Transactional
