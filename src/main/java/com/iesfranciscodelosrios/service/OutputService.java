@@ -26,6 +26,9 @@ public class OutputService {
     private OutputRepository outputRepository;
 
     @Autowired
+    private InputService inputService;
+
+    @Autowired
     private UserRepository userRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(OutputService.class);
@@ -132,6 +135,7 @@ public class OutputService {
                     .formula(outputCreateDTO.getFormula())
                     .userOwner(userOwner)
                     .umbralList(outputCreateDTO.getUmbralList())
+                    .inputs(outputCreateDTO.getInputsId().stream().map((item) -> this.inputService.findById(UUID.fromString(item))).toList())
                     .unit(outputCreateDTO.getUnit())
                     .build();
 

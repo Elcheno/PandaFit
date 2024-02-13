@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/form")
@@ -122,7 +123,6 @@ public class OutputController {
      */
     @PostMapping("/output")
     public ResponseEntity<OutputResponseDTO> save(@RequestBody OutputCreateDTO outputCreateDTO) {
-        System.out.println(outputCreateDTO);
         Output output = OutputService.save(outputCreateDTO);
         OutputResponseDTO outputResponseDTO = OutputResponseDTO.builder()
                 .id(output.getId())
@@ -130,6 +130,7 @@ public class OutputController {
                 .description(output.getDescription())
                 .formula(output.getFormula())
                 .umbralList(output.getUmbralList())
+                .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
                 .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
