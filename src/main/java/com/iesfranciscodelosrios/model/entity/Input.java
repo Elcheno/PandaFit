@@ -7,7 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -48,6 +51,13 @@ public class Input {
     @Cascade(CascadeType.PERSIST)
     @NotNull(message = "El propietario de un Input no puede ser nulo")
     private UserEntity userOwner;
+
+    @ManyToMany(
+            cascade = { jakarta.persistence.CascadeType.MERGE, jakarta.persistence.CascadeType.PERSIST },
+            fetch = FetchType.EAGER,
+            mappedBy = "inputs")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Output> outputs;
 
     @Override
     public int hashCode() {

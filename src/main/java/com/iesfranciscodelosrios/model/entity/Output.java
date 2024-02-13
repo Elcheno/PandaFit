@@ -8,11 +8,10 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @EqualsAndHashCode
@@ -44,6 +43,15 @@ public class Output {
     @JoinColumn(name = "user_owner_id")
     @Cascade(CascadeType.PERSIST)
     private UserEntity userOwner;
+
+    @ManyToMany(cascade = { jakarta.persistence.CascadeType.MERGE, jakarta.persistence.CascadeType.PERSIST })
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JoinTable(
+            name = "input-output",
+            joinColumns = @JoinColumn(name = "output_id"),
+            inverseJoinColumns = @JoinColumn(name = "input_id")
+    )
+    private List<Input> inputs;
 
     @Convert(converter = HashMapConverter.class)
     private Set<Object> umbralList;
