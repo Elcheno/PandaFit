@@ -1,11 +1,9 @@
 package com.iesfranciscodelosrios.controller;
 
-import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputResponseDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputUpdateDTO;
-import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.service.OutputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/form")
 public class OutputController {
+
     @Autowired
     private OutputService OutputService;
 
@@ -41,6 +39,7 @@ public class OutputController {
                 .description(output.getDescription())
                 .formula(output.getFormula())
                 .umbralList(output.getUmbralList())
+                .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
                 .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -63,39 +62,17 @@ public class OutputController {
                 .description(output.getDescription())
                 .formula(output.getFormula())
                 .umbralList(output.getUmbralList())
+                .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
                 .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
     }
 
     /**
-     * Retrieves a paginated list of outputs.
-     *
-     * @param pageable Pageable object for pagination information.
-     * @return ResponseEntity containing a Page of OutputResponseDTOs or no content if the page is empty.
+     * Get all outputs with pagination and sorting
+     * @param pageable the pagination
+     * @return the output or empty collection
      */
-    /*@GetMapping("/outputs/page")
-    public ResponseEntity<Page<OutputResponseDTO>> getAllOutputs(
-            @PageableDefault() Pageable pageable) {
-
-        Page<Output> result = OutputService.findAll(pageable);
-
-        if (result.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        Page<OutputResponseDTO> response = result.map(output -> OutputResponseDTO.builder()
-                .id(output.getId())
-                .name(output.getName())
-        //        .description(output.getDescription())
-        //        .formula(output.getFormula())
-                .result(output.getResult())
-                .build()
-        );
-
-        return ResponseEntity.ok(response);
-    }*/
-
     @GetMapping("/output/page")
     public ResponseEntity<Page<OutputResponseDTO>> getAllOutputs(@PageableDefault() Pageable pageable) {
         Page<Output> result = OutputService.findAll(pageable);
@@ -109,6 +86,7 @@ public class OutputController {
                     .description(output.getDescription())
                     .formula(output.getFormula())
                     .umbralList(output.getUmbralList())
+                    .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
                     .unit(output.getUnit())
                     .build();
         });
@@ -150,6 +128,7 @@ public class OutputController {
                 .description(output.getDescription())
                 .formula(output.getFormula())
                 .umbralList(output.getUmbralList())
+                .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
                 .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
@@ -169,6 +148,7 @@ public class OutputController {
                 .description(output.getDescription())
                 .formula(output.getFormula())
                 .umbralList(output.getUmbralList())
+                .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
                 .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
