@@ -96,7 +96,7 @@ public class OutputController {
         return ResponseEntity.ok(response);
     }*/
 
-    @GetMapping("/outputs/page")
+    @GetMapping("/output/page")
     public ResponseEntity<Page<OutputResponseDTO>> getAllOutputs(@PageableDefault() Pageable pageable) {
         Page<Output> result = OutputService.findAll(pageable);
 
