@@ -6,7 +6,6 @@ import com.iesfranciscodelosrios.model.dto.input.InputUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Input;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.repository.InputRepository;
-import com.iesfranciscodelosrios.repository.UserRepository;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,12 +28,7 @@ public class InputService {
     private InputRepository inputRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-
-    /*public Input findById(UUID id) {
-        return inputRepository.findById(id).orElse(null);
-    }*/
+    private UserService userService;
 
     /**
      * Retrieves an Input based on the specified UUID identifier.
@@ -110,8 +104,7 @@ public class InputService {
      */
     public Input save(InputCreateDTO inputCreateDTO) {
         try {
-            UserEntity userOwner = userRepository.findById(inputCreateDTO.getUserOwnerId())
-                    .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
+            UserEntity userOwner = userService.findById(inputCreateDTO.getUserOwnerId());
 
             Input input = Input.builder()
                     .name(inputCreateDTO.getName())
@@ -194,10 +187,6 @@ public class InputService {
             throw new RuntimeException("Error al eliminar el input: " + e.getMessage());
         }
     }
-
-    /*public Input findByName(String name) {
-        return inputRepository.findByName(name).orElse(null);
-    }*/
 
     /**
      * Retrieves an Input based on the specified name.

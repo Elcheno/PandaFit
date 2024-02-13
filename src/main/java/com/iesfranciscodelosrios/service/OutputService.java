@@ -29,7 +29,7 @@ public class OutputService {
     private InputService inputService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     private static final Logger logger = LoggerFactory.getLogger(OutputService.class);
 
@@ -126,8 +126,7 @@ public class OutputService {
      */
     public Output save(OutputCreateDTO outputCreateDTO) {
         try {
-            UserEntity userOwner = userRepository.findById(outputCreateDTO.getUserOwnerId())
-                    .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
+            UserEntity userOwner = userService.findById(outputCreateDTO.getUserOwnerId());
 
             Output output = Output.builder()
                     .name(outputCreateDTO.getName())
