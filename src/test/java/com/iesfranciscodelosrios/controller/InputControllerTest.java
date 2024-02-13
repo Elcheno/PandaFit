@@ -130,11 +130,11 @@ public class InputControllerTest {
         // Arrange
         InputDeleteDTO deleteDTO = new InputDeleteDTO();
         deleteDTO.setId(UUID.randomUUID());
-        deleteDTO.setName("Delete Input");
+    //    deleteDTO.setName("Delete Input");
 
         Input input = new Input();
         input.setId(deleteDTO.getId());
-        input.setName(deleteDTO.getName());
+    //    input.setName(deleteDTO.getName());
 
         when(inputService.delete(any(InputDeleteDTO.class))).thenReturn(input);
 

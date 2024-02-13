@@ -32,7 +32,7 @@ public class CascadePersistTestOutput {
                 .description("Output Description")
                 .formula("OutputFormula")
                 .userOwner(userOwner)
-                .result("Some Result")
+        //        .result("Some Result")
                 .build();
 
 
