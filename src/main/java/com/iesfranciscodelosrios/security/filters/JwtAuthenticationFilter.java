@@ -1,10 +1,13 @@
 package com.iesfranciscodelosrios.security.filters;
 
 import com.iesfranciscodelosrios.model.dto.user.UserAuthenticationDTO;
+import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.security.jwt.JwtUtils;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iesfranciscodelosrios.service.UserDetailServiceImp;
+import com.iesfranciscodelosrios.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     JwtUtils jwtUtils;
     public JwtAuthenticationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
@@ -31,27 +35,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-        UserAuthenticationDTO userEntity = null;
-        String email;
-        String password;
 
-        try {
-            userEntity = new ObjectMapper().readValue(request.getInputStream(), UserAuthenticationDTO.class);
-            email = userEntity.getEmail();
-            password = userEntity.getPassword();
+        String email = request.getAttribute("email").toString();
+        String uuid = request.getAttribute("uuid").toString();
 
-        } catch (StreamReadException e) {
-            throw new RuntimeException(e);
-
-        } catch (DatabindException e) {
-            throw new RuntimeException(e);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-
-        }
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, uuid);
 
         return getAuthenticationManager().authenticate(authenticationToken);
     }
@@ -71,7 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String, Object> httpResponse = new HashMap<>();
         httpResponse.put("token", "Bearer ".concat(token));
         httpResponse.put("message", "Authentication succesfully");
-        httpResponse.put("name", user.getUsername());
+        httpResponse.put("email", user.getUsername());
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
         response.setStatus(HttpStatus.OK.value());

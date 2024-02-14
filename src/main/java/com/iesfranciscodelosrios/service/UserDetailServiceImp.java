@@ -30,13 +30,24 @@ public class UserDetailServiceImp implements UserDetailsService {
 
         return new User(
                 userEntity.getEmail(),
-                userEntity.getPassword(),
+                userEntity.getUuid() != null ? userEntity.getUuid() : "",
                 true,
                 true,
                 true,
                 true,
                 authorities
         );
+    }
+
+    public boolean registerUser (String email, String uuid) {
+        UserEntity userEntity = userService.findByEmail(email);
+
+        if (userEntity != null && userEntity.getUuid() == null) {
+            UserEntity user = userService.updateUUID(userEntity, uuid);
+            if (user.getUuid() == uuid) return true;
+        }
+
+        return false;
     }
 
 }

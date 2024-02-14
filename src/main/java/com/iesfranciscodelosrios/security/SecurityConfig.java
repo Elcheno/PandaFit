@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.security;
 
+import com.iesfranciscodelosrios.security.filters.UserRegisterUuidFilter;
 import com.iesfranciscodelosrios.security.filters.JwtAuthenticationFilter;
 import com.iesfranciscodelosrios.security.filters.JwtAuthorizationFilter;
 import com.iesfranciscodelosrios.security.jwt.JwtUtils;
@@ -12,7 +13,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -42,7 +43,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-//                    auth.requestMatchers("/institution/**").permitAll();
+                    auth.requestMatchers("/institution/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> {
@@ -50,6 +51,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 })
                 .addFilter(jwtAuthenticationFilter)
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(userRegisterUuidFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
 
     }
@@ -64,21 +66,12 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-//        return NoOpPasswordEncoder.getInstance();
+        return NoOpPasswordEncoder.getInstance();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//
-//        manager.createUser(User.withUsername("usuario")
-//                .password(passwordEncoder().encode("userPass"))
-//                .roles(RoleType.USER.name())
-//                .build());
-//
-//        return manager;
-//    }
+    private UserRegisterUuidFilter userRegisterUuidFilter() {
+        return new UserRegisterUuidFilter(userDetailService);
+    }
 
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception {
@@ -87,13 +80,5 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .passwordEncoder(passwordEncoder)
                 .and().build();
     }
-
-//    @Bean
-//    AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception {
-//        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
-//                .userDetailsService(userDetailsService())
-//                .passwordEncoder(passwordEncoder)
-//                .and().build();
-//    }
 
 }
