@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearCreateDTO;
 import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.service.InstitutionService;
 import com.iesfranciscodelosrios.service.SchoolYearService;
@@ -24,9 +25,10 @@ public class PandafitSchoolYearServiceTests {
 
     @Test
     public void testCreateSchoolYear() {
-        schoolYearService.save(SchoolYear.builder()
+        schoolYearService.save(
+                SchoolYearCreateDTO.builder()
                 .name("1 ESO A")
-                .institution(institutionService.findByName("global"))
+                .institutionId(institutionService.findByName("global").getId())
                 .build());
     }
 

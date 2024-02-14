@@ -26,7 +26,10 @@ public class OutputService {
     private OutputRepository outputRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private InputService inputService;
+
+    @Autowired
+    private UserService userService;
 
     private static final Logger logger = LoggerFactory.getLogger(OutputService.class);
 
@@ -123,8 +126,7 @@ public class OutputService {
      */
     public Output save(OutputCreateDTO outputCreateDTO) {
         try {
-            UserEntity userOwner = userRepository.findById(outputCreateDTO.getUserOwnerId())
-                    .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
+            UserEntity userOwner = userService.findById(outputCreateDTO.getUserOwnerId());
 
             Output output = Output.builder()
                     .name(outputCreateDTO.getName())
@@ -132,6 +134,7 @@ public class OutputService {
                     .formula(outputCreateDTO.getFormula())
                     .userOwner(userOwner)
                     .umbralList(outputCreateDTO.getUmbralList())
+                    .inputs(outputCreateDTO.getInputsId().stream().map((item) -> this.inputService.findById(UUID.fromString(item))).toList())
                     .unit(outputCreateDTO.getUnit())
                     .build();
 

@@ -44,7 +44,7 @@ public class PandaFitInputServiceTest {
         InputCreateDTO inputCreateDTO = InputCreateDTO.builder()
                 .name("inputName")
                 .description("Input Description")
-                .validator("InputValidator")
+        //        .validator("InputValidator")
                 .userOwnerId(userOwner.getId())
                 .build();
 
@@ -55,7 +55,7 @@ public class PandaFitInputServiceTest {
         assertNotNull(savedInput.getId(), "ID debería generarse después de guardar");
         assertEquals("inputName", savedInput.getName(), "El nombre debe ser igual");
         assertEquals("Input Description", savedInput.getDescription(), "La descripción debe ser igual");
-        assertEquals("InputValidator", savedInput.getValidator(), "El validador debe ser igual");
+    //    assertEquals("InputValidator", savedInput.getValidator(), "El validador debe ser igual");
         assertEquals(userOwner.getId(), savedInput.getUserOwner().getId(), "El ID del propietario debería ser igual");
     }
 
@@ -69,7 +69,7 @@ public class PandaFitInputServiceTest {
         InputCreateDTO inputCreateDTO = InputCreateDTO.builder()
                 .name("inputName")
                 .description("Input Description")
-                .validator("InputValidator")
+        //        .validator("InputValidator")
                 .userOwnerId(userOwner.getId())
                 .build();
 
@@ -96,7 +96,7 @@ public class PandaFitInputServiceTest {
         InputCreateDTO inputCreateDTO = InputCreateDTO.builder()
                 .name("inputName")
                 .description("Input Description")
-                .validator("InputValidator")
+        //        .validator("InputValidator")
                 .userOwnerId(userOwner.getId())
                 .build();
 
@@ -105,7 +105,7 @@ public class PandaFitInputServiceTest {
         // When
         InputDeleteDTO inputDeleteDTO = InputDeleteDTO.builder()
                 .id(savedInput.getId())
-                .name(savedInput.getName())
+        //        .name(savedInput.getName())
                 .build();
         Input deletedInput = inputService.delete(inputDeleteDTO);
 

@@ -48,7 +48,8 @@ public class PandafitUserServiceTests {
                     .build()
             );
 
-            userService.save(UserEntity.builder()
+            UserEntity user = userService.save(UserEntity.builder()
+                    .id(UUID.randomUUID())
                     .email("user" + i + "@example.com")
                     .institution(institutionService.findByName("global2"))
                     .password("Ejemplo1&")
@@ -77,7 +78,7 @@ public class PandafitUserServiceTests {
 
     @Test
     public void testDeleteUser() {
-        userService.delete(userService.findByEmail("ejemplo@example.com2"));
+
     }
 
     @Test

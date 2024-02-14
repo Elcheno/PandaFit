@@ -1,12 +1,11 @@
 package com.iesfranciscodelosrios.model.dto.output;
 
-import com.iesfranciscodelosrios.model.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,6 +24,8 @@ public class OutputResponseDTO {
     private String formula;
 
     private Set<Object> umbralList;
+
+    private List<String> inputsId;
 
     private String unit;
 }
