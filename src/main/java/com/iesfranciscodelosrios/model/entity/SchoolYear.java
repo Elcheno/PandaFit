@@ -18,7 +18,8 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "school_year")
+@Table(name = "school_year",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "institution_id"})})
 public class SchoolYear {
 
     @Id
@@ -30,7 +31,7 @@ public class SchoolYear {
     // Dígito entre 1 y 4 seguido de "º", espacio en blanco, seguido de ESO o BACHILLERATO, espacio en blanco, grupo capturador que acepta una o más palabras
     // la cual cada una comienza con una letra mayúscula, espacio en blanco y por último una letra en mayúscula
     @Pattern(regexp = "^[A-Za-z0-9]{2,25}$", message = " Debe haber entre 2 y 25 dígitos")
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
     @NotNull(message = "La institución no puede ser nula")
