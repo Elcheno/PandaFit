@@ -17,7 +17,6 @@ import java.util.UUID;
 public class FormActCreateDTO {
     private LocalDateTime startDate;
     private LocalDateTime expirationDate;
-    private Form form;
-    private SchoolYear schoolYear;
-    private Set<Answer> answersList;
+    private UUID formId;
+    private UUID schoolYearId;
 }

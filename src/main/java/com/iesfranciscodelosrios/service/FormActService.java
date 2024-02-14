@@ -63,8 +63,8 @@ public class FormActService {
     }
 
     public FormAct save(FormActCreateDTO formActCreateDTO) {
-        Form form = formService.findById(formActCreateDTO.getForm().getId());
-        SchoolYear schoolYear = schoolYearService.findById(formActCreateDTO.getSchoolYear().getId());
+        Form form = formService.findById(formActCreateDTO.getFormId());
+        SchoolYear schoolYear = schoolYearService.findById(formActCreateDTO.getSchoolYearId());
 
         if (form == null || schoolYear == null) return null;
 
