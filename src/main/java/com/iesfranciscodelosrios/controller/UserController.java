@@ -133,31 +133,14 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<UserDeleteDTO> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
-        if (userDeleteDTO.getId() == null) return ResponseEntity.badRequest().build();
-        userService.delete(userDeleteDTO.getId());
-        return ResponseEntity.ok(userDeleteDTO);
-    }
+    public ResponseEntity<String> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
+        boolean deleted = userService.delete(userDeleteDTO);
 
-//    @DeleteMapping("/users")
-//    public ResponseEntity<UserResponseDTO> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
-//        //UserEntity user = userService.findById(userDeleteDTO.getId());
-//
-//        //if (user == null) return ResponseEntity.badRequest().build();
-//        // System.out.println("USUARIO");
-//
-//        UserEntity userEntity = userService.delete(userDeleteDTO.getId());
-//
-//        if (userEntity == null) return ResponseEntity.badRequest().build();
-//
-//        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-//                .id(userEntity.getId())
-//                .email(userEntity.getEmail())
-//                .password(userEntity.getPassword())
-//                .role(userEntity.getRole())
-//                .build();
-//
-//        return ResponseEntity.ok(userResponseDTO);
-//    }
+        if(deleted) {
+            return ResponseEntity.ok("Usuario eliminado correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

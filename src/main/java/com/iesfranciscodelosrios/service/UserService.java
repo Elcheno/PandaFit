@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserResponseDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.*;
@@ -122,20 +123,20 @@ public class UserService {
     }
 
     @Transactional
-    public UserEntity delete(UUID id) {
-        if (id == null) return null;
+    public boolean delete(UserDeleteDTO userDeleteDTO) {
         try {
-            userRepository.forceDelete(id);
-            logger.info("Eliminando el usuario con ID: {}", id);
-        } catch (GenericJDBCException a) {
-            logger.error("Error al forzar la eliminación del usuario con ID '{}': {}", id, a.getMessage());
-            throw new RuntimeException("Error al forzar la eliminación del usuario: " + a.getMessage());
+            Optional<UserEntity> userEntityOptional = userRepository.findById(userDeleteDTO.getId());
+            if (userEntityOptional.isPresent()) {
+                logger.info("Eliminando el usuario con ID: {}: {}", userDeleteDTO.getId(), userEntityOptional.get());
+                userRepository.forceDelete(userEntityOptional.get().getId());
+                return true;
+            }
+            logger.error("No se pudo eliminar el usuario con ID '{}' : {}", userDeleteDTO.getId(), userEntityOptional.get());
+            return false;
         } catch (Exception e) {
             logger.error("Error al eliminar el usuario: {}", e.getMessage());
-            throw new RuntimeException("Error al eliminar el usuario: " + e.getMessage());
+            throw new RuntimeException("Error al eliminar el usuario.\n" + e.getMessage());
         }
-
-        return null;
     }
 
     public UserEntity findByEmail(String email) {

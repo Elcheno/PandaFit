@@ -126,18 +126,8 @@ public class SchoolYearService  {
 
             if (schoolYearToUpdate != null){
                 schoolYearToUpdate.setName(schoolYearUpdateDTO.getName());
-                schoolYearToUpdate.setInstitution(institutionRepository.findById(schoolYearUpdateDTO.getInstitutionId()).get());
 
                 Set<FormAct> formActList = new HashSet<>();
-
-                if (schoolYearUpdateDTO.getFormActIdList() == null || schoolYearUpdateDTO.getFormActIdList().isEmpty() || schoolYearUpdateDTO.getFormActIdList().size() < 1) {
-                    logger.info("La lista de formActIdList se encuentra vacia");
-                } else {
-                    for (UUID formActId : schoolYearUpdateDTO.getFormActIdList()) {
-                        formActList.add(formActRepository.findById(formActId).get());
-                        schoolYearToUpdate.setFormActList(formActList);
-                    }
-                }
 
                 logger.info("Actualizando el año escolar: {}", schoolYearToUpdate);
                 return schoolYearRepository.save(schoolYearToUpdate);
