@@ -139,6 +139,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public UserEntity findByEmail(String email) {
         try {
             UserEntity result = userRepository.findByEmail(email)
