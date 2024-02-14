@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.controller;
 
+import com.iesfranciscodelosrios.model.dto.form.FormResponseDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserResponseDTO;
@@ -43,12 +44,7 @@ public class UserController {
 
         if (userEntity == null) return ResponseEntity.notFound().build();
 
-        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-                .id(userEntity.getId())
-                .email(userEntity.getEmail())
-                .role(userEntity.getRole().stream().map(role -> RoleType.valueOf(role.getRole().name())).collect(Collectors.toSet()))
-                .password(userEntity.getPassword())
-                .build();
+        UserResponseDTO userResponseDTO = userService.mapToResponseDTO(userEntity);
 
         return ResponseEntity.ok(userResponseDTO);
     }
@@ -58,20 +54,8 @@ public class UserController {
         Page<UserEntity> result = userService.findAll(pageable);
 
         if (result == null) return ResponseEntity.badRequest().build();
-//        if (result.isEmpty()) return ResponseEntity.noContent().build();
 
-        Page<UserResponseDTO> response = result.map(user -> UserResponseDTO.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .role(user.getRole().stream().map(role -> RoleType.valueOf(role.getRole().name())).collect(Collectors.toSet()))
-                .password(user.getPassword())
-//                .institution(user.getInstitution())
-//                .formList(user.getFormList())
-//                .outputList(user.getOutputList())
-//                .inputList(user.getInputList())
-                .build()
-        );
-
+        Page<UserResponseDTO> response = result.map(userService::mapToResponseDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -83,19 +67,8 @@ public class UserController {
         Page<UserEntity> result = userService.findAllByInstitution(UUID.fromString(institutionId), pageable);
 
         if (result == null) return ResponseEntity.badRequest().build();
-//        if (result.isEmpty()) return ResponseEntity.noContent().build();
 
-        Page<UserResponseDTO> response = result.map(user -> UserResponseDTO.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .role(user.getRole().stream().map(role -> RoleType.valueOf(role.getRole().name())).collect(Collectors.toSet()))
-                        .password(user.getPassword())
-//                .institution(user.getInstitution())
-//                .formList(user.getFormList())
-//                .outputList(user.getOutputList())
-//                .inputList(user.getInputList())
-                        .build()
-        );
+        Page<UserResponseDTO> response = result.map(userService::mapToResponseDTO);
 
         return ResponseEntity.ok(response);
     }
@@ -113,17 +86,7 @@ public class UserController {
         if (result == null) return ResponseEntity.badRequest().build();
         if (result.isEmpty()) return ResponseEntity.noContent().build();
 
-        Page<UserResponseDTO> response = result.map(user -> UserResponseDTO.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .role(user.getRole().stream().map(roleType -> RoleType.valueOf(roleType.getRole().name())).collect(Collectors.toSet()))
-                        .password(user.getPassword())
-//                .institution(user.getInstitution())
-//                .formList(user.getFormList())
-//                .outputList(user.getOutputList())
-//                .inputList(user.getInputList())
-                        .build()
-        );
+        Page<UserResponseDTO> response = result.map(userService::mapToResponseDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -142,17 +105,7 @@ public class UserController {
         if (result == null) return ResponseEntity.badRequest().build();
         if (result.isEmpty()) return ResponseEntity.noContent().build();
 
-        Page<UserResponseDTO> response = result.map(user -> UserResponseDTO.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .role(user.getRole().stream().map(roleType -> RoleType.valueOf(roleType.getRole().name())).collect(Collectors.toSet()))
-                        .password(user.getPassword())
-//                .institution(user.getInstitution())
-//                .formList(user.getFormList())
-//                .outputList(user.getOutputList())
-//                .inputList(user.getInputList())
-                        .build()
-        );
+        Page<UserResponseDTO> response = result.map(userService::mapToResponseDTO);
 
         return ResponseEntity.ok(response);
     }
@@ -160,44 +113,11 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
-
-        Set<Role> roles = userCreateDTO.getRoles().stream().map((String tryRole) -> {
-                            RoleType roleType;
-                            try {
-                                roleType = RoleType.valueOf(tryRole);
-                            } catch (IllegalArgumentException e) {
-                                ErrorResponseException error = new ErrorResponseException(HttpStatus.BAD_REQUEST);
-                                error.setDetail("Invalid role type");
-                                throw error;
-                            }
-                            Role role = roleService.findByName(roleType);
-                            if (role == null) return Role.builder()
-                                    .role(roleType)
-                                    .build();
-                            return role;
-                    })
-                    .collect(Collectors.toSet());
-
-        Institution institution = institutionService.findById(userCreateDTO.getInstitutionId());
-
-        if (roles == null || roles.isEmpty() || institution == null) return ResponseEntity.badRequest().build();
-
-        UserEntity userEntity = userService.save(UserEntity.builder()
-                .email(userCreateDTO.getEmail())
-                .password(userCreateDTO.getPassword())
-                .role(roles)
-                .institution(institution)
-                .build());
+        UserEntity userEntity = userService.save(userCreateDTO);
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
 
-        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-                .id(userEntity.getId())
-                .email(userEntity.getEmail())
-                .password(userEntity.getPassword())
-                .role(userEntity.getRole().stream().map(role -> RoleType.valueOf(role.getRole().name())).collect(Collectors.toSet()))
-                .build();
-
+        UserResponseDTO userResponseDTO = userService.mapToResponseDTO(userEntity);
         return ResponseEntity.ok(userResponseDTO);
     }
 
@@ -207,41 +127,20 @@ public class UserController {
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
 
-        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-                .id(userEntity.getId())
-                .email(userEntity.getEmail())
-                .password(userEntity.getPassword())
-                .build();
+        UserResponseDTO userResponseDTO = userService.mapToResponseDTO(userEntity);
 
         return ResponseEntity.ok(userResponseDTO);
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<UserDeleteDTO> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
-        if (userDeleteDTO.getId() == null) return ResponseEntity.badRequest().build();
-        userService.delete(userDeleteDTO.getId());
-        return ResponseEntity.ok(userDeleteDTO);
-    }
+    public ResponseEntity<String> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
+        boolean deleted = userService.delete(userDeleteDTO);
 
-//    @DeleteMapping("/users")
-//    public ResponseEntity<UserResponseDTO> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
-//        //UserEntity user = userService.findById(userDeleteDTO.getId());
-//
-//        //if (user == null) return ResponseEntity.badRequest().build();
-//        // System.out.println("USUARIO");
-//
-//        UserEntity userEntity = userService.delete(userDeleteDTO.getId());
-//
-//        if (userEntity == null) return ResponseEntity.badRequest().build();
-//
-//        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-//                .id(userEntity.getId())
-//                .email(userEntity.getEmail())
-//                .password(userEntity.getPassword())
-//                .role(userEntity.getRole())
-//                .build();
-//
-//        return ResponseEntity.ok(userResponseDTO);
-//    }
+        if(deleted) {
+            return ResponseEntity.ok("Usuario eliminado correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

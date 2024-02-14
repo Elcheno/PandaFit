@@ -1,6 +1,5 @@
 package com.iesfranciscodelosrios.model.dto.user;
 
-import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import lombok.*;
 
@@ -16,5 +15,9 @@ public class UserResponseDTO {
     private UUID id;
     private String email;
     private String password;
+    private UUID institutionId;
+    private Set<UUID> inputsId;
+    private Set<UUID> outputsId;
+    private Set<UUID> formsId;
     private Set<RoleType> role;
 }

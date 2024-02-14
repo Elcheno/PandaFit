@@ -1,9 +1,10 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserResponseDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserUpdateDTO;
-import com.iesfranciscodelosrios.model.entity.Institution;
-import com.iesfranciscodelosrios.model.entity.Role;
-import com.iesfranciscodelosrios.model.entity.UserEntity;
+import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.repository.UserRepository;
@@ -15,28 +16,60 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.ErrorResponseException;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-public class UserService implements iServices<UserEntity> {
+public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private InstitutionService institutionService;
+    @Autowired
+    private RoleService roleService;
 
     @Transactional
-    @Override
-    public UserEntity save(UserEntity user) {
+    public UserEntity save(UserCreateDTO userCreateDTO) {
         try {
-            logger.info("Guardando nuevo usuario: {}", user);
+            logger.info("Guardando nuevo usuario: {}", userCreateDTO);
+
+            Set<Role> roles = userCreateDTO.getRoles().stream().map((String tryRole) -> {
+                        RoleType roleType;
+                        try {
+                            roleType = RoleType.valueOf(tryRole);
+                        } catch (IllegalArgumentException e) {
+                            ErrorResponseException error = new ErrorResponseException(HttpStatus.BAD_REQUEST);
+                            error.setDetail("Invalid role type");
+                            throw error;
+                        }
+                        Role role = roleService.findByName(roleType);
+                        if (role == null) return Role.builder()
+                                .role(roleType)
+                                .build();
+                        return role;
+                    })
+                    .collect(Collectors.toSet());
+
+            Institution institution = institutionService.findById(userCreateDTO.getInstitutionId());
+
+            UserEntity user = UserEntity.builder()
+                    .email(userCreateDTO.getEmail())
+                    .password(userCreateDTO.getPassword())
+                    .role(roles)
+                    .institution(institution)
+                    .build();
+
             return userRepository.save(user);
         } catch (Exception e) {
             logger.error("Error al guardar el usuario: {}", e.getMessage());
@@ -44,7 +77,6 @@ public class UserService implements iServices<UserEntity> {
         }
     }
 
-    @Override
     public UserEntity findById(UUID id) {
         try {
             UserEntity result = userRepository.findById(id)
@@ -85,27 +117,26 @@ public class UserService implements iServices<UserEntity> {
         }
     }
 
-    @Override
     public UserEntity delete(UserEntity user) {
         // El método original no implementa la eliminación, así que no hay operación de eliminación aquí
         return null;
     }
 
     @Transactional
-    public UserEntity delete(UUID id) {
-        if (id == null) return null;
+    public boolean delete(UserDeleteDTO userDeleteDTO) {
         try {
-            userRepository.forceDelete(id);
-            logger.info("Eliminando el usuario con ID: {}", id);
-        } catch (GenericJDBCException a) {
-            logger.error("Error al forzar la eliminación del usuario con ID '{}': {}", id, a.getMessage());
-            throw new RuntimeException("Error al forzar la eliminación del usuario: " + a.getMessage());
+            Optional<UserEntity> userEntityOptional = userRepository.findById(userDeleteDTO.getId());
+            if (userEntityOptional.isPresent()) {
+                logger.info("Eliminando el usuario con ID: {}: {}", userDeleteDTO.getId(), userEntityOptional.get());
+                userRepository.forceDelete(userEntityOptional.get().getId());
+                return true;
+            }
+            logger.error("No se pudo eliminar el usuario con ID '{}' : {}", userDeleteDTO.getId(), userEntityOptional.get());
+            return false;
         } catch (Exception e) {
             logger.error("Error al eliminar el usuario: {}", e.getMessage());
-            throw new RuntimeException("Error al eliminar el usuario: " + e.getMessage());
+            throw new RuntimeException("Error al eliminar el usuario.\n" + e.getMessage());
         }
-
-        return null;
     }
 
     public UserEntity findByEmail(String email) {
@@ -247,6 +278,48 @@ public class UserService implements iServices<UserEntity> {
         } catch (Exception e) {
             logger.error("Error al buscar todos los usuarios de la institución '{}' por rol '{}' paginados: {}", institution, role, e.getMessage());
             throw new RuntimeException("Error al buscar todos los usuarios de la institución por rol paginados: " + e.getMessage());
+        }
+    }
+
+    public UserResponseDTO mapToResponseDTO(UserEntity user) {
+        try {
+            logger.info("Creando la response de {}", user);
+
+            Set<UUID> inputUidList = new HashSet<>();
+            Set<UUID> outputUidList = new HashSet<>();
+            Set<UUID> formUidList = new HashSet<>();
+
+            if(user.getInputList() != null){
+                for (Input input : user.getInputList()) {
+                    inputUidList.add(input.getId());
+                }
+            }
+
+            if(user.getOutputList() != null){
+                for (Output output : user.getOutputList()) {
+                    outputUidList.add(output.getId());
+                }
+            }
+
+            if(user.getFormList() != null){
+                for (Form form : user.getFormList()) {
+                    formUidList.add(form.getId());
+                }
+            }
+
+            return UserResponseDTO.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .password(user.getPassword())
+                    .institutionId(user.getInstitution().getId())
+                    .inputsId(inputUidList)
+                    .outputsId(outputUidList)
+                    .formsId(formUidList)
+                    .role(user.getRole().stream().map(role -> RoleType.valueOf(role.getRole().name())).collect(Collectors.toSet()))
+                    .build();
+        } catch (Exception e) {
+            logger.error("Error al crear la response {}", user);
+            throw new RuntimeException("Error al crear la response " + e.getMessage());
         }
     }
 }

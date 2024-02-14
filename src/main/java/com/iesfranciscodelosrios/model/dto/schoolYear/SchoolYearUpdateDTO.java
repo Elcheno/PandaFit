@@ -17,6 +17,4 @@ import java.util.UUID;
 public class SchoolYearUpdateDTO {
     private UUID id;
     private String name;
-    private UUID institutionId;
-    private Set<UUID> formActIdList;
 }

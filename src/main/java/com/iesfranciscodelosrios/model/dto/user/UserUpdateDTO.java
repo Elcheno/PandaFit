@@ -1,10 +1,6 @@
 package com.iesfranciscodelosrios.model.dto.user;
 
-import com.iesfranciscodelosrios.model.entity.*;
-import com.iesfranciscodelosrios.model.type.RoleType;
 import lombok.*;
-
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -14,9 +10,6 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class UserUpdateDTO {
     private UUID id;
-
     private String email;
-
     private String password;
-
 }
