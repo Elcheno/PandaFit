@@ -20,4 +20,6 @@ public class FormUpdateDTO {
     private String description;
     private UUID userId;
     private Set<UUID> formActUidList;
+    private Set<UUID> inputIdList;
+    private Set<UUID> outputIdList;
 }

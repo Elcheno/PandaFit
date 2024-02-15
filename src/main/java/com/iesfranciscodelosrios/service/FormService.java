@@ -4,10 +4,7 @@ import com.iesfranciscodelosrios.model.dto.form.FormCreateDTO;
 import com.iesfranciscodelosrios.model.dto.form.FormDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.form.FormResponseDTO;
 import com.iesfranciscodelosrios.model.dto.form.FormUpdateDTO;
-import com.iesfranciscodelosrios.model.entity.Form;
-import com.iesfranciscodelosrios.model.entity.FormAct;
-import com.iesfranciscodelosrios.model.entity.Institution;
-import com.iesfranciscodelosrios.model.entity.UserEntity;
+import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.FormActRepository;
 import com.iesfranciscodelosrios.repository.FormRepository;
@@ -34,6 +31,10 @@ public class FormService {
     UserRepository userRepository;
     @Autowired
     FormActRepository formActRepository;
+    @Autowired
+    private InputService inputService;
+    @Autowired
+    private OutputService outputService;
 
     private static final Logger logger = LoggerFactory.getLogger(FormService.class);
 
@@ -98,10 +99,23 @@ public class FormService {
     public Form save(FormCreateDTO formCreateDTO) {
         try {
             logger.info("Creando el formulario a partir del DTO: {}", formCreateDTO);
+
+            Set<Input> inputList = new HashSet<>();
+            for (UUID id : formCreateDTO.getInputIdList()) {
+                inputList.add(inputService.findById(id));
+            }
+
+            Set<Output> outputList = new HashSet<>();
+            for (UUID id : formCreateDTO.getOutputIdList()) {
+                outputList.add(outputService.findById(id));
+            }
+
             Form form = Form.builder()
                     .name(formCreateDTO.getName())
                     .description(formCreateDTO.getDescription())
                     .userOwner(userRepository.findById(formCreateDTO.getUserId()).get())
+                    .inputList(inputList)
+                    .outputList(outputList)
                     .build();
             logger.info("Guardando formulario: {}", form);
             return formRepository.save(form);
@@ -117,9 +131,22 @@ public class FormService {
             Form formToUpdate = formRepository.findById(formUpdateDTO.getId()).get();
 
             if (formToUpdate != null) {
+
+                Set<Input> inputList = new HashSet<>();
+                for (UUID id : formUpdateDTO.getInputIdList()) {
+                    inputList.add(inputService.findById(id));
+                }
+
+                Set<Output> outputList = new HashSet<>();
+                for (UUID id : formUpdateDTO.getOutputIdList()) {
+                    outputList.add(outputService.findById(id));
+                }
+
                 formToUpdate.setName(formUpdateDTO.getName());
                 formToUpdate.setDescription(formUpdateDTO.getDescription());
                 formToUpdate.setUserOwner(userRepository.findById(formUpdateDTO.getUserId()).get());
+                formToUpdate.setInputList(inputList);
+                formToUpdate.setOutputList(outputList);
 
                 Set<FormAct> formActList = new HashSet<>();
 
@@ -159,11 +186,25 @@ public class FormService {
     public FormResponseDTO mapToResponseDTO(Form form) {
         try {
             logger.info("Creando la response de {}", form);
-            Set<UUID> formActUidList = new HashSet<>();
 
+            Set<UUID> formActUidList = new HashSet<>();
             if(form.getFormActList() != null){
                 for (FormAct formAct : form.getFormActList()) {
                     formActUidList.add(form.getId());
+                }
+            }
+
+            Set<UUID> inputIdList = new HashSet<>();
+            if(form.getInputList() != null){
+                for (Input input : form.getInputList()) {
+                    inputIdList.add(input.getId());
+                }
+            }
+
+            Set<UUID> outputIdList = new HashSet<>();
+            if(form.getOutputList() != null){
+                for (Output output : form.getOutputList()) {
+                    outputIdList.add(output.getId());
                 }
             }
 
@@ -173,7 +214,10 @@ public class FormService {
                     .description(form.getDescription())
                     .userOwner(form.getUserOwner().getId())
                     .formActList(formActUidList)
+                    .inputList(inputIdList)
+                    .outputList(outputIdList)
                     .build();
+
         } catch (Exception e) {
             logger.error("Error al crear la response {}", form);
             throw new RuntimeException("Error al crear la response " + e.getMessage());

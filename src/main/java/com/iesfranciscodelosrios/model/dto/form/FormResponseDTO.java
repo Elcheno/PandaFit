@@ -20,4 +20,6 @@ public class FormResponseDTO {
     private String description;
     private UUID userOwner;
     private Set<UUID> formActList;
+    private Set<UUID> outputList;
+    private Set<UUID> inputList;
 }
