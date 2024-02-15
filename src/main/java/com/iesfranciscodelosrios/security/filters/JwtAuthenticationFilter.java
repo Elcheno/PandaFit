@@ -52,6 +52,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         User user = (User) authResult.getPrincipal();
 
+
         String token = jwtUtils.generateTokenAccess(user.getUsername());
 
         response.addHeader("Authorization", "Bearer ".concat(token));
@@ -60,6 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         httpResponse.put("token", "Bearer ".concat(token));
         httpResponse.put("message", "Authentication succesfully");
         httpResponse.put("email", user.getUsername());
+        httpResponse.put("roles", user.getAuthorities());
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
         response.setStatus(HttpStatus.OK.value());
@@ -69,7 +71,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                              AuthenticationException failed) throws IOException, ServletException {
+                                              AuthenticationException failed) throws IOException {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                 "Authentication Failed");
     }

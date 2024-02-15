@@ -17,14 +17,17 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableWebMvc
-public class SecurityConfig implements WebMvcConfigurer {
+//@EnableWebMvc
+public class SecurityConfig {
 
     @Autowired
     UserDetailServiceImp userDetailService;
@@ -41,11 +44,12 @@ public class SecurityConfig implements WebMvcConfigurer {
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
 
         return httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-//                    auth.anyRequest().permitAll();
-                    auth.requestMatchers("/institution/**").permitAll();
-                    auth.anyRequest().authenticated();
+//                    auth.requestMatchers("/institution/**").permitAll();
+//                    auth.anyRequest().authenticated();
+                    auth.anyRequest().permitAll();
                 })
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -57,12 +61,20 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedHeaders("*")
-                .allowedMethods("*");
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH",
+                "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type",
+                "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        UrlBasedCorsConfigurationSource source = new
+                UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 
     @Bean

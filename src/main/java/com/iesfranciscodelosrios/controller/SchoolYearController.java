@@ -112,11 +112,11 @@ public class SchoolYearController {
      * @return ResponseEntity containing the deleted SchoolYearResponseDTO.
      */
     @DeleteMapping("/institution/schoolYear")
-    public ResponseEntity<String> deleteSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
+    public ResponseEntity<Boolean> deleteSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
         boolean deleted = schoolYearService.delete(schoolYearDeleteDTO);
 
         if (deleted) {
-            return ResponseEntity.ok("SchoolYear eliminado correctamente");
+            return ResponseEntity.ok(deleted);
         } else {
             return ResponseEntity.notFound().build();
         }

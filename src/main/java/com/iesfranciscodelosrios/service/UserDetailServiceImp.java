@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,14 +24,18 @@ public class UserDetailServiceImp implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userService.findByEmail(email);
 
-        Collection<? extends GrantedAuthority> authorities = userEntity.getRole()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role.getRole().name())))
-                .collect(Collectors.toSet());
+        Collection<? extends GrantedAuthority> authorities = new HashSet<>();
+
+        if (userEntity != null) {
+            authorities = userEntity.getRole()
+                    .stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_".concat(role.getRole().name())))
+                    .collect(Collectors.toSet());
+        }
 
         return new User(
-                userEntity.getEmail(),
-                userEntity.getUuid() != null ? userEntity.getUuid() : "",
+                userEntity != null ? userEntity.getEmail() : "0",
+                userEntity != null ? userEntity.getUuid() : "0",
                 true,
                 true,
                 true,
