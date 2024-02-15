@@ -43,6 +43,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
+//                    auth.anyRequest().permitAll();
                     auth.requestMatchers("/institution/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
