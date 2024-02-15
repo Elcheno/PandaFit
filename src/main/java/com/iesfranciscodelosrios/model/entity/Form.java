@@ -37,6 +37,14 @@ public class Form {
     @OneToMany(mappedBy = "form")
     private Set<FormAct> formActList;
 
+    @OneToMany
+    @JoinColumn(name = "output")
+    private Set<Output> outputList;
+
+    @OneToMany
+    @JoinColumn(name = "input")
+    private Set<Input> inputList;
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
