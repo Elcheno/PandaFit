@@ -138,11 +138,11 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<String> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
+    public ResponseEntity<Boolean> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
         boolean deleted = userService.delete(userDeleteDTO);
 
         if(deleted) {
-            return ResponseEntity.ok("Usuario eliminado correctamente");
+            return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.notFound().build();
         }
