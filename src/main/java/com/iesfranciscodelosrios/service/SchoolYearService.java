@@ -53,6 +53,7 @@ public class SchoolYearService  {
         }
     }
 
+    @Transactional
     public SchoolYear save(SchoolYearCreateDTO schoolYearCreateDTO) {
         try {
             logger.info("Creando el año escolar a partir del DTO: {}", schoolYearCreateDTO);

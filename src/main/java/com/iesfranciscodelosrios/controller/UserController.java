@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,9 @@ public class UserController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") String userId) {
@@ -113,6 +117,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
+        userCreateDTO.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
         UserEntity userEntity = userService.save(userCreateDTO);
 
         if (userEntity == null) return ResponseEntity.badRequest().build();
@@ -133,11 +138,11 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<String> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
+    public ResponseEntity<Boolean> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
         boolean deleted = userService.delete(userDeleteDTO);
 
         if(deleted) {
-            return ResponseEntity.ok("Usuario eliminado correctamente");
+            return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -148,7 +148,7 @@ public class OutputController {
                 .description(output.getDescription())
                 .formula(output.getFormula())
                 .umbralList(output.getUmbralList())
-                .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
+//                .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
                 .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);

@@ -117,6 +117,30 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public UserEntity updateUUID(UserEntity user, String uuid) {
+        try {
+            UserEntity userToUptdate = findById(user.getId());
+
+            UserEntity userEntity = UserEntity.builder()
+                    .id(userToUptdate.getId())
+                    .email(userToUptdate.getEmail())
+                    .password(userToUptdate.getPassword())
+                    .institution(userToUptdate.getInstitution())
+                    .role(userToUptdate.getRole())
+                    .password(userToUptdate.getPassword())
+                    .uuid(uuid)
+                    .build();
+
+            logger.info("Actualizando el usuario con ID {}: {}", userToUptdate.getId(), userEntity);
+
+            return userRepository.save(userEntity);
+        } catch (Exception e) {
+            logger.error("Error al actualizar el usuario: {}", e.getMessage());
+            throw new RuntimeException("Error al actualizar el usuario: " + e.getMessage());
+        }
+    }
+
     public UserEntity delete(UserEntity user) {
         // El método original no implementa la eliminación, así que no hay operación de eliminación aquí
         return null;
@@ -139,6 +163,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public UserEntity findByEmail(String email) {
         try {
             UserEntity result = userRepository.findByEmail(email)

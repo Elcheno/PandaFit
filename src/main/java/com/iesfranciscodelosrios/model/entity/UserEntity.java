@@ -33,12 +33,15 @@ public class UserEntity {
 
 
     @NotBlank(message = "La contraseña no puede estar en blanco")
-    @Pattern(
-            regexp = "^[a-zA-ZÁáÀàÉéÈèÍíÌìÓóÒòÚúÙùÑñüÜ0-9!@#\\$%\\^&\\*\\?_~\\/]{8,20}$",
-            message = "La contraseña no es lo suficientemente segura"
-    ) // 8-20 caracteres alfanúmericos
+//    @Pattern(
+//            regexp = "^[a-zA-ZÁáÀàÉéÈèÍíÌìÓóÒòÚúÙùÑñüÜ0-9!@#\\$%\\^&\\*\\?_~\\/]{8,20}$",
+//            message = "La contraseña no es lo suficientemente segura"
+//    ) // 8-20 caracteres alfanúmericos
     @Column(name = "password")
     private String password;
+
+    @Column(name = "uuid")
+    private String uuid;
 
     @NotNull(message = "La institución no puede ser nula")
     @ManyToOne
@@ -49,7 +52,7 @@ public class UserEntity {
     //    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @NotNull(message = "Los roles no pueden ser nulos")
     @Size(min = 1, message = "Debe tener al menos un rol")
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "users_roles",

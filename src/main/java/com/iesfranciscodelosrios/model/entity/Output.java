@@ -65,4 +65,14 @@ public class Output {
         return Objects.hash(id);
     }
 
+    @Override
+    public String toString() {
+        return "Output{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", formula='" + formula + '\'' +
+                ", unit='" + unit + '\'' +
+                '}';
+    }
 }
