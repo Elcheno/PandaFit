@@ -87,6 +87,24 @@ public class SchoolYearService  {
         }
     }
 
+    @Transactional
+    public boolean deleteIfNotUse(SchoolYearDeleteDTO schoolYearDeleteDTO) {
+        try {
+            Optional<SchoolYear> schoolYearOptional = schoolYearRepository.findById(schoolYearDeleteDTO.getId());
+            if (schoolYearOptional.isPresent() && schoolYearOptional.get().getFormActList().size() == 0){
+                logger.info("Eliminando el año escolar con ID '{}' : {}", schoolYearDeleteDTO.getId(), schoolYearOptional.get());
+                schoolYearRepository.forceDelete(schoolYearDeleteDTO.getId());
+                return true;
+            }else{
+                logger.error("No se pudo eliminar el año escolar con ID '{}' : {}",schoolYearDeleteDTO.getId(), schoolYearOptional);
+                return false;
+            }
+        }catch (Exception e){
+            logger.error("Error al eliminar el formulario: {}", e.getMessage());
+            throw new RuntimeException("Error al eliminar el formulario.\n" + e.getMessage());
+        }
+    }
+
     public SchoolYear findByNameAndInstitution(String name, Institution institution) {
         try {
             SchoolYear result = schoolYearRepository.findByNameAndAndInstitution(name, institution)

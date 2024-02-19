@@ -183,6 +183,22 @@ public class FormService {
         }
     }
 
+    public boolean deleteIfNotUse(FormDeleteDTO formDeleteDTO) {
+        try {
+            Optional<Form> formOptional = formRepository.findById(formDeleteDTO.getId());
+            if (formOptional.isPresent() && formOptional.get().getFormActList().size() == 0) {
+                logger.info("Eliminando el formulario con ID: {}: {}", formDeleteDTO.getId(), formOptional.get());
+                formRepository.deleteById(formDeleteDTO.getId());
+                return true;
+            }
+            logger.error("No se pudo eliminar el formulario con ID'{}' : {}", formDeleteDTO.getId(), formOptional.get());
+            return false;
+        } catch (Exception e) {
+            logger.error("Error al eliminar el formulario: {}", e.getMessage());
+            throw new RuntimeException("Error al eliminar el formulario.\n" + e.getMessage());
+        }
+    }
+
     public FormResponseDTO mapToResponseDTO(Form form) {
         try {
             logger.info("Creando la response de {}", form);

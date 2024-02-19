@@ -122,6 +122,17 @@ public class SchoolYearController {
         }
     }
 
+    @DeleteMapping("/institution/schoolYear")
+    public ResponseEntity<Boolean> deleteIfNotUseSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
+        boolean deleted = schoolYearService.deleteIfNotUse(schoolYearDeleteDTO);
+
+        if (deleted) {
+            return ResponseEntity.ok(deleted);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     /**
      * Updates an existing SchoolYear.
      *
