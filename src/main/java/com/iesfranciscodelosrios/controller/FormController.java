@@ -84,4 +84,15 @@ public class FormController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping()
+    public ResponseEntity<String> deleteIfNotUseForm(@RequestBody FormDeleteDTO formDeleteDTO) {
+        boolean deleted = formService.deleteIfNotUse(formDeleteDTO);
+
+        if (deleted) {
+            return ResponseEntity.ok("Formulario eliminado correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
