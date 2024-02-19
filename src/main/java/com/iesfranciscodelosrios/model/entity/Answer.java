@@ -24,10 +24,11 @@ public class Answer {
     private LocalDateTime date;
 
     @ManyToOne
-    @JoinColumn(name = "formAct", nullable = false, unique = true)
+    @JoinColumn(name = "formAct", nullable = false)
     @EqualsAndHashCode.Exclude
     private FormAct formAct;
 
+    //userId autogenerada por nosotros ejemplo: agutcru403
     @Column(name = "uuid", unique = true)
     @NotBlank(message = "El campo UUID no puede estar en blanco")
     private String uuid;

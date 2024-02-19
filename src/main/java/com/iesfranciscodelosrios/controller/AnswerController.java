@@ -18,49 +18,30 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/active/{idActive}/response")
+@RequestMapping("/active/response")
 public class AnswerController {
 
     @Autowired
-
     private AnswerService answerService;
 
-    @GetMapping("/byDate/{date}")
-    public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("idActive") UUID formActId,
-        @PathVariable("date") String answerDate) {
-
-            System.out.println(answerDate);
-            System.out.println(Timestamp.valueOf(LocalDateTime.parse(answerDate)));
-            //Si ejecuto el test del servicio este funciona correctamente pero cuando llego al test del controlador
-            //da null pointer exception al ejecutar el metodo del servicio y no se porque
-            Answer answerEntity = answerService.loadAnswerByDate(LocalDateTime.parse(answerDate));
+    @GetMapping("/byDate")
+    public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("date") LocalDateTime answerDate) {
+            Answer answerEntity = answerService.loadAnswerByDate(answerDate);
 
             if (answerEntity == null) return ResponseEntity.notFound().build();
 
-            AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
-                    .id(answerEntity.getId())
-                    .date(answerEntity.getDate())
-                    .uuid(answerEntity.getUuid())
-                    .build();
-
+            AnswerResponseDTO answerResponseDTO = answerService.mapToResponseDTO(answerEntity);
             return ResponseEntity.ok(answerResponseDTO);
     }
 
 
     @GetMapping("{id}")
-    public ResponseEntity<AnswerResponseDTO> getAnswerById(@RequestParam("idActive") UUID formActId,
-       @PathVariable("id") String answerId) {
-
-        Answer answerEntity = answerService.findById(UUID.fromString(answerId));
+    public ResponseEntity<AnswerResponseDTO> getAnswerById(@PathVariable("id") UUID id) {
+        Answer answerEntity = answerService.findById(id);
 
         if (answerEntity == null) return ResponseEntity.notFound().build();
 
-        AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
-                .id(answerEntity.getId())
-                .date(answerEntity.getDate())
-                .uuid(answerEntity.getUuid())
-                .build();
-
+        AnswerResponseDTO answerResponseDTO = answerService.mapToResponseDTO(answerEntity);
         return ResponseEntity.ok(answerResponseDTO);
     }
 
@@ -70,43 +51,28 @@ public class AnswerController {
 
         if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<AnswerResponseDTO> response = result.map(answer -> AnswerResponseDTO.builder()
-                .id(answer.getId())
-                .date(answer.getDate())
-                .uuid(answer.getUuid())
-                .build());
-
+        Page<AnswerResponseDTO> response = result.map(answerService::mapToResponseDTO);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping()
-    public ResponseEntity<AnswerResponseDTO> createAnswer(@PathVariable("idActive") UUID formActId,
-        @RequestBody AnswerCreateDTO answerCreateDTO) {
+    public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody AnswerCreateDTO answerCreateDTO) {
+        Answer answerEntity = answerService.save(answerCreateDTO);
 
-        Answer answerEntity = answerService.save(answerCreateDTO, formActId);
         if (answerEntity == null) return ResponseEntity.badRequest().build();
 
-        AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
-                .id(answerEntity.getId())
-                .date(answerEntity.getDate())
-                .uuid(answerEntity.getUuid())
-                .build();
-
+        AnswerResponseDTO answerResponseDTO = answerService.mapToResponseDTO(answerEntity);
         return new ResponseEntity<>(answerResponseDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping()
-    public ResponseEntity<AnswerResponseDTO> deleteAnswer(@PathVariable("idActive") UUID formActId, @RequestBody AnswerDeleteDTO answerDeleteDTO) {
-        Answer answerEntity = answerService.delete(answerDeleteDTO);
+    public ResponseEntity<String> deleteAnswer( @RequestBody AnswerDeleteDTO answerDeleteDTO) {
+        boolean deleted = answerService.delete(answerDeleteDTO);
 
-        if (answerEntity == null) return ResponseEntity.badRequest().build();
-
-        AnswerResponseDTO answerResponseDTO = AnswerResponseDTO.builder()
-                .id(answerEntity.getId())
-                .date(answerEntity.getDate())
-                .uuid(answerEntity.getUuid())
-                .build();
-
-        return ResponseEntity.ok(answerResponseDTO);
+        if (deleted) {
+            return ResponseEntity.ok("Respuesta eliminada correctamente");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
