@@ -214,8 +214,8 @@ public class FormService {
                     .description(form.getDescription())
                     .userOwner(form.getUserOwner().getId())
                     .formActList(formActUidList)
-                    .inputList(inputIdList)
-                    .outputList(outputIdList)
+                    .inputIdList(inputIdList)
+                    .outputIdList(outputIdList)
                     .build();
 
         } catch (Exception e) {
