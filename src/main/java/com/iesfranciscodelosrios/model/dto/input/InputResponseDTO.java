@@ -23,7 +23,7 @@ public class InputResponseDTO {
 
     private String description;
 
-    private TypeType type;
+    private String type;
 
     private Boolean decimal;
 
