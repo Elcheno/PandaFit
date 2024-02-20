@@ -3,6 +3,7 @@ package com.iesfranciscodelosrios.service;
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionCreateDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.model.entity.Role;
@@ -124,11 +125,9 @@ public class PandaFitOutputServiceTest {
         roles.add(Role.builder().role(RoleType.USER).build());
 
         // Crea un usuario para utilizarlo en las pruebas
-        return userService.save(UserEntity.builder()
+        return userService.save(UserCreateDTO.builder()
                 .email("testuser@example.com")
                 .password("Abcd123!")
-                .institution(institution)
-                .role(roles)
                 .build());
     }
 

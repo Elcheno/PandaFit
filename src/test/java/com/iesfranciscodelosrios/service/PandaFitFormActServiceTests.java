@@ -3,6 +3,7 @@ package com.iesfranciscodelosrios.service;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActCreateDTO;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.schoolYear.SchoolYearCreateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import com.iesfranciscodelosrios.repository.FormActRepository;
@@ -53,8 +54,6 @@ public class PandaFitFormActServiceTests {
         FormActCreateDTO formActCreateDTO = FormActCreateDTO.builder()
                 .startDate(formAct.getStartDate())
                 .expirationDate(formAct.getExpirationDate())
-                .form(formAct.getForm())
-                .schoolYear(formAct.getSchoolYear())
                 .build();
 
         // When
@@ -97,11 +96,9 @@ public class PandaFitFormActServiceTests {
     private UserEntity createUserForTest() {
         Set<Role> roles = new HashSet<>();
         roles.add(Role.builder().role(RoleType.USER).build());
-        return userService.save(UserEntity.builder()
+        return userService.save(UserCreateDTO.builder()
                 .email("testuser@example.com")
                 .password("Abcd123!")
-                .institution(createInstitutionForTest())
-                .role(roles)
                 .build());
     }
 
@@ -133,8 +130,6 @@ public class PandaFitFormActServiceTests {
         FormActCreateDTO formActCreateDTO = FormActCreateDTO.builder()
                 .startDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusDays(7))
-                .form(createFormForTest())
-                .schoolYear(schoolYear)
                 .build();
         return formActService.save(formActCreateDTO);
     }
