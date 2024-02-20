@@ -1,9 +1,6 @@
 package com.iesfranciscodelosrios.controller;
 
-import com.iesfranciscodelosrios.model.dto.institution.InstitutionCreateDTO;
-import com.iesfranciscodelosrios.model.dto.institution.InstitutionDeleteDTO;
-import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
-import com.iesfranciscodelosrios.model.dto.institution.InstitutionUpdateDTO;
+import com.iesfranciscodelosrios.model.dto.institution.*;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.service.InstitutionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +21,16 @@ public class InstitutionController {
     private InstitutionService institutionService;
 
     @GetMapping("{id}")
-    public ResponseEntity<InstitutionResponseDTO> getInstitutionById(@PathVariable("id") String id) {
+    public ResponseEntity<InstitutionResponseCompleteDTO> getInstitutionById(@PathVariable("id") String id) {
         Institution institution = institutionService.findById(UUID.fromString(id));
 
         if (institution == null) return ResponseEntity.notFound().build();
 
-        InstitutionResponseDTO institutionResponseDTO = InstitutionResponseDTO.builder()
+        InstitutionResponseCompleteDTO institutionResponseDTO = InstitutionResponseCompleteDTO.builder()
                 .id(institution.getId())
                 .name(institution.getName())
+                .schoolYearQuantity(institution.getSchoolYearList().size())
+                .userQuantity(institution.getUserList().size())
                 .build();
 
         return ResponseEntity.ok(institutionResponseDTO);
