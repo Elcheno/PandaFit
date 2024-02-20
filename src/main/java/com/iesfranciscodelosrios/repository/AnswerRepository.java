@@ -4,6 +4,7 @@ import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,12 @@ public interface AnswerRepository extends CrudRepository<Answer, UUID> {
             value = "SELECT * FROM answer a WHERE a.date = ?1",
             nativeQuery = true)
     Optional<Answer> findAnswerByDate(LocalDateTime date);
+
+    @Modifying
+    @Query(
+            value = "DELETE FROM answer a WHERE a.id = ?1",
+            nativeQuery = true)
+    void forceDelete(UUID answerID) throws Exception;
 
     Page<Answer> findAll(Pageable pageable) throws Exception;
 }
