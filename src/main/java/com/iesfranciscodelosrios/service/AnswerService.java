@@ -4,7 +4,6 @@ import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
-import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.repository.AnswerRepository;
 import com.iesfranciscodelosrios.repository.FormActRepository;
 import org.slf4j.Logger;
@@ -14,8 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -129,12 +128,13 @@ public class AnswerService{
          * @param answerDeleteDTO The AnswerDeleteDTO containing information for deleting the Answer.
          * @return The deleted Answer object, or null if an issue occurs.
          */
+        @Transactional
         public boolean delete (AnswerDeleteDTO answerDeleteDTO){
             try {
                 Optional<Answer> answerOpotional = answerRepository.findById(answerDeleteDTO.getId());
                 if (answerOpotional.isPresent()) {
                     logger.info("Eliminando la respuesta con ID: {}: {}", answerDeleteDTO.getId(), answerOpotional.get());
-                    answerRepository.deleteById(answerDeleteDTO.getId());
+                    answerRepository.forceDelete(answerOpotional.get().getId());
                     return true;
                 }
                 logger.error("No se pudo eliminar la respuesta con ID'{}' : {}", answerDeleteDTO.getId(), answerOpotional.get());
