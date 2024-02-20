@@ -24,4 +24,6 @@ public interface SchoolYearRepository extends JpaRepository<SchoolYear, UUID> {
     @Modifying
     @Query(value = "DELETE FROM school_year as u WHERE u.id = ?1", nativeQuery = true)
     void forceDelete(UUID sachoolYearID) throws Exception;
+
+    Page<SchoolYear> findAllByNameContainingIgnoreCase(Pageable pageable, String name) throws Exception;
 }

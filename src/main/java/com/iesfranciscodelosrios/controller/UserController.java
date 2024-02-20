@@ -63,6 +63,16 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/page/email")
+    public ResponseEntity<Page<UserResponseDTO>> getAllUserByEmailContaining(@PageableDefault(sort = "email") Pageable pageable, @RequestParam("email") String email) {
+        Page<UserEntity> result = userService.findAllByEmailContaining(pageable, email);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<UserResponseDTO> response = result.map(userService::mapToResponseDTO);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("{institutionId}/users/page")
     public ResponseEntity<Page<UserResponseDTO>> getAllUserByInstitution(
             @PathVariable("institutionId") String institutionId,

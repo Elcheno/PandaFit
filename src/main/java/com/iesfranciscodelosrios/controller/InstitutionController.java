@@ -51,6 +51,20 @@ public class InstitutionController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/page/name")
+    public ResponseEntity<Page<InstitutionResponseDTO>> getAllInstitutionsByNameContaining(@PageableDefault(sort = "name") Pageable pageable, @RequestParam("name") String name) {
+        Page<Institution> result = institutionService.findAllByNameContaining(pageable, name);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<InstitutionResponseDTO> response = result.map(institution -> InstitutionResponseDTO.builder()
+                .id(institution.getId())
+                .name(institution.getName())
+                .build());
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping()
     public ResponseEntity<InstitutionResponseDTO> createInstitution(@RequestBody InstitutionCreateDTO institutionCreateDTO) {
         Institution institution = institutionService.save(institutionCreateDTO);

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 @Service
@@ -128,6 +129,29 @@ public class InstitutionService {
 
                             pageable.getSort()
                     )
+            );
+
+            logger.info("Buscando todas las instituciones paginadas: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las instituciones paginadas: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todas las instituciones paginadas: " + e.getMessage());
+        }
+    }
+
+    public Page<Institution> findAllByNameContaining(Pageable pageable, String name) {
+        try {
+            Page<Institution> result = institutionRepository.findAllByNameContainingIgnoreCase(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), name
             );
 
             logger.info("Buscando todas las instituciones paginadas: {}", result);
