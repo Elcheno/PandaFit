@@ -85,7 +85,7 @@ public class FormController {
         }
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/deleteIfNotUse")
     public ResponseEntity<String> deleteIfNotUseForm(@RequestBody FormDeleteDTO formDeleteDTO) {
         boolean deleted = formService.deleteIfNotUse(formDeleteDTO);
 

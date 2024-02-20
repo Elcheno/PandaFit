@@ -207,6 +207,29 @@ public class UserService {
         }
     }
 
+    public Page<UserEntity> findAllByEmailContaining(Pageable pageable, String email) {
+        try {
+            Page<UserEntity> result = userRepository.findAllByEmailContainingIgnoreCase(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), email
+            );
+
+            logger.info("Buscando todos los usuarios paginados: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todos los usuarios paginados: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todos los usuarios paginados: " + e.getMessage());
+        }
+    }
+
     public Page<UserEntity> findAllByInstitution(UUID institutionId, Pageable pageable) {
         Institution institution = institutionService.findById(institutionId);
         if (institution == null) return null;
