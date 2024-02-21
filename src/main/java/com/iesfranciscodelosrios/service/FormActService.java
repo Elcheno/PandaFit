@@ -3,10 +3,7 @@ package com.iesfranciscodelosrios.service;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActCreateDTO;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActResponseDTO;
-import com.iesfranciscodelosrios.model.entity.Form;
-import com.iesfranciscodelosrios.model.entity.FormAct;
-import com.iesfranciscodelosrios.model.entity.Institution;
-import com.iesfranciscodelosrios.model.entity.SchoolYear;
+import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.FormActRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class FormActService {
@@ -101,9 +99,9 @@ public class FormActService {
                 .id(formAct.getId())
                 .startDate(formAct.getStartDate())
                 .expirationDate(formAct.getExpirationDate())
-                .form(formAct.getForm())
-                .schoolYear(formAct.getSchoolYear())
-                .answersList(formAct.getAnswersList())
+                .formId(formAct.getId().toString())
+                .schoolYearId(formAct.getSchoolYear().getId().toString())
+                .answersListId(formAct.getAnswersList() != null ? formAct.getAnswersList().stream().map(answer -> answer.getId().toString()).collect(Collectors.toSet()) : null)
                 .build();
     }
 }

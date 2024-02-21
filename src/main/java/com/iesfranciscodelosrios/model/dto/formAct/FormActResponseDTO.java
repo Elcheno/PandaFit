@@ -18,8 +18,8 @@ public class FormActResponseDTO {
     private UUID id;
     private LocalDateTime startDate;
     private LocalDateTime expirationDate;
-    private Form form;
-    private SchoolYear schoolYear;
-    private Set<Answer> answersList;
+    private String formId;
+    private String schoolYearId;
+    private Set<String> answersListId;
 }
 
