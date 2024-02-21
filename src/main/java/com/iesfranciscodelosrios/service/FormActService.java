@@ -67,8 +67,8 @@ public class FormActService {
         if (form == null || schoolYear == null) return null;
 
         FormAct formAct = FormAct.builder()
-                .startDate(LocalDateTime.now())
-                .expirationDate(LocalDateTime.now().plusHours(1))
+                .startDate(formActCreateDTO.getStartDate())
+                .expirationDate(formActCreateDTO.getExpirationDate())
                 .form(form)
                 .schoolYear(schoolYear)
                 .build();
@@ -92,6 +92,30 @@ public class FormActService {
 
     public List<FormAct> findAll() {
         return formActRepository.findAll();
+    }
+
+    public Page<FormAct> findAllBySchoolYear(UUID id, Pageable pageable) {
+        try {
+            SchoolYear schoolYear = this.schoolYearService.findById(id);
+            if (schoolYear == null) return null;
+            return formActRepository.findAllBySchoolYearAndExpirationDateAfter(
+                    schoolYear,
+                    LocalDateTime.now(),
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
+
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public FormActResponseDTO mapToResponseDTO(FormAct formAct) {
