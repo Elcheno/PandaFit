@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class AnswerCreateDTO {
-    private UUID id;
     private LocalDateTime date;
     private String uuid;
+    private UUID formActId;
 }

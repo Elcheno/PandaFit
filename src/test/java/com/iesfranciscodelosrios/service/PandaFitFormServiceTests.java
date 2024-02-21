@@ -6,6 +6,7 @@ import com.iesfranciscodelosrios.model.dto.form.FormResponseDTO;
 import com.iesfranciscodelosrios.model.dto.form.FormUpdateDTO;
 import com.iesfranciscodelosrios.model.dto.formAct.FormActCreateDTO;
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionCreateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.model.type.RoleType;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,13 @@ public class PandaFitFormServiceTests {
                 .role(role)
                 .build();
 
-        userService.save(userOwner);
+        UserCreateDTO userCreateDTO = UserCreateDTO.builder()
+                .email("email@example.com")
+                .password("Pasword123!")
+                .institutionId(institution.getId())
+                .build();
+
+        userService.save(userCreateDTO);
 
         // Ahora crearemos los FormAct y el Form después de guardar el usuario propietario
         HashSet<FormAct> formsAct = new HashSet<>();

@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.entity.Role;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.model.type.RoleType;
@@ -27,33 +28,27 @@ public class PandafitUserServiceTests {
 
     @Test
     public void testCreateUser() {
-//        Set<Role> role = new HashSet<>();
-//        role.add(Role.builder()
-//                .role(RoleType.USER)
-//                .build()
-//        );
-//
-//        userService.save(UserEntity.builder()
-//                .email("user2@example.com")
-//                .institution(institutionService.findByName("global1"))
-//                .password("Ejemplo1&")
-//                .role(role)
-//                .build()
-//        );
+        Set<Role> role = new HashSet<>();
+        role.add(Role.builder()
+                .role(RoleType.USER)
+                .build()
+        );
+
+        userService.save(UserCreateDTO.builder()
+                .email("user2@example.com")
+                .password("Ejemplo1&")
+                .build()
+        );
 
         for(int i = 25; i < 46; i++) {
-            Set<Role> role = new HashSet<>();
             role.add(Role.builder()
                     .role(RoleType.USER)
                     .build()
             );
 
-            UserEntity user = userService.save(UserEntity.builder()
-                    .id(UUID.randomUUID())
+            UserEntity user = userService.save(UserCreateDTO.builder()
                     .email("user" + i + "@example.com")
-                    .institution(institutionService.findByName("global2"))
                     .password("Ejemplo1&")
-                    .role(role)
                     .build()
             );
         }

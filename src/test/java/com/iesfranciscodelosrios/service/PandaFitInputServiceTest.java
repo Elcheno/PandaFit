@@ -4,6 +4,7 @@ import com.iesfranciscodelosrios.model.dto.input.InputCreateDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputResponseDTO;
 import com.iesfranciscodelosrios.model.dto.institution.InstitutionCreateDTO;
+import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.entity.Input;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Role;
@@ -120,11 +121,9 @@ public class PandaFitInputServiceTest {
 
     private UserEntity createUserForTest() {
         // Crea un usuario para utilizarlo en las pruebas
-        return userService.save(UserEntity.builder()
+        return userService.save(UserCreateDTO.builder()
                 .email("testuser@example.com")
-                .institution(createInstitutionForTest())
                 .password("Abcdefg1!")
-                .role(createDefaultRoles())
                 .build());
     }
 

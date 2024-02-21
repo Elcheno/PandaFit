@@ -14,7 +14,5 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class AnswerDeleteDTO {
-    private LocalDateTime date;
-    private FormAct formAct;
-    private String uuid;
+    private UUID id;
 }
