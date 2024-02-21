@@ -54,6 +54,29 @@ public class FormActController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("page/schoolyear/{id}")
+    public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYear(
+            @PageableDefault() Pageable pageable,
+            @PathVariable("id") String id) {
+        Page<FormAct> result = formActService.findAllBySchoolYear(UUID.fromString(id), pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<FormActResponseDTO> response = result.map(formAct -> {
+            return FormActResponseDTO.builder()
+                    .id(formAct.getId())
+                    .startDate(formAct.getStartDate())
+                    .expirationDate(formAct.getExpirationDate())
+                    .formId(formAct.getForm().getId().toString())
+                    .formName(formAct.getForm().getName())
+                    .build();
+        });
+
+        System.out.println(response);
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @PostMapping()
     public ResponseEntity<FormActResponseDTO> createFormAct(@RequestBody FormActCreateDTO formActCreateDTO) {

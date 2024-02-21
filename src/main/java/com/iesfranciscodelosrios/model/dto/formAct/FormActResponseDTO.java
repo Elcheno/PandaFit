@@ -19,6 +19,7 @@ public class FormActResponseDTO {
     private LocalDateTime startDate;
     private LocalDateTime expirationDate;
     private String formId;
+    private String formName;
     private String schoolYearId;
     private Set<String> answersListId;
 }
