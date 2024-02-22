@@ -28,5 +28,9 @@ public interface FormActRepository extends CrudRepository <FormAct, UUID> {
     List<FormAct> findAll();
     Page<FormAct> findAll(Pageable pageable) throws Exception;
 
+    Page<FormAct> findAllBySchoolYear(SchoolYear schoolYear, Pageable pageable) throws Exception;
+
     Page<FormAct> findAllBySchoolYearAndExpirationDateAfter(SchoolYear schoolYear, LocalDateTime date, Pageable pageable) throws Exception;
+
+    Page<FormAct> findAllBySchoolYearAndExpirationDateBefore(SchoolYear schoolYear, LocalDateTime date, Pageable pageable) throws Exception;
 }

@@ -98,7 +98,54 @@ public class FormActService {
         try {
             SchoolYear schoolYear = this.schoolYearService.findById(id);
             if (schoolYear == null) return null;
+            return formActRepository.findAllBySchoolYear(
+                    schoolYear,
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
+
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Page<FormAct> findAllBySchoolYearAfterExpirationDate(UUID id, Pageable pageable) {
+        try {
+            SchoolYear schoolYear = this.schoolYearService.findById(id);
+            if (schoolYear == null) return null;
             return formActRepository.findAllBySchoolYearAndExpirationDateAfter(
+                    schoolYear,
+                    LocalDateTime.now(),
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
+
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Page<FormAct> findAllBySchoolYearBeforeExpirationDate(UUID id, Pageable pageable) {
+        try {
+            SchoolYear schoolYear = this.schoolYearService.findById(id);
+            if (schoolYear == null) return null;
+            return formActRepository.findAllBySchoolYearAndExpirationDateBefore(
                     schoolYear,
                     LocalDateTime.now(),
                     PageRequest.of(
@@ -124,6 +171,7 @@ public class FormActService {
                 .startDate(formAct.getStartDate())
                 .expirationDate(formAct.getExpirationDate())
                 .formId(formAct.getId().toString())
+                .formName(formAct.getForm().getName())
                 .schoolYearId(formAct.getSchoolYear().getId().toString())
                 .answersListId(formAct.getAnswersList() != null ? formAct.getAnswersList().stream().map(answer -> answer.getId().toString()).collect(Collectors.toSet()) : null)
                 .build();

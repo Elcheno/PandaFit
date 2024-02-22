@@ -72,7 +72,47 @@ public class FormActController {
                     .build();
         });
 
-        System.out.println(response);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("page/schoolyear/after/{id}")
+    public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYearAfterExpirationDate(
+            @PageableDefault() Pageable pageable,
+            @PathVariable("id") String id) {
+        Page<FormAct> result = formActService.findAllBySchoolYearAfterExpirationDate(UUID.fromString(id), pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<FormActResponseDTO> response = result.map(formAct -> {
+            return FormActResponseDTO.builder()
+                    .id(formAct.getId())
+                    .startDate(formAct.getStartDate())
+                    .expirationDate(formAct.getExpirationDate())
+                    .formId(formAct.getForm().getId().toString())
+                    .formName(formAct.getForm().getName())
+                    .build();
+        });
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("page/schoolyear/before/{id}")
+    public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYearBeforeExpirationDate(
+            @PageableDefault() Pageable pageable,
+            @PathVariable("id") String id) {
+        Page<FormAct> result = formActService.findAllBySchoolYearBeforeExpirationDate(UUID.fromString(id), pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<FormActResponseDTO> response = result.map(formAct -> {
+            return FormActResponseDTO.builder()
+                    .id(formAct.getId())
+                    .startDate(formAct.getStartDate())
+                    .expirationDate(formAct.getExpirationDate())
+                    .formId(formAct.getForm().getId().toString())
+                    .formName(formAct.getForm().getName())
+                    .build();
+        });
 
         return ResponseEntity.ok(response);
     }
