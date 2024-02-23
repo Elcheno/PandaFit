@@ -170,7 +170,7 @@ public class FormActService {
                 .id(formAct.getId())
                 .startDate(formAct.getStartDate())
                 .expirationDate(formAct.getExpirationDate())
-                .formId(formAct.getId().toString())
+                .formId(formAct.getForm().getId().toString())
                 .formName(formAct.getForm().getName())
                 .schoolYearId(formAct.getSchoolYear().getId().toString())
                 .answersListId(formAct.getAnswersList() != null ? formAct.getAnswersList().stream().map(answer -> answer.getId().toString()).collect(Collectors.toSet()) : null)
