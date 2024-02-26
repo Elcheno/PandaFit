@@ -185,8 +185,6 @@ public class FormActController {
         formDetails.put("id", form.getId());
         formDetails.put("name", form.getName());
         formDetails.put("description", form.getDescription());
-        formDetails.put("userOwner", form.getUserOwner());
-        formDetails.put("outputList", form.getOutputList());
         responseData.put("formDetails", formDetails);
 
         return ResponseEntity.ok(responseData);
