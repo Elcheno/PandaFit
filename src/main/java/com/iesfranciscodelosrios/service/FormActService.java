@@ -1,10 +1,7 @@
 package com.iesfranciscodelosrios.service;
 
-import com.iesfranciscodelosrios.model.dto.formAct.FormActCreateDTO;
-import com.iesfranciscodelosrios.model.dto.formAct.FormActDeleteDTO;
-import com.iesfranciscodelosrios.model.dto.formAct.FormActResponseDTO;
+import com.iesfranciscodelosrios.model.dto.formAct.*;
 import com.iesfranciscodelosrios.model.entity.*;
-import com.iesfranciscodelosrios.model.interfaces.iServices;
 import com.iesfranciscodelosrios.repository.FormActRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,7 +36,6 @@ public class FormActService {
         Optional<FormAct> formAct = formActRepository.findById(id);
         return formAct.orElse(null);
     }
-
     public Page<FormAct> findAll(Pageable pageable) {
         try {
             return formActRepository.findAll(
@@ -175,5 +171,20 @@ public class FormActService {
                 .schoolYearId(formAct.getSchoolYear().getId().toString())
                 .answersListId(formAct.getAnswersList() != null ? formAct.getAnswersList().stream().map(answer -> answer.getId().toString()).collect(Collectors.toSet()) : null)
                 .build();
+    }
+
+    public FormAct closeForm(FormActCloseDTO formActCloseDTO) {
+        try {
+            FormAct formActToClose = formActRepository.findById(formActCloseDTO.getId()).get();
+
+            if (formActToClose != null){
+                formActToClose.setExpirationDate(formActCloseDTO.getExpirationDate());
+                return formActRepository.save(formActToClose);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
