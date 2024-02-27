@@ -1,8 +1,6 @@
 package com.iesfranciscodelosrios.controller;
 
-import com.iesfranciscodelosrios.model.dto.formAct.FormActCreateDTO;
-import com.iesfranciscodelosrios.model.dto.formAct.FormActDeleteDTO;
-import com.iesfranciscodelosrios.model.dto.formAct.FormActResponseDTO;
+import com.iesfranciscodelosrios.model.dto.formAct.*;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.service.FormActService;
@@ -118,6 +116,15 @@ public class FormActController {
     @PostMapping()
     public ResponseEntity<FormActResponseDTO> createFormAct(@RequestBody FormActCreateDTO formActCreateDTO) {
         FormAct formAct = formActService.save(formActCreateDTO);
+        if (formAct == null) return ResponseEntity.badRequest().build();
+
+        FormActResponseDTO formActResponseDTO = formActService.mapToResponseDTO(formAct);
+        return ResponseEntity.ok(formActResponseDTO);
+    }
+
+    @PutMapping("/close")
+    public ResponseEntity<FormActResponseDTO> createFormAct(@RequestBody FormActCloseDTO formActCloseDTO) {
+        FormAct formAct = formActService.closeForm(formActCloseDTO);
         if (formAct == null) return ResponseEntity.badRequest().build();
 
         FormActResponseDTO formActResponseDTO = formActService.mapToResponseDTO(formAct);
