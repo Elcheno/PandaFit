@@ -1,12 +1,12 @@
 package com.iesfranciscodelosrios.model.entity;
 
+import com.iesfranciscodelosrios.utils.HashMapConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -32,6 +32,9 @@ public class Answer {
     @Column(name = "uuid", unique = true)
     @NotBlank(message = "El campo UUID no puede estar en blanco")
     private String uuid;
+
+    @Convert(converter = HashMapConverter.class)
+    private Set<Object> response;
 
     @Override
     public boolean equals(Object o) {
