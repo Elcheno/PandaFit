@@ -112,6 +112,7 @@ public class AnswerService{
                     .date(answerCreateDTO.getDate())
                     .formAct(formActRepository.findById(answerCreateDTO.getFormActId()).get())
                     .uuid(answerCreateDTO.getUuid())
+                    .response(answerCreateDTO.getResponse())
                     .build();
 
             logger.info("Guardando la respuesta: {}", answer);
@@ -152,6 +153,7 @@ public class AnswerService{
                 return AnswerResponseDTO.builder()
                         .id(answer.getId())
                         .date(answer.getDate())
+                        .response(answer.getResponse())
                         .formActId(answer.getFormAct().getId())
                         .uuid(answer.getUuid())
                         .build();
