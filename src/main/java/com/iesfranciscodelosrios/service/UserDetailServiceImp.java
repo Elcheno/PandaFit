@@ -44,6 +44,10 @@ public class UserDetailServiceImp implements UserDetailsService {
         );
     }
 
+    public UserEntity findByEmail (String email) {
+        return userService.findByEmail(email);
+    }
+
     public boolean registerUser (String email, String uuid) {
         UserEntity userEntity = userService.findByEmail(email);
 

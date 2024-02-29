@@ -4,6 +4,7 @@ import com.iesfranciscodelosrios.model.dto.user.UserAuthenticationDTO;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.service.UserDetailServiceImp;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,8 +50,11 @@ public class UserRegisterUuidFilter extends OncePerRequestFilter {
 
             this.userDetailsService.registerUser(email, uuid);
 
+            UserEntity usuario = this.userDetailsService.findByEmail(email);
+
             request.setAttribute("email", email);
             request.setAttribute("uuid", uuid);
+            request.setAttribute("id", usuario.getId());
         }
 
         filterChain.doFilter(request, response);

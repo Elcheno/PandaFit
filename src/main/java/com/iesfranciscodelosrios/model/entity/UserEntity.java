@@ -85,6 +85,7 @@ public class UserEntity {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", institution=" + (institution != null ? institution.getName() : null) +
+                ", uuid='" + uuid + '\'' +
                 '}';
     }
 }
