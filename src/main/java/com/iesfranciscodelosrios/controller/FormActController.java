@@ -49,7 +49,7 @@ public class FormActController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("page/schoolyear/{id}")
+    @GetMapping("page/schoolYear/{id}")
     public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYear(
             @PageableDefault() Pageable pageable,
             @PathVariable("id") String id) {
@@ -70,7 +70,7 @@ public class FormActController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("page/schoolyear/after/{id}")
+    @GetMapping("page/schoolYear/after/{id}")
     public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYearAfterExpirationDate(
             @PageableDefault() Pageable pageable,
             @PathVariable("id") String id) {
@@ -91,7 +91,7 @@ public class FormActController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("page/schoolyear/before/{id}")
+    @GetMapping("page/schoolYear/before/{id}")
     public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYearBeforeExpirationDate(
             @PageableDefault() Pageable pageable,
             @PathVariable("id") String id) {
