@@ -16,6 +16,7 @@ public class UserResponseDTO {
     private String email;
     private String password;
     private UUID institutionId;
+    private String institutionName;
     private Set<UUID> inputsId;
     private Set<UUID> outputsId;
     private Set<UUID> formsId;

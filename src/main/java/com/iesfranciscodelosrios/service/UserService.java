@@ -360,6 +360,7 @@ public class UserService {
                     .email(user.getEmail())
                     .password(user.getPassword())
                     .institutionId(user.getInstitution().getId())
+                    .institutionName(user.getInstitution().getName())
                     .inputsId(inputUidList)
                     .outputsId(outputUidList)
                     .formsId(formUidList)
