@@ -23,7 +23,12 @@ public class JwtUtils {
 
     private String timeExpiration = "86400000";
 
-    // Generar token
+    /**
+     * Generates an access token for the given email.
+     *
+     * @param email The email for which the token is generated.
+     * @return The generated access token.
+     */
     public String generateTokenAccess(String email) {
         Map<String, String> claims = new HashMap<>();
         claims.put("email", email);
@@ -37,7 +42,12 @@ public class JwtUtils {
                 .compact();
     }
 
-    // Validar token
+    /**
+     * Validates the access token.
+     *
+     * @param token The access token to validate.
+     * @return True if the token is valid, false otherwise.
+     */
     public boolean validateTokenAccess(String token) {
         try {
             Jwts.parserBuilder()
@@ -54,7 +64,12 @@ public class JwtUtils {
         }
     }
 
-    // Obtener todos los claims del token
+    /**
+     * Extracts all claims from the provided token.
+     *
+     * @param token The token from which to extract the claims.
+     * @return All claims extracted from the token.
+     */
     public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSeignatureKey())
@@ -63,18 +78,34 @@ public class JwtUtils {
                 .getBody();
     }
 
-    // Obtener email del token
+    /**
+     * Retrieves the email from the provided token.
+     *
+     * @param token The token from which to retrieve the email.
+     * @return The email extracted from the token.
+     */
     public String getEmailFromToken(String token) {
         return getClaim(token, Claims::getSubject);
     }
 
-    // Obtener un solo Claim del token
+    /**
+     * Retrieves a specific claim from the provided token.
+     *
+     * @param token            The token from which to retrieve the claim.
+     * @param claimsTFunction  The function to apply to extract the specific claim.
+     * @param <T>              The type of the claim value.
+     * @return The value of the specific claim extracted from the token.
+     */
     public <T> T getClaim(String token, Function<Claims, T> claimsTFunction) {
         Claims claims = extractAllClaims(token);
         return claimsTFunction.apply(claims);
     }
 
-    // Obtener firma del token
+    /**
+     * Generates the signature key using the secret key.
+     *
+     * @return The generated signature key.
+     */
     public Key getSeignatureKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

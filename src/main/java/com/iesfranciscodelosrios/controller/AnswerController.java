@@ -24,6 +24,12 @@ public class AnswerController {
     @Autowired
     private AnswerService answerService;
 
+    /**
+     * Retrieve an answer by its date.
+     *
+     * @param answerDate The date of the answer to retrieve.
+     * @return ResponseEntity containing the retrieved answer or a not found status.
+     */
     @GetMapping("/byDate")
     public ResponseEntity<AnswerResponseDTO> getAnswerByDate(@RequestParam("date") LocalDateTime answerDate) {
             Answer answerEntity = answerService.loadAnswerByDate(answerDate);
@@ -34,7 +40,12 @@ public class AnswerController {
             return ResponseEntity.ok(answerResponseDTO);
     }
 
-
+    /**
+     * Retrieve an answer by its ID.
+     *
+     * @param id The ID of the answer to retrieve.
+     * @return ResponseEntity containing the retrieved answer or a not found status.
+     */
     @GetMapping("{id}")
     public ResponseEntity<AnswerResponseDTO> getAnswerById(@PathVariable("id") UUID id) {
         Answer answerEntity = answerService.findById(id);
@@ -45,6 +56,12 @@ public class AnswerController {
         return ResponseEntity.ok(answerResponseDTO);
     }
 
+    /**
+     * Retrieve all answers with pagination.
+     *
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of answers or a bad request status.
+     */
     @GetMapping("page")
     public ResponseEntity<Page<AnswerResponseDTO>> getAllAnswers(@PageableDefault() Pageable pageable) {
         Page<Answer> result = answerService.findAll(pageable);
@@ -55,6 +72,12 @@ public class AnswerController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Create a new answer.
+     *
+     * @param answerCreateDTO DTO containing information for creating the answer.
+     * @return ResponseEntity containing the created answer or a bad request status.
+     */
     @PostMapping()
     public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody AnswerCreateDTO answerCreateDTO) {
         Answer answerEntity = answerService.save(answerCreateDTO);
@@ -65,6 +88,12 @@ public class AnswerController {
         return new ResponseEntity<>(answerResponseDTO, HttpStatus.CREATED);
     }
 
+    /**
+     * Delete an answer.
+     *
+     * @param answerDeleteDTO DTO containing information for deleting the answer.
+     * @return ResponseEntity containing a success message or a not found status.
+     */
     @DeleteMapping()
     public ResponseEntity<String> deleteAnswer( @RequestBody AnswerDeleteDTO answerDeleteDTO) {
         boolean deleted = answerService.delete(answerDeleteDTO);

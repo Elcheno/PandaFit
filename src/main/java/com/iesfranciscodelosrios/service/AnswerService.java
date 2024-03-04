@@ -103,7 +103,13 @@ public class AnswerService{
         }
     }
 
-
+    /**
+     * Saves the answer provided in the AnswerCreateDTO object.
+     *
+     * @param answerCreateDTO The AnswerCreateDTO object containing the information for creating the answer.
+     * @return The saved Answer object.
+     * @throws RuntimeException If an error occurs while creating the answer.
+     */
     public Answer save(AnswerCreateDTO answerCreateDTO) {
         try {
             logger.info("Guardando la respuesta: {}", answerCreateDTO);
@@ -146,6 +152,13 @@ public class AnswerService{
             }
         }
 
+    /**
+     * Maps an Answer object to an AnswerResponseDTO object.
+     *
+     * @param answer The Answer object to map.
+     * @return The mapped AnswerResponseDTO object.
+     * @throws RuntimeException If an error occurs while creating the response DTO.
+     */
         public AnswerResponseDTO mapToResponseDTO (Answer answer){
             try {
                 logger.info("Creando la response de {}", answer);

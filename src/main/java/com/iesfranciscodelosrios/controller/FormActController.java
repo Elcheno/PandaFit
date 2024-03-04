@@ -23,6 +23,12 @@ public class FormActController {
     @Autowired
     private FormActService formActService;
 
+    /**
+     * Retrieve a form action by its ID.
+     *
+     * @param id The ID of the form action to retrieve.
+     * @return ResponseEntity containing the retrieved form action or a not found status.
+     */
     @GetMapping("{id}")
     public ResponseEntity<FormActResponseDTO> getFormActById(@PathVariable("id") String id) {
         FormAct formAct = formActService.findById(UUID.fromString(id));
@@ -32,6 +38,12 @@ public class FormActController {
         return ResponseEntity.ok(formActResponseDTO);
     }
 
+    /**
+     * Retrieve all form actions with pagination.
+     *
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of form actions or a bad request status.
+     */
     @GetMapping("page")
     public ResponseEntity<Page<FormActResponseDTO>> getAllFormsAct(@PageableDefault() Pageable pageable) {
         Page<FormAct> result = formActService.findAll(pageable);
@@ -49,6 +61,13 @@ public class FormActController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves all form actions for a given school year with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param id       The ID of the school year.
+     * @return ResponseEntity containing a page of form actions for the specified school year or a bad request status.
+     */
     @GetMapping("page/schoolYear/{id}")
     public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYear(
             @PageableDefault() Pageable pageable,
@@ -70,6 +89,13 @@ public class FormActController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves all form actions for a given school year after a specified expiration date with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param id       The ID of the school year.
+     * @return ResponseEntity containing a page of form actions for the specified school year and after the expiration date or a bad request status.
+     */
     @GetMapping("page/schoolYear/after/{id}")
     public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYearAfterExpirationDate(
             @PageableDefault() Pageable pageable,
@@ -91,6 +117,13 @@ public class FormActController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves all form actions for a given school year before a specified expiration date with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param id       The ID of the school year.
+     * @return ResponseEntity containing a page of form actions for the specified school year and before the expiration date or a bad request status.
+     */
     @GetMapping("page/schoolYear/before/{id}")
     public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActBySchoolYearBeforeExpirationDate(
             @PageableDefault() Pageable pageable,
@@ -112,7 +145,12 @@ public class FormActController {
         return ResponseEntity.ok(response);
     }
 
-
+    /**
+     * Creates a new form action.
+     *
+     * @param formActCreateDTO DTO containing information for creating the form action.
+     * @return ResponseEntity containing the created form action or a bad request status.
+     */
     @PostMapping()
     public ResponseEntity<FormActResponseDTO> createFormAct(@RequestBody FormActCreateDTO formActCreateDTO) {
         FormAct formAct = formActService.save(formActCreateDTO);
@@ -122,6 +160,12 @@ public class FormActController {
         return ResponseEntity.ok(formActResponseDTO);
     }
 
+    /**
+     * Closes a form action.
+     *
+     * @param formActCloseDTO DTO containing information for closing the form action.
+     * @return ResponseEntity containing the closed form action or a bad request status.
+     */
     @PutMapping("/close")
     public ResponseEntity<FormActResponseDTO> createFormAct(@RequestBody FormActCloseDTO formActCloseDTO) {
         FormAct formAct = formActService.closeForm(formActCloseDTO);
@@ -131,6 +175,12 @@ public class FormActController {
         return ResponseEntity.ok(formActResponseDTO);
     }
 
+    /**
+     * Deletes a form action by its ID.
+     *
+     * @param formActDeleteDTO DTO containing the ID of the form action to delete.
+     * @return ResponseEntity containing the deleted form action or a not found status.
+     */
     @DeleteMapping()
     public ResponseEntity<FormActResponseDTO> deleteFormActById(@RequestBody FormActDeleteDTO formActDeleteDTO) {
         FormAct formAct = formActService.delete(formActDeleteDTO);

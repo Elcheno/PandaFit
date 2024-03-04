@@ -62,28 +62,6 @@ public class OutputService {
         }
     }
 
-
-
-    /*public Page<Output> findAll(Pageable pageable) {
-        try {
-            return outputRepository.findAll(
-                    PageRequest.of(
-                            pageable.getPageNumber() > 0
-                                    ? pageable.getPageNumber()
-                                    : 0,
-
-                            pageable.getPageSize() > 0
-                                    ? pageable.getPageSize()
-                                    : 10,
-
-                            pageable.getSort()
-                    )
-            );
-        } catch (Exception e) {
-            return null;
-        }
-    }*/
-
     /**
      * Retrieves all Outputs with pagination support.
      *
@@ -212,11 +190,6 @@ public class OutputService {
             throw new RuntimeException("Error al eliminar el output: " + e.getMessage());
         }
     }
-
-
-    /*public Output findByName(String name) {
-        return outputRepository.findByName(name).orElse(null);
-    }*/
 
     /**
      * Retrieves an Output based on the specified name.

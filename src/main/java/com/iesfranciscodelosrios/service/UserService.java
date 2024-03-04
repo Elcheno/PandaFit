@@ -39,6 +39,12 @@ public class UserService {
     @Autowired
     private RoleService roleService;
 
+    /**
+     * Saves a new user.
+     *
+     * @param userCreateDTO The DTO containing user information.
+     * @return The saved UserEntity object.
+     */
     @Transactional
     public UserEntity save(UserCreateDTO userCreateDTO) {
         try {
@@ -77,6 +83,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Finds a user by their ID.
+     *
+     * @param id The ID of the user.
+     * @return The UserEntity object representing the user.
+     */
     public UserEntity findById(UUID id) {
         try {
             UserEntity result = userRepository.findById(id)
@@ -95,6 +107,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Updates a user's information.
+     *
+     * @param userUpdateDTO The DTO containing updated user information.
+     * @return The updated UserEntity object.
+     */
     @Transactional
     public UserEntity update(UserUpdateDTO userUpdateDTO) {
         try {
@@ -117,6 +135,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Updates a user's UUID.
+     *
+     * @param user The UserEntity object representing the user.
+     * @param uuid The UUID to update.
+     * @return The updated UserEntity object.
+     */
     @Transactional
     public UserEntity updateUUID(UserEntity user, String uuid) {
         try {
@@ -146,6 +171,12 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param userDeleteDTO The DTO containing the ID of the user to delete.
+     * @return true if the user was deleted successfully, false otherwise.
+     */
     @Transactional
     public boolean delete(UserDeleteDTO userDeleteDTO) {
         try {
@@ -163,6 +194,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Finds a user by their email.
+     *
+     * @param email The email of the user to find.
+     * @return The UserEntity object representing the user.
+     */
     @Transactional
     public UserEntity findByEmail(String email) {
         try {
@@ -182,6 +219,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves all users in a paginated manner.
+     *
+     * @param pageable The pagination information.
+     * @return A Page object containing the users.
+     */
     public Page<UserEntity> findAll(Pageable pageable) {
         try {
             Page<UserEntity> result = userRepository.findAll(
@@ -207,6 +250,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves all users whose email contains the specified value in a paginated manner.
+     *
+     * @param pageable The pagination information.
+     * @param email    The value to search for in the email.
+     * @return A Page object containing the users.
+     */
     public Page<UserEntity> findAllByEmailContaining(Pageable pageable, String email) {
         try {
             Page<UserEntity> result = userRepository.findAllByEmailContainingIgnoreCase(
@@ -230,6 +280,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves all users belonging to the specified institution in a paginated manner.
+     *
+     * @param institutionId The ID of the institution.
+     * @param pageable      The pagination information.
+     * @return A Page object containing the users.
+     */
     public Page<UserEntity> findAllByInstitution(UUID institutionId, Pageable pageable) {
         Institution institution = institutionService.findById(institutionId);
         if (institution == null) return null;
@@ -259,6 +316,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves all users with the specified role in a paginated manner.
+     *
+     * @param role     The role to search for.
+     * @param pageable The pagination information.
+     * @return A Page object containing the users.
+     */
     public Page<UserEntity> findAllByRole(String role, Pageable pageable) {
         RoleType rol;
         try {
@@ -292,6 +356,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves all users belonging to the specified institution and having the specified role in a paginated manner.
+     *
+     * @param institutionId The ID of the institution.
+     * @param role          The role to search for.
+     * @param pageable      The pagination information.
+     * @return A Page object containing the users.
+     */
     public Page<UserEntity> findAllByInstitutionAndRole(UUID institutionId, String role, Pageable pageable) {
         Institution institution = institutionService.findById(institutionId);
         RoleType rol;
@@ -329,6 +401,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Maps a UserEntity object to a UserResponseDTO object.
+     *
+     * @param user The UserEntity object to map.
+     * @return A UserResponseDTO object.
+     */
     public UserResponseDTO mapToResponseDTO(UserEntity user) {
         try {
             logger.info("Creando la response de {}", user);

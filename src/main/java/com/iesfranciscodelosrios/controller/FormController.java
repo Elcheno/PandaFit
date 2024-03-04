@@ -24,6 +24,12 @@ public class FormController {
     @Autowired
     private FormService formService;
 
+    /**
+     * Retrieves a form by its name.
+     *
+     * @param name The name of the form to retrieve.
+     * @return ResponseEntity containing the retrieved form or a not found status.
+     */
     @GetMapping("name")
     public ResponseEntity<FormResponseDTO> getFormByName(@RequestParam("name") String name){
         Form formEntity = formService.loadFormByName(name);
@@ -34,6 +40,12 @@ public class FormController {
         return ResponseEntity.ok(formResponseDTO);
     }
 
+    /**
+     * Retrieves a form by its ID.
+     *
+     * @param id The ID of the form to retrieve.
+     * @return ResponseEntity containing the retrieved form or a not found status.
+     */
     @GetMapping("{id}")
     public ResponseEntity<FormResponseDTO> getFormById(@PathVariable("id") UUID id){
         Form formEntity = formService.findById(id);
@@ -44,6 +56,12 @@ public class FormController {
         return ResponseEntity.ok(formResponseDTO);
     }
 
+    /**
+     * Retrieves all forms with pagination.
+     *
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of forms or a bad request status.
+     */
     @GetMapping("page")
     public ResponseEntity<Page<FormResponseDTO>> getAllForms(@PageableDefault() Pageable pageable) {
         Page<Form> result = formService.findAll(pageable);
@@ -54,6 +72,12 @@ public class FormController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Creates a new form.
+     *
+     * @param formCreateDTO DTO containing information for creating the form.
+     * @return ResponseEntity containing the created form or a bad request status.
+     */
     @PostMapping()
     public ResponseEntity<FormResponseDTO> createForm(@RequestBody FormCreateDTO formCreateDTO){
         Form formEntity = formService.save(formCreateDTO);
@@ -64,6 +88,12 @@ public class FormController {
         return ResponseEntity.ok(formResponseDTO);
     }
 
+    /**
+     * Updates an existing form.
+     *
+     * @param formUpdateDTO DTO containing information for updating the form.
+     * @return ResponseEntity containing the updated form or a bad request status.
+     */
     @PutMapping()
     public ResponseEntity<FormResponseDTO> updateForm(@RequestBody FormUpdateDTO formUpdateDTO){
         Form formEntity = formService.update(formUpdateDTO);
@@ -74,6 +104,12 @@ public class FormController {
         return ResponseEntity.ok(formResponseDTO);
     }
 
+    /**
+     * Deletes a form by its ID.
+     *
+     * @param formDeleteDTO DTO containing the ID of the form to delete.
+     * @return ResponseEntity containing a boolean indicating the success of the deletion or a not found status.
+     */
     @DeleteMapping()
     public ResponseEntity<Boolean> deleteForm(@RequestBody FormDeleteDTO formDeleteDTO) {
         boolean deleted = formService.delete(formDeleteDTO);
@@ -85,6 +121,12 @@ public class FormController {
         }
     }
 
+    /**
+     * Deletes a form if it's not in use.
+     *
+     * @param formDeleteDTO DTO containing the ID of the form to delete if not in use.
+     * @return ResponseEntity containing a message indicating the success of the deletion or a not found status.
+     */
     @DeleteMapping("/deleteIfNotUse")
     public ResponseEntity<String> deleteIfNotUseForm(@RequestBody FormDeleteDTO formDeleteDTO) {
         boolean deleted = formService.deleteIfNotUse(formDeleteDTO);

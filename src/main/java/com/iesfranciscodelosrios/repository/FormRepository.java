@@ -12,7 +12,20 @@ import java.util.UUID;
 
 @Repository
 public interface FormRepository extends CrudRepository<Form, UUID> {
+    /**
+     * Finds a form by its name.
+     *
+     * @param name The name of the form.
+     * @return An optional containing the form if found, otherwise empty.
+     */
     Optional<Form> findByName(String name);
 
+    /**
+     * Retrieves all forms paginated.
+     *
+     * @param pageable Pagination information.
+     * @return A page of forms.
+     * @throws Exception If an error occurs during the retrieval process.
+     */
     Page<Form> findAll(Pageable pageable) throws Exception;
 }
