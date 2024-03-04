@@ -36,6 +36,13 @@ public class SchoolYearService  {
     @Autowired
     private FormActRepository formActRepository;
 
+    /**
+     * Retrieves a school year by its ID.
+     *
+     * @param id ID of the school year to retrieve.
+     * @return The school year with the specified ID, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public SchoolYear findById(UUID id) {
         try {
             SchoolYear result = schoolYearRepository.findById(id)
@@ -54,6 +61,13 @@ public class SchoolYearService  {
         }
     }
 
+    /**
+     * Saves a new school year.
+     *
+     * @param schoolYearCreateDTO The DTO containing information about the school year to save.
+     * @return The saved school year.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     @Transactional
     public SchoolYear save(SchoolYearCreateDTO schoolYearCreateDTO) {
         try {
@@ -70,6 +84,13 @@ public class SchoolYearService  {
         }
     }
 
+    /**
+     * Deletes a school year.
+     *
+     * @param schoolYearDeleteDTO The DTO containing information about the school year to delete.
+     * @return True if the school year was successfully deleted, false otherwise.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     @Transactional
     public boolean delete(SchoolYearDeleteDTO schoolYearDeleteDTO) {
         try {
@@ -88,6 +109,13 @@ public class SchoolYearService  {
         }
     }
 
+    /**
+     * Deletes a school year if it's not being used.
+     *
+     * @param schoolYearDeleteDTO The DTO containing information about the school year to delete.
+     * @return True if the school year was successfully deleted, false otherwise.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     @Transactional
     public boolean deleteIfNotUse(SchoolYearDeleteDTO schoolYearDeleteDTO) {
         try {
@@ -106,6 +134,14 @@ public class SchoolYearService  {
         }
     }
 
+    /**
+     * Retrieves a school year by its name and institution.
+     *
+     * @param name        Name of the school year to retrieve.
+     * @param institution Institution of the school year.
+     * @return The school year with the specified name and institution, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public SchoolYear findByNameAndInstitution(String name, Institution institution) {
         try {
             SchoolYear result = schoolYearRepository.findByNameAndAndInstitution(name, institution)
@@ -124,6 +160,14 @@ public class SchoolYearService  {
         }
     }
 
+    /**
+     * Retrieves all school years with names containing the specified string, ignoring case.
+     *
+     * @param pageable Pageable object for pagination.
+     * @param name     String to search for in school year names.
+     * @return A page of school years whose names contain the specified string.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Page<SchoolYear> findAllByNameContaining(Pageable pageable, String name) {
         try {
             Page<SchoolYear> result = schoolYearRepository.findAllByNameContainingIgnoreCase(
@@ -148,6 +192,14 @@ public class SchoolYearService  {
         }
     }
 
+    /**
+     * Retrieves all school years of the specified institution.
+     *
+     * @param institution Institution to retrieve school years for.
+     * @param pageable    Pageable object for pagination.
+     * @return A page of school years belonging to the specified institution.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Page<SchoolYear> findAllByInstitution(Institution institution, Pageable pageable) {
         try {
             if (institution == null) return null;
@@ -163,6 +215,13 @@ public class SchoolYearService  {
         }
     }
 
+    /**
+     * Updates a school year with information from the provided DTO.
+     *
+     * @param schoolYearUpdateDTO DTO containing information to update the school year.
+     * @return The updated school year.
+     * @throws RuntimeException If the school year to update does not exist or an error occurs during the operation.
+     */
     public SchoolYear update(SchoolYearUpdateDTO schoolYearUpdateDTO) {
         try {
             logger.info("Buscando el año escolar a actualizar con ID '{}'", schoolYearUpdateDTO.getId());
@@ -185,6 +244,13 @@ public class SchoolYearService  {
         }
     }
 
+    /**
+     * Maps a SchoolYear entity to a SchoolYearResponseDTO.
+     *
+     * @param schoolYear The SchoolYear entity to map.
+     * @return The mapped SchoolYearResponseDTO.
+     * @throws RuntimeException If an error occurs during the mapping process.
+     */
     public SchoolYearResponseDTO mapToResponseDTO(SchoolYear schoolYear){
         try{
             logger.info("Creando la response de {}", schoolYear);

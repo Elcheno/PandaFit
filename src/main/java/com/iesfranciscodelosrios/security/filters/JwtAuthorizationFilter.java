@@ -25,6 +25,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailServiceImp userDetailsService;
 
+    /**
+     * Internal method to perform filtering logic for authentication using JWT.
+     *
+     * @param request      The HTTP request to be filtered.
+     * @param response     The HTTP response after filtering.
+     * @param filterChain The filter chain to which this filter belongs.
+     * @throws ServletException If a servlet error occurs.
+     * @throws IOException      If an I/O error occurs.
+     */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,

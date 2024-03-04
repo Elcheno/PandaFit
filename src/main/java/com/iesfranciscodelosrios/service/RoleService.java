@@ -19,6 +19,13 @@ public class RoleService implements iServices<Role> {
     @Autowired
     private RoleRepository roleRepository;
 
+    /**
+     * Retrieves a role by its ID.
+     *
+     * @param id ID of the role to retrieve.
+     * @return The role with the specified ID, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     @Override
     public Role findById(UUID id) {
         try {
@@ -37,6 +44,13 @@ public class RoleService implements iServices<Role> {
         }
     }
 
+    /**
+     * Saves a new role.
+     *
+     * @param role The role to save.
+     * @return The saved role.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     @Override
     public Role save(Role role) {
         try {
@@ -48,6 +62,13 @@ public class RoleService implements iServices<Role> {
         }
     }
 
+    /**
+     * Deletes a role.
+     *
+     * @param role The role to delete.
+     * @return The deleted role.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     @Override
     public Role delete(Role role) {
         try {
@@ -60,6 +81,13 @@ public class RoleService implements iServices<Role> {
         }
     }
 
+    /**
+     * Finds a role by its name.
+     *
+     * @param role The name of the role to find.
+     * @return The role with the specified name, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Role findByName(RoleType role) {
         try {
             Role result = roleRepository.findByRole(role)

@@ -20,6 +20,12 @@ public class InstitutionController {
     @Autowired
     private InstitutionService institutionService;
 
+    /**
+     * Retrieves an institution by its ID.
+     *
+     * @param id The ID of the institution to retrieve.
+     * @return ResponseEntity containing the retrieved institution or a not found status.
+     */
     @GetMapping("{id}")
     public ResponseEntity<InstitutionResponseCompleteDTO> getInstitutionById(@PathVariable("id") String id) {
         Institution institution = institutionService.findById(UUID.fromString(id));
@@ -36,6 +42,12 @@ public class InstitutionController {
         return ResponseEntity.ok(institutionResponseDTO);
     }
 
+    /**
+     * Retrieves all institutions with pagination.
+     *
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of institutions or a bad request status.
+     */
     @GetMapping("page")
     public ResponseEntity<Page<InstitutionResponseDTO>> getAllInstitutions(@PageableDefault() Pageable pageable) {
         Page<Institution> result = institutionService.findAll(pageable);
@@ -50,6 +62,13 @@ public class InstitutionController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves all institutions containing the given name with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name     The name to search for.
+     * @return ResponseEntity containing a page of institutions or a bad request status.
+     */
     @GetMapping("/page/name")
     public ResponseEntity<Page<InstitutionResponseDTO>> getAllInstitutionsByNameContaining(@PageableDefault(sort = "name") Pageable pageable, @RequestParam("name") String name) {
         Page<Institution> result = institutionService.findAllByNameContaining(pageable, name);
@@ -64,6 +83,12 @@ public class InstitutionController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Creates a new institution.
+     *
+     * @param institutionCreateDTO DTO containing information for creating the institution.
+     * @return ResponseEntity containing the created institution or a bad request status.
+     */
     @PostMapping()
     public ResponseEntity<InstitutionResponseDTO> createInstitution(@RequestBody InstitutionCreateDTO institutionCreateDTO) {
         Institution institution = institutionService.save(institutionCreateDTO);
@@ -78,6 +103,12 @@ public class InstitutionController {
         return ResponseEntity.ok(institutionResponseDTO);
     }
 
+    /**
+     * Updates an existing institution.
+     *
+     * @param institutionUpdateDTO DTO containing information for updating the institution.
+     * @return ResponseEntity containing the updated institution or a bad request status.
+     */
     @PutMapping()
     public ResponseEntity<InstitutionResponseDTO> updateInstitution(@RequestBody InstitutionUpdateDTO institutionUpdateDTO) {
         Institution institution = institutionService.update(institutionUpdateDTO);
@@ -92,6 +123,12 @@ public class InstitutionController {
         return ResponseEntity.ok(institutionResponseDTO);
     }
 
+    /**
+     * Deletes an institution.
+     *
+     * @param institutionDeleteDTO DTO containing the ID of the institution to delete.
+     * @return ResponseEntity containing the deleted institution or a bad request status.
+     */
     @DeleteMapping()
     public ResponseEntity<InstitutionResponseDTO> deleteInstitution(@RequestBody InstitutionDeleteDTO institutionDeleteDTO) {
         Institution institution = institutionService.delete(institutionDeleteDTO);

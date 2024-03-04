@@ -42,6 +42,12 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Retrieves a user by ID.
+     *
+     * @param userId The ID of the user to retrieve.
+     * @return ResponseEntity containing the user details if found, otherwise returns a 404 Not Found response.
+     */
     @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") String userId) {
         UserEntity userEntity = userService.findById(UUID.fromString(userId));
@@ -53,6 +59,12 @@ public class UserController {
         return ResponseEntity.ok(userResponseDTO);
     }
 
+    /**
+     * Retrieves a page of all users.
+     *
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of user details if found, otherwise returns a 400 Bad Request response.
+     */
     @GetMapping("/users/page")
     public ResponseEntity<Page<UserResponseDTO>> getAllUser(@PageableDefault() Pageable pageable) {
         Page<UserEntity> result = userService.findAll(pageable);
@@ -63,6 +75,13 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves a page of users by email containing a specific keyword.
+     *
+     * @param pageable Pagination information.
+     * @param email    The email keyword to search for.
+     * @return ResponseEntity containing a page of user details if found, otherwise returns a 400 Bad Request response.
+     */
     @GetMapping("/page/email")
     public ResponseEntity<Page<UserResponseDTO>> getAllUserByEmailContaining(@PageableDefault(sort = "email") Pageable pageable, @RequestParam("email") String email) {
         Page<UserEntity> result = userService.findAllByEmailContaining(pageable, email);
@@ -73,6 +92,13 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves a page of users belonging to a specific institution.
+     *
+     * @param institutionId The ID of the institution.
+     * @param pageable      Pagination information.
+     * @return ResponseEntity containing a page of user details if found, otherwise returns a 400 Bad Request response.
+     */
     @GetMapping("{institutionId}/users/page")
     public ResponseEntity<Page<UserResponseDTO>> getAllUserByInstitution(
             @PathVariable("institutionId") String institutionId,
@@ -87,6 +113,13 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves a page of users by their role.
+     *
+     * @param role     The role of the users.
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of user details if found, otherwise returns a 400 Bad Request response.
+     */
     @GetMapping("/users/page/{role}")
     public ResponseEntity<Page<UserResponseDTO>> getAllUserByRole(
             @PathVariable("role") String role,
@@ -104,6 +137,14 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves a page of users belonging to a specific institution and having a specific role.
+     *
+     * @param role          The role of the users.
+     * @param institutionId The ID of the institution.
+     * @param pageable      Pagination information.
+     * @return ResponseEntity containing a page of user details if found, otherwise returns a 400 Bad Request response.
+     */
     @GetMapping("{institutionId}/users/page/{role}")
     public ResponseEntity<Page<UserResponseDTO>> getAllUserByInstitutionAndRole(
             @PathVariable("role") String role,
@@ -124,7 +165,12 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-
+    /**
+     * Creates a new user based on the provided user creation DTO.
+     *
+     * @param userCreateDTO The DTO containing user creation data.
+     * @return ResponseEntity containing the created user details if successful, otherwise returns a 400 Bad Request response.
+     */
     @PostMapping("/users")
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
         userCreateDTO.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
@@ -136,6 +182,12 @@ public class UserController {
         return ResponseEntity.ok(userResponseDTO);
     }
 
+    /**
+     * Updates an existing user based on the provided user update DTO.
+     *
+     * @param userUpdateDTO The DTO containing user update data.
+     * @return ResponseEntity containing the updated user details if successful, otherwise returns a 400 Bad Request response.
+     */
     @PutMapping("/users")
     public ResponseEntity<UserResponseDTO> updateUser(@RequestBody UserUpdateDTO userUpdateDTO) {
         UserEntity userEntity = userService.update(userUpdateDTO);
@@ -147,6 +199,12 @@ public class UserController {
         return ResponseEntity.ok(userResponseDTO);
     }
 
+    /**
+     * Deletes a user based on the provided user deletion DTO.
+     *
+     * @param userDeleteDTO The DTO containing user deletion data.
+     * @return ResponseEntity indicating whether the deletion was successful (true) or the user was not found (404).
+     */
     @DeleteMapping("/users")
     public ResponseEntity<Boolean> deleteUser(@RequestBody() UserDeleteDTO userDeleteDTO) {
         boolean deleted = userService.delete(userDeleteDTO);

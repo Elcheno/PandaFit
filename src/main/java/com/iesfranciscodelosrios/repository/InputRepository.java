@@ -13,7 +13,20 @@ import java.util.UUID;
 @Repository
 public interface InputRepository extends CrudRepository<Input, UUID> {
 
+    /**
+     * Finds an input by its name.
+     *
+     * @param name The name of the input.
+     * @return An optional containing the input if found, otherwise empty.
+     */
     Optional<Input> findByName(String name);
 
+    /**
+     * Retrieves all inputs paginated.
+     *
+     * @param pageable Pagination information.
+     * @return A page of inputs.
+     * @throws Exception If an error occurs during the retrieval process.
+     */
     Page<Input> findAll(Pageable pageable) throws Exception;
 }

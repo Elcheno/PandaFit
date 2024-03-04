@@ -15,6 +15,12 @@ public class HashMapConverter implements AttributeConverter<Set<Object>, String>
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Converts a Set of objects to a JSON string for database storage.
+     *
+     * @param stringObjectMap The Set of objects to convert.
+     * @return The JSON string representation of the Set.
+     */
     @Override
     public String convertToDatabaseColumn(Set<Object> stringObjectMap) {
         String result = null;
@@ -28,6 +34,12 @@ public class HashMapConverter implements AttributeConverter<Set<Object>, String>
         return result;
     }
 
+    /**
+     * Converts a JSON string to a Set of objects when retrieving from the database.
+     *
+     * @param s The JSON string to convert.
+     * @return The Set of objects obtained from the JSON string.
+     */
     @Override
     public Set<Object> convertToEntityAttribute(String s) {
         Set<Object> result = null;
