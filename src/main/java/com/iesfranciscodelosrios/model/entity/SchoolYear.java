@@ -30,7 +30,7 @@ public class SchoolYear {
     @NotBlank(message = "El nombre no puede estar en blanco")
     // Dígito entre 1 y 4 seguido de "º", espacio en blanco, seguido de ESO o BACHILLERATO, espacio en blanco, grupo capturador que acepta una o más palabras
     // la cual cada una comienza con una letra mayúscula, espacio en blanco y por último una letra en mayúscula
-    @Pattern(regexp = "^[A-Za-z0-9]{2,25}$", message = " Debe haber entre 2 y 25 dígitos")
+    //@Pattern(regexp = "^[A-Za-z0-9]{2,25}$", message = " Debe haber entre 2 y 25 dígitos")
     @Column(name = "name")
     private String name;
 
