@@ -38,6 +38,14 @@ public class SecurityConfig {
     @Autowired
     JwtAuthorizationFilter authorizationFilter;
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param httpSecurity The HttpSecurity object.
+     * @param authenticationManager The AuthenticationManager object.
+     * @return The SecurityFilterChain object.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
@@ -61,6 +69,11 @@ public class SecurityConfig {
 
     }
 
+    /**
+     * Configures the CORS configuration source.
+     *
+     * @return The CorsConfigurationSource object.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -77,15 +90,33 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * Configures the password encoder.
+     *
+     * @return The PasswordEncoder object.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
+    /**
+     * Creates a UserRegisterUuidFilter object.
+     *
+     * @return The UserRegisterUuidFilter object.
+     */
     private UserRegisterUuidFilter userRegisterUuidFilter() {
         return new UserRegisterUuidFilter(userDetailService);
     }
 
+    /**
+     * Configures the authentication manager.
+     *
+     * @param httpSecurity The HttpSecurity object.
+     * @param passwordEncoder The PasswordEncoder object.
+     * @return The AuthenticationManager object.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception {
         return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)

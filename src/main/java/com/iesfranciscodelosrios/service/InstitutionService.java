@@ -24,6 +24,13 @@ public class InstitutionService {
     @Autowired
     private InstitutionRepository institutionRepository;
 
+    /**
+     * Finds an Institution by its ID.
+     *
+     * @param id The ID of the Institution to find.
+     * @return The found Institution, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Institution findById(UUID id) {
         try {
             Institution result = institutionRepository.findById(id)
@@ -42,6 +49,13 @@ public class InstitutionService {
         }
     }
 
+    /**
+     * Saves a new Institution.
+     *
+     * @param institutionDTO The InstitutionCreateDTO containing information about the Institution to be saved.
+     * @return The saved Institution.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Institution save(InstitutionCreateDTO institutionDTO) {
         try {
             if (institutionDTO == null) return null;
@@ -59,6 +73,13 @@ public class InstitutionService {
         }
     }
 
+    /**
+     * Updates an existing Institution.
+     *
+     * @param institutionDTO The InstitutionUpdateDTO containing information about the Institution to be updated.
+     * @return The updated Institution.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Institution update(InstitutionUpdateDTO institutionDTO) {
         try {
             if (institutionDTO == null) return null;
@@ -77,6 +98,13 @@ public class InstitutionService {
         }
     }
 
+    /**
+     * Deletes an existing Institution.
+     *
+     * @param institutionDTO The InstitutionDeleteDTO containing information about the Institution to be deleted.
+     * @return The deleted Institution.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Institution delete(InstitutionDeleteDTO institutionDTO) {
         try {
             if (institutionDTO == null) return null;
@@ -97,6 +125,13 @@ public class InstitutionService {
         }
     }
 
+    /**
+     * Finds an Institution by its name.
+     *
+     * @param name The name of the Institution to find.
+     * @return The found Institution, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Institution findByName(String name) {
         try {
             Institution result = institutionRepository.findByName(name)
@@ -115,6 +150,13 @@ public class InstitutionService {
         }
     }
 
+    /**
+     * Retrieves all institutions in a paginated manner.
+     *
+     * @param pageable Pagination information.
+     * @return Page containing the institutions.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Page<Institution> findAll(Pageable pageable) {
         try {
             Page<Institution> result = institutionRepository.findAll(
@@ -140,6 +182,14 @@ public class InstitutionService {
         }
     }
 
+    /**
+     * Retrieves all institutions whose name contains a given substring in a paginated manner.
+     *
+     * @param pageable Pagination information.
+     * @param name     Substring to search for in institution names.
+     * @return Page containing the institutions that match the search criteria.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Page<Institution> findAllByNameContaining(Pageable pageable, String name) {
         try {
             Page<Institution> result = institutionRepository.findAllByNameContainingIgnoreCase(

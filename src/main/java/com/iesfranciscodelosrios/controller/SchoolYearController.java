@@ -91,6 +91,13 @@ public class SchoolYearController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves all school years containing the given name with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name     The name to search for.
+     * @return ResponseEntity containing a page of school years or a bad request status.
+     */
     @GetMapping("/page/name")
     public ResponseEntity<Page<SchoolYearResponseDTO>> getAllSchoolYearsByNameContaining(
             @PageableDefault(sort = "name") Pageable pageable,
@@ -139,6 +146,12 @@ public class SchoolYearController {
         }
     }
 
+    /**
+     * Deletes a school year if it's not in use.
+     *
+     * @param schoolYearDeleteDTO DTO containing the ID of the school year to delete.
+     * @return ResponseEntity containing true if the school year is deleted, otherwise a not found status.
+     */
     @DeleteMapping("/deleteIfNotUse")
     public ResponseEntity<Boolean> deleteIfNotUseSchoolYear(@RequestBody SchoolYearDeleteDTO schoolYearDeleteDTO) {
         boolean deleted = schoolYearService.deleteIfNotUse(schoolYearDeleteDTO);

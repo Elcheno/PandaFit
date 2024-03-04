@@ -71,6 +71,12 @@ public class InputController {
         return ResponseEntity.ok(inputResponseDTO);
     }
 
+    /**
+     * Retrieves all inputs with pagination.
+     *
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of inputs or a bad request status.
+     */
     @GetMapping("/input/page")
     public ResponseEntity<Page<InputResponseDTO>> getAllInputs(@PageableDefault() Pageable pageable) {
         Page<Input> result = InputService.findAll(pageable);

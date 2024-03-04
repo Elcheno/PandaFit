@@ -4,6 +4,7 @@ import com.iesfranciscodelosrios.model.entity.FormAct;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -15,4 +16,5 @@ public class AnswerResponseDTO {
     private LocalDateTime date;
     private UUID formActId;
     private String uuid;
+    private Set<Object> response;
 }

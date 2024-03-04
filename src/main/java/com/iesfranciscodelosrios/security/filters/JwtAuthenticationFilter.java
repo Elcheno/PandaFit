@@ -28,10 +28,24 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     JwtUtils jwtUtils;
+
+    /**
+     * Constructor de JwtAuthenticationFilter.
+     *
+     * @param jwtUtils Instancia de JwtUtils.
+     */
     public JwtAuthenticationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
 
+    /**
+     * Attempt to authenticate the user.
+     *
+     * @param request  The received HTTP request.
+     * @param response The HTTP response to be sent.
+     * @return The resulting authentication.
+     * @throws AuthenticationException If authentication fails.
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
@@ -44,6 +58,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return getAuthenticationManager().authenticate(authenticationToken);
     }
 
+    /**
+     * Handling of successful authentication.
+     *
+     * @param request     The received HTTP request.
+     * @param response    The HTTP response to be sent.
+     * @param chain       The filter chain to which this filter belongs.
+     * @param authResult  The authentication result.
+     * @throws IOException      If an I/O error occurs.
+     * @throws ServletException If a servlet error occurs.
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
@@ -62,6 +86,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         httpResponse.put("message", "Authentication succesfully");
         httpResponse.put("email", user.getUsername());
         httpResponse.put("roles", user.getAuthorities());
+        httpResponse.put("id", request.getAttribute("id").toString());
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
         response.setStatus(HttpStatus.OK.value());
@@ -69,6 +94,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().flush();
     }
 
+    /**
+     * Handling of unsuccessful authentication.
+     *
+     * @param request  The received HTTP request.
+     * @param response The HTTP response to be sent.
+     * @param failed   The failed authentication exception.
+     * @throws IOException If an I/O error occurs.
+     */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException {

@@ -20,6 +20,13 @@ public class UserDetailServiceImp implements UserDetailsService {
     @Autowired
     UserService userService;
 
+    /**
+     * Loads a user by their email address.
+     *
+     * @param email The email address of the user.
+     * @return UserDetails object representing the user.
+     * @throws UsernameNotFoundException If the user is not found.
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userService.findByEmail(email);
@@ -44,6 +51,23 @@ public class UserDetailServiceImp implements UserDetailsService {
         );
     }
 
+    /**
+     * Finds a user by their email address.
+     *
+     * @param email The email address of the user.
+     * @return The UserEntity object representing the user.
+     */
+    public UserEntity findByEmail (String email) {
+        return userService.findByEmail(email);
+    }
+
+    /**
+     * Registers a user.
+     *
+     * @param email The email address of the user.
+     * @param uuid  The UUID of the user.
+     * @return True if the user is registered successfully, false otherwise.
+     */
     public boolean registerUser (String email, String uuid) {
         UserEntity userEntity = userService.findByEmail(email);
 

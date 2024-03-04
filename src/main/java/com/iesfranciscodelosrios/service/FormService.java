@@ -38,6 +38,13 @@ public class FormService {
 
     private static final Logger logger = LoggerFactory.getLogger(FormService.class);
 
+    /**
+     * Loads a Form based on the specified name.
+     *
+     * @param name The name of the Form to search for.
+     * @return A Form object if found, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Form loadFormByName(String name) {
         try {
             Form result = formRepository.findByName(name)
@@ -56,6 +63,13 @@ public class FormService {
         }
     }
 
+    /**
+     * Retrieves a Form based on the specified UUID identifier.
+     *
+     * @param id The UUID identifier of the Form to be retrieved.
+     * @return A Form object if found, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Form findById(UUID id) {
         try {
             Form result = formRepository.findById(id)
@@ -74,6 +88,13 @@ public class FormService {
         }
     }
 
+    /**
+     * Retrieves all Forms with pagination support.
+     *
+     * @param pageable The Pageable object specifying the page number, size, and sorting criteria.
+     * @return A Page containing Form objects based on the provided Pageable parameters.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Page<Form> findAll(Pageable pageable) {
         try {
             logger.info("Buscando todos los formularios.");
@@ -96,6 +117,13 @@ public class FormService {
         }
     }
 
+    /**
+     * Saves a new Form based on the provided FormCreateDTO.
+     *
+     * @param formCreateDTO The FormCreateDTO containing information for creating the Form.
+     * @return The created Form object.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Form save(FormCreateDTO formCreateDTO) {
         try {
             logger.info("Creando el formulario a partir del DTO: {}", formCreateDTO);
@@ -125,6 +153,13 @@ public class FormService {
         }
     }
 
+    /**
+     * Updates an existing Form based on the provided FormUpdateDTO.
+     *
+     * @param formUpdateDTO The FormUpdateDTO containing information for updating the Form.
+     * @return The updated Form object, or null if not found.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public Form update(FormUpdateDTO formUpdateDTO) {
         try {
             logger.info("Buscando el formulario a actualizar con ID '{}'", formUpdateDTO.getId());
@@ -167,6 +202,13 @@ public class FormService {
         }
     }
 
+    /**
+     * Deletes a Form by its ID.
+     *
+     * @param formDeleteDTO The FormDeleteDTO containing the ID of the Form to be deleted.
+     * @return true if the Form is deleted successfully, false otherwise.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public boolean delete(FormDeleteDTO formDeleteDTO) {
         try {
             Optional<Form> formOptional = formRepository.findById(formDeleteDTO.getId());
@@ -183,6 +225,13 @@ public class FormService {
         }
     }
 
+    /**
+     * Deletes a Form if it is not associated with any FormAct.
+     *
+     * @param formDeleteDTO The FormDeleteDTO containing the ID of the Form to be deleted.
+     * @return true if the Form is deleted successfully, false otherwise.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public boolean deleteIfNotUse(FormDeleteDTO formDeleteDTO) {
         try {
             Optional<Form> formOptional = formRepository.findById(formDeleteDTO.getId());
@@ -199,6 +248,13 @@ public class FormService {
         }
     }
 
+    /**
+     * Maps a Form object to a FormResponseDTO object.
+     *
+     * @param form The Form object to be mapped.
+     * @return The mapped FormResponseDTO object.
+     * @throws RuntimeException If an error occurs during the operation.
+     */
     public FormResponseDTO mapToResponseDTO(Form form) {
         try {
             logger.info("Creando la response de {}", form);
