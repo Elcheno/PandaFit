@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.controller;
 
+import com.iesfranciscodelosrios.model.dto.input.InputResponseDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputResponseDTO;
@@ -43,6 +44,31 @@ public class OutputController {
                 .unit(output.getUnit())
                 .build();
         return ResponseEntity.ok(outputResponseDTO);
+    }
+
+    /**
+     * Retrieves all Outputs containing the given name with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return ResponseEntity containing a page of Outputs or a bad request status.
+     */
+    @GetMapping("/page/name")
+    public ResponseEntity<Page<OutputResponseDTO>> getAllOutputsByNameContaining(@PageableDefault(sort = "name") Pageable pageable, @RequestParam("name") String name) {
+        Page<Output> result = OutputService.findAllByNameContaining(pageable, name);
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<OutputResponseDTO> response = result.map(output -> OutputResponseDTO.builder()
+                .id(output.getId())
+                .name(output.getName())
+                .description(output.getDescription())
+                .formula(output.getFormula())
+                .umbralList(output.getUmbralList())
+                .inputsId(output.getInputs().stream().map((item) -> item.getId().toString()).toList())
+                .unit(output.getUnit())
+                .build());
+
+        return ResponseEntity.ok(response);
     }
 
     /**

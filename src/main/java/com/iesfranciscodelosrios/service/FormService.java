@@ -118,6 +118,36 @@ public class FormService {
     }
 
     /**
+     * Retrieves all forms containing the given name with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return ResponseEntity containing a page of forms or a bad request status.
+     */
+    public Page<Form> findAllByNameContaining(Pageable pageable, String name) {
+        try {
+            Page<Form> result = formRepository.findAllByNameContainingIgnoreCase(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), name
+            );
+
+            logger.info("Buscando todas las instituciones paginadas: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las instituciones paginadas: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todas las instituciones paginadas: " + e.getMessage());
+        }
+    }
+
+    /**
      * Saves a new Form based on the provided FormCreateDTO.
      *
      * @param formCreateDTO The FormCreateDTO containing information for creating the Form.

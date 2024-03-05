@@ -3,6 +3,7 @@ package com.iesfranciscodelosrios.service;
 import com.iesfranciscodelosrios.model.dto.output.OutputCreateDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputUpdateDTO;
+import com.iesfranciscodelosrios.model.entity.Input;
 import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.Output;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
@@ -91,6 +92,36 @@ public class OutputService {
             logger.error("Error al buscar todos los outputs paginados: {}", e.getMessage());
 
             throw new RuntimeException("Error al buscar todos los outputs paginados: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Retrieves all Outputs containing the given name with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return A Page containing Output objects.
+     */
+    public Page<Output> findAllByNameContaining(Pageable pageable, String name) {
+        try {
+            Page<Output> result = outputRepository.findAllByNameContainingIgnoreCase(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), name
+            );
+
+            logger.info("Buscando todas las instituciones paginadas: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las instituciones paginadas: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todas las instituciones paginadas: " + e.getMessage());
         }
     }
 

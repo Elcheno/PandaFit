@@ -4,6 +4,7 @@ import com.iesfranciscodelosrios.model.dto.input.InputCreateDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.input.InputUpdateDTO;
 import com.iesfranciscodelosrios.model.entity.Input;
+import com.iesfranciscodelosrios.model.entity.Institution;
 import com.iesfranciscodelosrios.model.entity.UserEntity;
 import com.iesfranciscodelosrios.repository.InputRepository;
 import org.slf4j.LoggerFactory;
@@ -217,4 +218,33 @@ public class InputService {
         }
     }
 
+    /**
+     * Retrieves all Inputs based on the specified name.
+     *
+     * @param pageable Pagination information.
+     * @param name The name of the Input to be retrieved.
+     * @return The retrieved Input object, or null if not found.
+     */
+    public Page<Input> findAllByNameContaining(Pageable pageable, String name) {
+        try {
+            Page<Input> result = inputRepository.findAllByNameContainingIgnoreCase(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), name
+            );
+
+            logger.info("Buscando todas las instituciones paginadas: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las instituciones paginadas: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todas las instituciones paginadas: " + e.getMessage());
+        }
+    }
 }
