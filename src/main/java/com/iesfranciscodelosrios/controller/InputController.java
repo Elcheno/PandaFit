@@ -54,7 +54,7 @@ public class InputController {
      * @param name The name to search for.
      * @return ResponseEntity containing a page of inputs or a bad request status.
      */
-    @GetMapping("/page/name")
+    @GetMapping("/page/input/name")
     public ResponseEntity<Page<InputResponseDTO>> getAllInputsByNameContaining(@PageableDefault(sort = "name") Pageable pageable, @RequestParam("name") String name) {
         Page<Input> result = InputService.findAllByNameContaining(pageable, name);
         if (result == null) return ResponseEntity.badRequest().build();

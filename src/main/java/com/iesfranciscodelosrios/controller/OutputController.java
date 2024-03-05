@@ -53,7 +53,7 @@ public class OutputController {
      * @param name The name to search for.
      * @return ResponseEntity containing a page of Outputs or a bad request status.
      */
-    @GetMapping("/page/name")
+    @GetMapping("/page/output/name")
     public ResponseEntity<Page<OutputResponseDTO>> getAllOutputsByNameContaining(@PageableDefault(sort = "name") Pageable pageable, @RequestParam("name") String name) {
         Page<Output> result = OutputService.findAllByNameContaining(pageable, name);
         if (result == null) return ResponseEntity.badRequest().build();
