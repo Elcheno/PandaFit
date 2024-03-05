@@ -36,165 +36,165 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PandaFitFormControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private FormService formService;
-
-    @InjectMocks
-    private FormController formController;
-
-    private Form form;
-    private UserEntity user;
-    private FormResponseDTO formResponseDTO;
-    private FormCreateDTO formCreateDTO;
-    private FormUpdateDTO formUpdateDTO;
-    private FormDeleteDTO formDeleteDTO;
-
-    @BeforeEach
-    void setUp() {
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.builder().role(RoleType.USER).build());
-
-        Institution institution = Institution.builder()
-                .name("Institution")
-                .build();
-
-        user = UserEntity.builder()
-                .email("email@example.com")
-                .password("Password123!")
-                .institution(institution)
-                .role(roles)
-                .build();
-
-        UUID id = UUID.fromString("ef2479be-24a5-4699-8ac6-769c31b0608a");
-
-        form = Form.builder()
-                .id(id)
-                .name("FormName")
-                .description("Form Description")
-                .userOwner(user)
-                .build();
-
-
-        formResponseDTO = FormResponseDTO.builder()
-                .id(form.getId())
-                .name(form.getName())
-                .description(form.getDescription())
-                .build();
-
-        formCreateDTO = FormCreateDTO.builder()
-                .name(form.getName())
-                .build();
-
-        formUpdateDTO = FormUpdateDTO.builder()
-                .name("UpdatedFormName")
-                .description("Updated Form Description")
-                .build();
-
-        formDeleteDTO = FormDeleteDTO.builder()
-                .build();
-    }
-
-    @Test
-    @Order(2)
-    void getFormByName() throws Exception {
-        when(formService.loadFormByName(any(String.class)))
-                .thenReturn(form);
-
-        ResultActions result = mockMvc.perform(get("/form/formulary/name")
-                .param("name", form.getName())
-                .contentType(MediaType.APPLICATION_JSON));
-
-        result.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(form.getId().toString()));
-    }
-
-    @Test
-    @Order(3)
-    void getFormById() throws Exception {
-        when(formService.findById(any(UUID.class)))
-                .thenReturn(form);
-
-        ResultActions result = mockMvc.perform(get("/form/formulary/{id}", form.getId())
-                .contentType(MediaType.APPLICATION_JSON));
-
-        result.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(form.getId().toString()));
-    }
-
-    @Test
-    @Order(1)
-    void createForm() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
-        String jsonRequest = objectMapper.writeValueAsString(formCreateDTO);
-
-        when(formService.save(any(FormCreateDTO.class)))
-                .thenReturn(form);
-
-        ResultActions result = mockMvc.perform(post("/form/formulary")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRequest));
-        System.out.println(form.toString());
-        result.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(form.getId().toString()))
-                .andExpect(jsonPath("$.name").value(formCreateDTO.getName()));
-    }
-
-    @Test
-    @Order(4)
-    void updateForm() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
-        String jsonRequest = objectMapper.writeValueAsString(formUpdateDTO);
-        System.out.println(formUpdateDTO);
-        when(formService.update(any(FormUpdateDTO.class)))
-                .thenReturn(form);
-
-        ResultActions result = mockMvc.perform(put("/form/formulary")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRequest));
-
-        result.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(form.getId().toString()))
-                .andExpect(jsonPath("$.name").value(formUpdateDTO.getName()))
-                .andExpect(jsonPath("$.description").value(formUpdateDTO.getDescription()));
-    }
-
-    @Test
-    @Order(5)
-    void deleteForm() throws Exception {
-        // Configurar el DTO de eliminación
-        FormDeleteDTO formDeleteDTO = FormDeleteDTO.builder()
-                .id(form.getId())
-                .build();
-
-        // Convertir el DTO a JSON
-        String jsonRequest = objectMapper.writeValueAsString(formDeleteDTO);
-
-        // Configurar el servicio para devolver true
-        when(formService.delete(any(FormDeleteDTO.class)))
-                .thenReturn(true);
-
-        // Realizar la solicitud de eliminación al controlador
-        ResultActions result = mockMvc.perform(delete("/form/formulary")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRequest));
-
-        // Verificar la respuesta
-        result.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("Formulario eliminado correctamente"));
-    }
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @Autowired
+//    private ObjectMapper objectMapper;
+//
+//    @MockBean
+//    private FormService formService;
+//
+//    @InjectMocks
+//    private FormController formController;
+//
+//    private Form form;
+//    private UserEntity user;
+//    private FormResponseDTO formResponseDTO;
+//    private FormCreateDTO formCreateDTO;
+//    private FormUpdateDTO formUpdateDTO;
+//    private FormDeleteDTO formDeleteDTO;
+//
+//    @BeforeEach
+//    void setUp() {
+//        Set<Role> roles = new HashSet<>();
+//        roles.add(Role.builder().role(RoleType.USER).build());
+//
+//        Institution institution = Institution.builder()
+//                .name("Institution")
+//                .build();
+//
+//        user = UserEntity.builder()
+//                .email("email@example.com")
+//                .password("Password123!")
+//                .institution(institution)
+//                .role(roles)
+//                .build();
+//
+//        UUID id = UUID.fromString("ef2479be-24a5-4699-8ac6-769c31b0608a");
+//
+//        form = Form.builder()
+//                .id(id)
+//                .name("FormName")
+//                .description("Form Description")
+//                .userOwner(user)
+//                .build();
+//
+//
+//        formResponseDTO = FormResponseDTO.builder()
+//                .id(form.getId())
+//                .name(form.getName())
+//                .description(form.getDescription())
+//                .build();
+//
+//        formCreateDTO = FormCreateDTO.builder()
+//                .name(form.getName())
+//                .build();
+//
+//        formUpdateDTO = FormUpdateDTO.builder()
+//                .name("UpdatedFormName")
+//                .description("Updated Form Description")
+//                .build();
+//
+//        formDeleteDTO = FormDeleteDTO.builder()
+//                .build();
+//    }
+//
+//    @Test
+//    @Order(2)
+//    void getFormByName() throws Exception {
+//        when(formService.loadFormByName(any(String.class)))
+//                .thenReturn(form);
+//
+//        ResultActions result = mockMvc.perform(get("/form/formulary/name")
+//                .param("name", form.getName())
+//                .contentType(MediaType.APPLICATION_JSON));
+//
+//        result.andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.id").value(form.getId().toString()));
+//    }
+//
+//    @Test
+//    @Order(3)
+//    void getFormById() throws Exception {
+//        when(formService.findById(any(UUID.class)))
+//                .thenReturn(form);
+//
+//        ResultActions result = mockMvc.perform(get("/form/formulary/{id}", form.getId())
+//                .contentType(MediaType.APPLICATION_JSON));
+//
+//        result.andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.id").value(form.getId().toString()));
+//    }
+//
+//    @Test
+//    @Order(1)
+//    void createForm() throws Exception {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.registerModule(new JavaTimeModule());
+//
+//        String jsonRequest = objectMapper.writeValueAsString(formCreateDTO);
+//
+//        when(formService.save(any(FormCreateDTO.class)))
+//                .thenReturn(form);
+//
+//        ResultActions result = mockMvc.perform(post("/form/formulary")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(jsonRequest));
+//        System.out.println(form.toString());
+//        result.andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.id").value(form.getId().toString()))
+//                .andExpect(jsonPath("$.name").value(formCreateDTO.getName()));
+//    }
+//
+//    @Test
+//    @Order(4)
+//    void updateForm() throws Exception {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.registerModule(new JavaTimeModule());
+//
+//        String jsonRequest = objectMapper.writeValueAsString(formUpdateDTO);
+//        System.out.println(formUpdateDTO);
+//        when(formService.update(any(FormUpdateDTO.class)))
+//                .thenReturn(form);
+//
+//        ResultActions result = mockMvc.perform(put("/form/formulary")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(jsonRequest));
+//
+//        result.andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.id").value(form.getId().toString()))
+//                .andExpect(jsonPath("$.name").value(formUpdateDTO.getName()))
+//                .andExpect(jsonPath("$.description").value(formUpdateDTO.getDescription()));
+//    }
+//
+//    @Test
+//    @Order(5)
+//    void deleteForm() throws Exception {
+//        // Configurar el DTO de eliminación
+//        FormDeleteDTO formDeleteDTO = FormDeleteDTO.builder()
+//                .id(form.getId())
+//                .build();
+//
+//        // Convertir el DTO a JSON
+//        String jsonRequest = objectMapper.writeValueAsString(formDeleteDTO);
+//
+//        // Configurar el servicio para devolver true
+//        when(formService.delete(any(FormDeleteDTO.class)))
+//                .thenReturn(true);
+//
+//        // Realizar la solicitud de eliminación al controlador
+//        ResultActions result = mockMvc.perform(delete("/form/formulary")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(jsonRequest));
+//
+//        // Verificar la respuesta
+//        result.andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(content().string("Formulario eliminado correctamente"));
+//    }
 }

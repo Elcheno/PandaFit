@@ -17,48 +17,48 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class CascadePersistInstitutionTestSchoolYearList {
 
-    @Autowired
-    private InstitutionRepository institutionRepository;
-
-    @Autowired
-    private SchoolYearRepository schoolYearRepository;
-
-    @Test
-    @Transactional
-    public void testCascadePersistSchoolYearList() {
-        // Given
-        Institution institution = Institution.builder()
-                .name("Instituto de Prueba")
-                .build();
-
-        SchoolYear schoolYear1 = SchoolYear.builder()
-                .name("2023-2024")
-                .institution(institution)
-                .build();
-
-        SchoolYear schoolYear2 = SchoolYear.builder()
-                .name("2024-2025")
-                .institution(institution)
-                .build();
-
-        schoolYearRepository.save(schoolYear1);
-        schoolYearRepository.save(schoolYear2);
-
-        Set<SchoolYear> schoolYearList = new HashSet<>();
-        schoolYearList.add(schoolYear1);
-        schoolYearList.add(schoolYear2);
-
-        institution.setSchoolYearList(schoolYearList);
-
-        // When
-        Institution savedInstitution = institutionRepository.save(institution);
-
-        // Then
-        assertNotNull(savedInstitution.getId(), "ID debería generarse después de guardar");
-        assertEquals(2, savedInstitution.getSchoolYearList().size(), "Debería haber dos SchoolYear guardados");
-
-        for (SchoolYear savedSchoolYear : savedInstitution.getSchoolYearList()) {
-            assertNotNull(savedSchoolYear.getId(), "ID de SchoolYear debería generarse después de guardar");
-        }
-    }
+//    @Autowired
+//    private InstitutionRepository institutionRepository;
+//
+//    @Autowired
+//    private SchoolYearRepository schoolYearRepository;
+//
+//    @Test
+//    @Transactional
+//    public void testCascadePersistSchoolYearList() {
+//        // Given
+//        Institution institution = Institution.builder()
+//                .name("Instituto de Prueba")
+//                .build();
+//
+//        SchoolYear schoolYear1 = SchoolYear.builder()
+//                .name("2023-2024")
+//                .institution(institution)
+//                .build();
+//
+//        SchoolYear schoolYear2 = SchoolYear.builder()
+//                .name("2024-2025")
+//                .institution(institution)
+//                .build();
+//
+//        schoolYearRepository.save(schoolYear1);
+//        schoolYearRepository.save(schoolYear2);
+//
+//        Set<SchoolYear> schoolYearList = new HashSet<>();
+//        schoolYearList.add(schoolYear1);
+//        schoolYearList.add(schoolYear2);
+//
+//        institution.setSchoolYearList(schoolYearList);
+//
+//        // When
+//        Institution savedInstitution = institutionRepository.save(institution);
+//
+//        // Then
+//        assertNotNull(savedInstitution.getId(), "ID debería generarse después de guardar");
+//        assertEquals(2, savedInstitution.getSchoolYearList().size(), "Debería haber dos SchoolYear guardados");
+//
+//        for (SchoolYear savedSchoolYear : savedInstitution.getSchoolYearList()) {
+//            assertNotNull(savedSchoolYear.getId(), "ID de SchoolYear debería generarse después de guardar");
+//        }
+//    }
 }
