@@ -1,23 +1,13 @@
-# Usar una imagen base con JDK 11 y Maven
-FROM maven:4.0.0-corretto-17 AS build
+# the base image
+FROM amazoncorretto:17
 
-# Establecer un directorio de trabajo
-WORKDIR /app
+# the JAR file path
+ARG JAR_FILE=target/*.jar
 
-# Copiar archivos de tu proyecto al directorio de trabajo
-COPY . /app
+# Copy the JAR file from the build context into the Docker image
+COPY ${JAR_FILE} application.jar
 
-# Ejecutar Maven para construir el proyecto
-RUN mvn clean package
+CMD apt-get update -y
 
-# Crear una nueva imagen basada en corretto 17
-FROM corretto:17-jre-slim-buster
-
-# Exponer el puerto que utilizará la aplicación
-EXPOSE 8080
-
-# Copiar el archivo JAR construido desde la etapa anterior
-COPY --from=build /app/target/pandafit-0.0.1-SNAPSHOT.jar /app/pandafit-0.0.1-SNAPSHOT.jar
-
-# Establecer el punto de entrada para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "/app/pandafit-0.0.1-SNAPSHOT.jar"]
+# Set the default command to run the Java application
+ENTRYPOINT ["java", "-Xmx2048M", "-jar", "/application.jar"]
