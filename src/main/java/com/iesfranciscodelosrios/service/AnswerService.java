@@ -4,6 +4,8 @@ import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
+import com.iesfranciscodelosrios.model.entity.Form;
+import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.repository.AnswerRepository;
 import com.iesfranciscodelosrios.repository.FormActRepository;
 import org.slf4j.Logger;
@@ -21,10 +23,15 @@ import java.util.UUID;
 
 @Service
 public class AnswerService{
+
     @Autowired
     AnswerRepository answerRepository;
+
     @Autowired
-    FormActRepository formActRepository;
+    FormActService formActService;
+
+    @Autowired
+    FormService formService;
 
     private static final Logger logger = LoggerFactory.getLogger(AnswerService.class);
 
@@ -80,6 +87,71 @@ public class AnswerService{
     }
 
     /**
+     * Retrieves all Answers by FormAct with pagination support.
+     *
+     * @param pageable The Pageable object specifying the page number, size, and sorting criteria.
+     * @return A Page containing Answer objects based on the provided Pageable parameters.
+     */
+    public Page<Answer> findAllByFormAct(UUID formActId, Pageable pageable) {
+        try {
+
+            FormAct formAct = formActService.findById(formActId);
+            if (formAct == null) return null;
+
+            return answerRepository.findAllByFormAct(
+                    formAct,
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
+
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las respuestas de un formulario activo: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Retrieves all Answers by Form with pagination support.
+     *
+     * @param pageable The Pageable object specifying the page number, size, and sorting criteria.
+     * @return A Page containing Answer objects based on the provided Pageable parameters.
+     */
+    public Page<Answer> findAllByForm(UUID formId, Pageable pageable) {
+        try {
+
+            Form form = formService.findById(formId);
+            if (form == null) return null;
+
+            return answerRepository.findAllByFormAct_Form(
+                    form,
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10,
+
+                            pageable.getSort()
+                    )
+            );
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las respuestas de un formulario: {}", e.getMessage());
+            return null;
+        }
+    }
+
+
+    /**
      * Retrieves an Answer based on the specified UUID identifier.
      *
      * @param id The UUID identifier of the Answer to be retrieved.
@@ -116,7 +188,7 @@ public class AnswerService{
 
             Answer answer = Answer.builder()
                     .date(answerCreateDTO.getDate())
-                    .formAct(formActRepository.findById(answerCreateDTO.getFormActId()).get())
+                    .formAct(formActService.findById(answerCreateDTO.getFormActId()))
                     .uuid(answerCreateDTO.getUuid())
                     .response(answerCreateDTO.getResponse())
                     .build();
