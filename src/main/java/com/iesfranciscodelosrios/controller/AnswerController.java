@@ -73,6 +73,38 @@ public class AnswerController {
     }
 
     /**
+     * Retrieve all answers with pagination.
+     *
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of answers or a bad request status.
+     */
+    @GetMapping("page/formAct/{id}")
+    public ResponseEntity<Page<AnswerResponseDTO>> getAllAnswersByFormAct(@PageableDefault() Pageable pageable, @PathVariable("id") String id) {
+        Page<Answer> result = answerService.findAllByFormAct(UUID.fromString(id), pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<AnswerResponseDTO> response = result.map(answerService::mapToResponseDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Retrieve all answers with pagination.
+     *
+     * @param pageable Pagination information.
+     * @return ResponseEntity containing a page of answers or a bad request status.
+     */
+    @GetMapping("page/form/{id}")
+    public ResponseEntity<Page<AnswerResponseDTO>> getAllAnswersByForm(@PageableDefault() Pageable pageable, @PathVariable("id") String id) {
+        Page<Answer> result = answerService.findAllByForm(UUID.fromString(id), pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<AnswerResponseDTO> response = result.map(answerService::mapToResponseDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Create a new answer.
      *
      * @param answerCreateDTO DTO containing information for creating the answer.
