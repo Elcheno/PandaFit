@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -98,18 +99,17 @@ public class SchoolYearController {
      * @param name     The name to search for.
      * @return ResponseEntity containing a page of school years or a bad request status.
      */
-    @GetMapping("/page/name")
-    public ResponseEntity<Page<SchoolYearResponseDTO>> getAllSchoolYearsByNameContaining(
-            @PageableDefault(sort = "name") Pageable pageable,
-            @RequestParam("name") String name) {
+    @GetMapping("institution/{institutionId}/schoolYear/page/name")
+    public ResponseEntity<Page<SchoolYearResponseDTO>> getAllSchoolYearsByNameContaining(@PageableDefault(sort = "name") Pageable pageable, @RequestParam("name") String name, @PathVariable("institutionId") String institutionId) {
 
-        Page<SchoolYear> result = schoolYearService.findAllByNameContaining(pageable, name);
+        Page<SchoolYear> result = schoolYearService.findAllByNameContaining(pageable, name, institutionService.findById(UUID.fromString(institutionId)));
 
         if (result == null) {
             return ResponseEntity.badRequest().build();
         }
 
         Page<SchoolYearResponseDTO> response = result.map(schoolYearService::mapToResponseDTO);
+
         return ResponseEntity.ok(response);
     }
 

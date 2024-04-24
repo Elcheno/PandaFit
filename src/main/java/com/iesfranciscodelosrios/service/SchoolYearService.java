@@ -168,9 +168,10 @@ public class SchoolYearService  {
      * @return A page of school years whose names contain the specified string.
      * @throws RuntimeException If an error occurs during the operation.
      */
-    public Page<SchoolYear> findAllByNameContaining(Pageable pageable, String name) {
+    public Page<SchoolYear> findAllByNameContaining(Pageable pageable, String name, Institution institution) {
+
         try {
-            Page<SchoolYear> result = schoolYearRepository.findAllByNameContainingIgnoreCase(
+            Page<SchoolYear> result = schoolYearRepository.findAllByNameContainingIgnoreCaseAndInstitution(
             PageRequest.of(
                     pageable.getPageNumber() > 0
                             ? pageable.getPageNumber()
@@ -181,7 +182,7 @@ public class SchoolYearService  {
                             : 10
 
                     //pageable.getSort()
-            ), name
+            ), name, institution
             );
 
             logger.info("Buscando todos los YEARS escolares con el nombre '{}' : {}", name, result);
@@ -258,7 +259,7 @@ public class SchoolYearService  {
 
             if(schoolYear.getFormActList() != null) {
                 for (FormAct formAct : schoolYear.getFormActList()) {
-                    formActUidList.add(schoolYear.getId());
+                    formActUidList.add(formAct.getId());
                 }
             }
 
