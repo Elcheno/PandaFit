@@ -36,6 +36,9 @@ public class Answer {
     @Convert(converter = HashMapConverter.class)
     private Set<Object> response;
 
+    @Convert(converter = HashMapConverter.class)
+    private Set<Object> outputs;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

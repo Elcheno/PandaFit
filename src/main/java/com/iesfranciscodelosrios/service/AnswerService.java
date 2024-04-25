@@ -3,11 +3,11 @@ package com.iesfranciscodelosrios.service;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
+import com.iesfranciscodelosrios.model.dto.output.OutputWithoutOwner;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.model.entity.Form;
 import com.iesfranciscodelosrios.model.entity.FormAct;
 import com.iesfranciscodelosrios.repository.AnswerRepository;
-import com.iesfranciscodelosrios.repository.FormActRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AnswerService{
@@ -185,12 +188,34 @@ public class AnswerService{
     public Answer save(AnswerCreateDTO answerCreateDTO) {
         try {
             logger.info("Guardando la respuesta: {}", answerCreateDTO);
+            FormAct formAct = formActService.findById(answerCreateDTO.getFormActId());
+
+            if (formAct == null) {
+                logger.error("El formulario activo no existe: {}", answerCreateDTO.getFormActId());
+                throw new RuntimeException("El formulario activo no existe");
+            }
+
+            Set<Object> outputs = new HashSet<>();
+            formAct.getForm().getOutputList().forEach(output -> {
+                OutputWithoutOwner outputWithoutOwner = OutputWithoutOwner.builder()
+                        .id(output.getId())
+                        .name(output.getName())
+                        .formula(output.getFormula())
+                        .description(output.getDescription())
+                        .umbralList(output.getUmbralList())
+                        .inputsId(output.getInputs().stream().map(input -> input.getId()).collect(Collectors.toSet()))
+                        .unit(output.getUnit())
+                        .build();
+                outputs.add(outputWithoutOwner);
+            });
+
 
             Answer answer = Answer.builder()
                     .date(answerCreateDTO.getDate())
-                    .formAct(formActService.findById(answerCreateDTO.getFormActId()))
+                    .formAct(formAct)
                     .uuid(answerCreateDTO.getUuid())
                     .response(answerCreateDTO.getResponse())
+                    .outputs(outputs)
                     .build();
 
             logger.info("Guardando la respuesta: {}", answer);
@@ -239,6 +264,7 @@ public class AnswerService{
                         .id(answer.getId())
                         .date(answer.getDate())
                         .response(answer.getResponse())
+                        .outputs(answer.getOutputs())
                         .formActId(answer.getFormAct().getId())
                         .uuid(answer.getUuid())
                         .build();
