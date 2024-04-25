@@ -73,6 +73,25 @@ public class FormController {
     }
 
     /**
+     * Retrieves all forms containing the given name with pagination.
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return ResponseEntity containing a page of forms or a bad request status.
+     */
+    @GetMapping("/page/name")
+    public ResponseEntity<Page<FormResponseDTO>> getAllFormsByNameContaining(@PageableDefault() Pageable pageable, @RequestParam("name") String name) {
+        Page<Form> result = formService.findAllByNameContaining(pageable, name);
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<FormResponseDTO> response = result.map(form -> FormResponseDTO.builder()
+                .id(form.getId())
+                .name(form.getName())
+                .build());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Creates a new form.
      *
      * @param formCreateDTO DTO containing information for creating the form.

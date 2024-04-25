@@ -82,7 +82,7 @@ public class UserController {
      * @param email    The email keyword to search for.
      * @return ResponseEntity containing a page of user details if found, otherwise returns a 400 Bad Request response.
      */
-    @GetMapping("/page/email")
+    @GetMapping("/users/page/email")
     public ResponseEntity<Page<UserResponseDTO>> getAllUserByEmailContaining(@PageableDefault(sort = "email") Pageable pageable, @RequestParam("email") String email) {
         Page<UserEntity> result = userService.findAllByEmailContaining(pageable, email);
 
