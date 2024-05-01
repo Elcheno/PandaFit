@@ -1,6 +1,7 @@
 package com.iesfranciscodelosrios.controller;
 
 import com.iesfranciscodelosrios.model.dto.form.FormResponseDTO;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionByUserResponseDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserResponseDTO;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionResponseDTO;
 
 import java.util.Set;
 import java.util.UUID;
@@ -163,6 +165,13 @@ public class UserController {
         Page<UserResponseDTO> response = result.map(userService::mapToResponseDTO);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/users/{id}/institution")
+    public ResponseEntity<InstitutionByUserResponseDTO> getUserInstitution(@PathVariable("id") String id) {
+        InstitutionByUserResponseDTO institutionByUserResponseDTO = userService.getUserInstitution(UUID.fromString(id));
+        if (institutionByUserResponseDTO == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(institutionByUserResponseDTO);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.iesfranciscodelosrios.service;
 
+import com.iesfranciscodelosrios.model.dto.institution.InstitutionByUserResponseDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserCreateDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserDeleteDTO;
 import com.iesfranciscodelosrios.model.dto.user.UserResponseDTO;
@@ -399,6 +400,18 @@ public class UserService {
             logger.error("Error al buscar todos los usuarios de la institución '{}' por rol '{}' paginados: {}", institution, role, e.getMessage());
             throw new RuntimeException("Error al buscar todos los usuarios de la institución por rol paginados: " + e.getMessage());
         }
+    }
+
+    public InstitutionByUserResponseDTO getUserInstitution(UUID userId) {
+        UserEntity user = findById(userId);
+        if (user == null) return null;
+        if (user.getInstitution() == null) return null;
+        return InstitutionByUserResponseDTO.builder()
+                .id(user.getInstitution().getId())
+                .name(user.getInstitution().getName())
+                .schoolYearsId(user.getInstitution().getSchoolYearList().stream().map(SchoolYear::getId).collect(Collectors.toSet()))
+                .schoolYearsName(user.getInstitution().getSchoolYearList().stream().map(SchoolYear::getName).collect(Collectors.toSet()))
+                .build();
     }
 
     /**
