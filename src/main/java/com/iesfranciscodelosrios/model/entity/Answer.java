@@ -37,6 +37,7 @@ public class Answer {
     private Set<Object> response;
 
     @Convert(converter = HashMapConverter.class)
+    @Column(columnDefinition = "VARCHAR")
     private Set<Object> outputs;
 
     @Override
@@ -62,5 +63,4 @@ public class Answer {
                 ", uuid='" + uuid + '\'' +
                 '}';
     }
-
 }
