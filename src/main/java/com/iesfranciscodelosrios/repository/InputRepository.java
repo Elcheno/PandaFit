@@ -29,4 +29,14 @@ public interface InputRepository extends CrudRepository<Input, UUID> {
      * @throws Exception If an error occurs during the retrieval process.
      */
     Page<Input> findAll(Pageable pageable) throws Exception;
+
+    /**
+     * Retrieves all inputs containing the specified name (case-insensitive) paginated.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return A page of inputs containing the specified name.
+     * @throws Exception If an error occurs during the retrieval process.
+     */
+    Page<Input> findAllByNameContainingIgnoreCase(Pageable pageable, String name) throws Exception;
 }

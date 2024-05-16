@@ -29,4 +29,13 @@ public interface OutputRepository extends CrudRepository<Output, UUID> {
      * @throws Exception If an error occurs during the operation.
      */
     Page<Output> findAll(Pageable pageable) throws Exception;
+
+    /**
+     * Retrieve all Output entities whose name contains the specified string, ignoring case.
+     * @param pageable Pageable object for pagination.
+     * @param name The string to search for in Output names.
+     * @return A Page containing Output entities.
+     * @throws Exception If an error occurs during retrieval.
+     */
+    Page<Output> findAllByNameContainingIgnoreCase(Pageable pageable, String name) throws Exception;
 }

@@ -91,4 +91,36 @@ public interface FormActRepository extends CrudRepository <FormAct, UUID> {
      * @throws Exception If an error occurs during the retrieval process.
      */
     Page<FormAct> findAllBySchoolYearAndExpirationDateBefore(SchoolYear schoolYear, LocalDateTime date, Pageable pageable) throws Exception;
+
+    /**
+     * Retrieves all form activities associated with a specific name, paginated.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return A page of form activities.
+     * @throws Exception If an error occurs during the retrieval process.
+     */
+    Page<FormAct> findAllByFormNameContainingIgnoreCase(Pageable pageable, String name) throws Exception;
+
+    /**
+     * Retrieves all form activities associated with a specific name and expiration date after a given date, paginated.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @param date The expiration date threshold.
+     * @return A page of form activities.
+     * @throws Exception If an error occurs during the retrieval process.
+     */
+    Page<FormAct> findAllByFormNameContainingIgnoreCaseAndExpirationDateAfter(Pageable pageable, String name, LocalDateTime date) throws Exception;
+
+    /**
+     * Retrieves all form activities associated with a specific name and expiration date before a given date, paginated.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @param date The expiration date threshold.
+     * @return A page of form activities.
+     * @throws Exception If an error occurs during the retrieval process.
+     */
+    Page<FormAct> findAllByFormNameContainingIgnoreCaseAndExpirationDateBefore(Pageable pageable, String name, LocalDateTime date) throws Exception;
 }

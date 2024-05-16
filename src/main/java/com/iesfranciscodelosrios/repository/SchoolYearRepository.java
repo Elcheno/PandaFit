@@ -53,5 +53,5 @@ public interface SchoolYearRepository extends JpaRepository<SchoolYear, UUID> {
      * @return A Page containing SchoolYear entities.
      * @throws Exception If an error occurs during retrieval.
      */
-    Page<SchoolYear> findAllByNameContainingIgnoreCase(Pageable pageable, String name) throws Exception;
+    Page<SchoolYear> findAllByNameContainingIgnoreCaseAndInstitution(Pageable pageable, String name, Institution institution) throws Exception;
 }

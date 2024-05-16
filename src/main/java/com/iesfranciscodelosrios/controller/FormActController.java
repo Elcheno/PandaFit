@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.iesfranciscodelosrios.model.entity.Input;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -57,6 +58,75 @@ public class FormActController {
                     .expirationDate(formAct.getExpirationDate())
                     .build();
         });
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Retrieve all form actions containing the given name with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return ResponseEntity containing a page of form actions or a bad request status.
+     */
+
+    @GetMapping("page/name")
+    public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActByFormNameContaining(@PageableDefault() Pageable pageable, @RequestParam("name") String name) {
+        Page<FormAct> result = formActService.findAllByFormNameContaining(pageable, name);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<FormActResponseDTO> response = result.map(formAct -> FormActResponseDTO.builder()
+                .id(formAct.getId())
+                .startDate(formAct.getStartDate())
+                .expirationDate(formAct.getExpirationDate())
+                .build());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Retrieve all form actions containing the given name and After the given DateTime with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @param date The date to search for.
+     * @return ResponseEntity containing a page of form actions or a bad request status.
+     */
+    @GetMapping("page/name/After")
+    public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActByFormNameContainingAndExpirationDateAfter(@PageableDefault() Pageable pageable, @RequestParam("name") String name, @RequestParam("date") LocalDateTime date) {
+        Page<FormAct> result = formActService.findAllByFormNameContainingAndExpirationDateAfter(pageable, name, date);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<FormActResponseDTO> response = result.map(formAct -> FormActResponseDTO.builder()
+                .id(formAct.getId())
+                .startDate(formAct.getStartDate())
+                .expirationDate(formAct.getExpirationDate())
+                .build());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Retrieve all form actions containing the given name and Before the given DateTime with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @param date The date to search for.
+     * @return ResponseEntity containing a page of form actions or a bad request status.
+     */
+    @GetMapping("page/name/Before")
+    public ResponseEntity<Page<FormActResponseDTO>> getAllFormsActByFormNameContainingAndExpirationDateBefore(@PageableDefault() Pageable pageable, @RequestParam("name") String name, @RequestParam("date") LocalDateTime date) {
+        Page<FormAct> result = formActService.findAllByFormNameContainingAndExpirationDateBefore(pageable, name, date);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<FormActResponseDTO> response = result.map(formAct -> FormActResponseDTO.builder()
+                .id(formAct.getId())
+                .startDate(formAct.getStartDate())
+                .expirationDate(formAct.getExpirationDate())
+                .build());
 
         return ResponseEntity.ok(response);
     }

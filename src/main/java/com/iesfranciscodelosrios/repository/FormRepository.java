@@ -28,4 +28,14 @@ public interface FormRepository extends CrudRepository<Form, UUID> {
      * @throws Exception If an error occurs during the retrieval process.
      */
     Page<Form> findAll(Pageable pageable) throws Exception;
+
+    /**
+     * Retrieves all forms containing the specified name (case-insensitive) paginated.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return A page of forms containing the specified name.
+     * @throws Exception If an error occurs during the retrieval process.
+     */
+    Page<Form> findAllByNameContainingIgnoreCase(Pageable pageable, String name) throws Exception;
 }

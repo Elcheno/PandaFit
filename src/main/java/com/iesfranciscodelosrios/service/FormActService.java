@@ -3,6 +3,8 @@ package com.iesfranciscodelosrios.service;
 import com.iesfranciscodelosrios.model.dto.formAct.*;
 import com.iesfranciscodelosrios.model.entity.*;
 import com.iesfranciscodelosrios.repository.FormActRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,8 @@ public class FormActService {
 
     @Autowired
     private SchoolYearService schoolYearService;
+
+    private static final Logger logger = LoggerFactory.getLogger(FormActService.class);
 
     /**
      * Loads a FormAct based on the specified start date.
@@ -72,6 +76,98 @@ public class FormActService {
             );
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * Retrieves all FormActs containing the given name with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return A page of FormAct objects containing the given name.
+     */
+    public Page<FormAct> findAllByFormNameContaining(Pageable pageable, String name) {
+        try {
+            Page<FormAct> result = formActRepository.findAllByFormNameContainingIgnoreCase(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), name
+            );
+
+            logger.info("Buscando todas las instituciones paginadas: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las instituciones paginadas: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todas las instituciones paginadas: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Retrieves all FormActs containing the given name and expiration date with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @param date The date to search for.
+     * @return A page of FormAct objects containing the given name and expiration date.
+     */
+    public Page<FormAct> findAllByFormNameContainingAndExpirationDateAfter(Pageable pageable, String name, LocalDateTime date) {
+        try {
+            Page<FormAct> result = formActRepository.findAllByFormNameContainingIgnoreCaseAndExpirationDateAfter(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), name, date
+            );
+
+            logger.info("Buscando todas las instituciones paginadas: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las instituciones paginadas: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todas las instituciones paginadas: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Retrieves all FormActs containing the given name and expiration date with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @param date The date to search for.
+     * @return A page of FormAct objects containing the given name and expiration date.
+     */
+    public Page<FormAct> findAllByFormNameContainingAndExpirationDateBefore(Pageable pageable, String name, LocalDateTime date) {
+        try {
+            Page<FormAct> result = formActRepository.findAllByFormNameContainingIgnoreCaseAndExpirationDateBefore(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), name, date
+            );
+
+            logger.info("Buscando todas las instituciones paginadas: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las instituciones paginadas: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todas las instituciones paginadas: " + e.getMessage());
         }
     }
 

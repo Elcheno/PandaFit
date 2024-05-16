@@ -48,6 +48,31 @@ public class InputController {
     }
 
     /**
+     * Retrieves all inputs containing the given name with pagination.
+     *
+     * @param pageable Pagination information.
+     * @param name The name to search for.
+     * @return ResponseEntity containing a page of inputs or a bad request status.
+     */
+    @GetMapping("/page/input/name")
+    public ResponseEntity<Page<InputResponseDTO>> getAllInputsByNameContaining(@PageableDefault(sort = "name") Pageable pageable, @RequestParam("name") String name) {
+        Page<Input> result = InputService.findAllByNameContaining(pageable, name);
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<InputResponseDTO> response = result.map(input -> InputResponseDTO.builder()
+                .id(input.getId())
+                .name(input.getName())
+                .description(input.getDescription())
+                .type(input.getType().name())
+                .decimal(input.getDecimal())
+                .decimals(input.getDecimals())
+                .unit(input.getUnit())
+                .build());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Retrieves an Input by its ID.
      *
      * @param id The ID of the input to retrieve.
