@@ -17,4 +17,5 @@ public class AnswerResponseDTO {
     private UUID formActId;
     private String uuid;
     private Set<Object> response;
+    private Set<Object> outputs;
 }

@@ -54,6 +54,7 @@ public class Output {
     private List<Input> inputs;
 
     @Convert(converter = HashMapConverter.class)
+    @Column(columnDefinition = "VARCHAR")
     private Set<Object> umbralList;
 
     @NotBlank(message = "Las unidades no puede estar en blanco")
