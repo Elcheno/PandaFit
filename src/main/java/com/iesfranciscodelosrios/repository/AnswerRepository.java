@@ -1,9 +1,6 @@
 package com.iesfranciscodelosrios.repository;
 
-import com.iesfranciscodelosrios.model.entity.Answer;
-import com.iesfranciscodelosrios.model.entity.Form;
-import com.iesfranciscodelosrios.model.entity.FormAct;
-import com.iesfranciscodelosrios.model.entity.Institution;
+import com.iesfranciscodelosrios.model.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -54,4 +51,7 @@ public interface AnswerRepository extends CrudRepository<Answer, UUID> {
     Page<Answer> findAllByFormAct(FormAct formAct, Pageable pageable) throws Exception;
 
     Page<Answer> findAllByFormAct_Form(Form form, Pageable pageable) throws Exception;
+
+    Page<Answer> findAllByFormAct_SchoolYear(SchoolYear schoolYear, Pageable pageable) throws Exception;
+
 }

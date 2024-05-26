@@ -1,6 +1,5 @@
 package com.iesfranciscodelosrios.model.dto.answer;
 
-import com.iesfranciscodelosrios.model.entity.FormAct;
 import lombok.*;
 
 import java.time.LocalDateTime;
