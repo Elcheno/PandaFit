@@ -309,6 +309,36 @@ public class AnswerService{
     }
 
     /**
+     * Retrieves a list of Answers based on a substring of the uuid.
+     *
+     * @return The list of retrieved Answer objects, or an empty list if not found.
+     */
+    public Page<Answer> findAllByFormName(Pageable pageable, UUID schoolyearId,String formName) {
+        try {
+            SchoolYear schoolYear = schoolYearService.findById(schoolyearId);
+
+            Page<Answer> result = answerRepository.findAllByFormAct_SchoolYearAndFormAct_FormNameContainingIgnoreCase(
+                    PageRequest.of(
+                            pageable.getPageNumber() > 0
+                                    ? pageable.getPageNumber()
+                                    : 0,
+
+                            pageable.getPageSize() > 0
+                                    ? pageable.getPageSize()
+                                    : 10
+                    ), schoolYear, formName
+            );
+
+            logger.info("Buscando todos los answers por nombre de formulario: {}", result);
+
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al buscar todos los answers por nombre de formulario: {}", e.getMessage());
+            throw new RuntimeException("Error al buscar todos los answers por nombre de formulario: " + e.getMessage());
+        }
+    }
+
+    /**
      * Maps an Answer object to an AnswerResponseDTO object.
      *
      * @param answer The Answer object to map.

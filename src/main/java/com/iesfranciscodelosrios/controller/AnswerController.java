@@ -62,6 +62,26 @@ public class AnswerController {
     }
 
     /**
+     * Find by form name
+     * @param formName name substring of the Answer's uuid
+     * @return the list of AnswerResponseDTOs or 404 if none found
+     */
+    @GetMapping("/active/response/schoolyear/{id}/name")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByFormName(@PageableDefault() Pageable pageable,
+                                                                    @PathVariable("id") String id,
+                                                                    @RequestParam("name") String formName) {
+        Page<Answer> answers = answerService.findAllByFormName(pageable, UUID.fromString(id), formName);
+
+        if (answers.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(answers);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Retrieve an answer by its ID.
      *
      * @param id The ID of the answer to retrieve.

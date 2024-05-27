@@ -34,6 +34,14 @@ public interface AnswerRepository extends CrudRepository<Answer, UUID> {
      */
     Page<Answer> findAllByFormAct_SchoolYearAndUuidContainingIgnoreCase(Pageable pageable, SchoolYear schoolYear, String uuid) throws Exception;
 
+    /**
+     * Find an Answer entity by its name.
+     *
+     * @param pageable The name of the Answer entity.
+     * @return An Optional containing the Output if found, or an empty Optional if not found.
+     */
+    Page<Answer> findAllByFormAct_SchoolYearAndFormAct_FormNameContainingIgnoreCase(Pageable pageable, SchoolYear schoolYear, String name) throws Exception;
+
 
     /**
      * Deletes an answer forcefully by its ID.
