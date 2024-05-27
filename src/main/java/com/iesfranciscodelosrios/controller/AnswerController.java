@@ -12,10 +12,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/active/response")
@@ -38,6 +38,28 @@ public class AnswerController {
 
             AnswerResponseDTO answerResponseDTO = answerService.mapToResponseDTO(answerEntity);
             return ResponseEntity.ok(answerResponseDTO);
+    }
+
+    /**
+     * Find by name
+     * @param uuid name substring of the Answer's uuid
+     * @return the list of AnswerResponseDTOs or 404 if none found
+     */
+    @GetMapping("/active/response/schoolyear/{id}/uuid")
+    public ResponseEntity<Page<AnswerResponseDTO>> findByName(@PageableDefault() Pageable pageable,
+                                                              @PathVariable("id") String id,
+                                                              @RequestParam("uuid") String uuid) {
+        Page<Answer> answers = answerService.findAllByUuid(pageable, UUID.fromString(id), uuid);
+
+        if (answers.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Page<AnswerResponseDTO> responseDTOs = answers.stream()
+                .map(answerService::mapToResponseDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responseDTOs);
     }
 
     /**
