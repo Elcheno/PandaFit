@@ -1,9 +1,6 @@
 package com.iesfranciscodelosrios.repository;
 
-import com.iesfranciscodelosrios.model.entity.Answer;
-import com.iesfranciscodelosrios.model.entity.Form;
-import com.iesfranciscodelosrios.model.entity.FormAct;
-import com.iesfranciscodelosrios.model.entity.Institution;
+import com.iesfranciscodelosrios.model.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +25,23 @@ public interface AnswerRepository extends CrudRepository<Answer, UUID> {
             value = "SELECT * FROM answer a WHERE a.date = ?1",
             nativeQuery = true)
     Optional<Answer> findAnswerByDate(LocalDateTime date);
+
+    /**
+     * Find an Answer entity by its name.
+     *
+     * @param pageable The name of the Answer entity.
+     * @return An Optional containing the Output if found, or an empty Optional if not found.
+     */
+    Page<Answer> findAllByFormAct_SchoolYearAndUuidContainingIgnoreCase(Pageable pageable, SchoolYear schoolYear, String uuid) throws Exception;
+
+    /**
+     * Find an Answer entity by its name.
+     *
+     * @param pageable The name of the Answer entity.
+     * @return An Optional containing the Output if found, or an empty Optional if not found.
+     */
+    Page<Answer> findAllByFormAct_SchoolYearAndFormAct_FormNameContainingIgnoreCase(Pageable pageable, SchoolYear schoolYear, String name) throws Exception;
+
 
     /**
      * Deletes an answer forcefully by its ID.
@@ -54,4 +67,7 @@ public interface AnswerRepository extends CrudRepository<Answer, UUID> {
     Page<Answer> findAllByFormAct(FormAct formAct, Pageable pageable) throws Exception;
 
     Page<Answer> findAllByFormAct_Form(Form form, Pageable pageable) throws Exception;
+
+    Page<Answer> findAllByFormAct_SchoolYear(SchoolYear schoolYear, Pageable pageable) throws Exception;
+
 }

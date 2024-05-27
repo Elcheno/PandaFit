@@ -2,6 +2,7 @@ package com.iesfranciscodelosrios.controller;
 
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.answer.AnswerPrettyResponseDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.service.AnswerService;
@@ -12,10 +13,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/active/response")
@@ -38,6 +39,46 @@ public class AnswerController {
 
             AnswerResponseDTO answerResponseDTO = answerService.mapToResponseDTO(answerEntity);
             return ResponseEntity.ok(answerResponseDTO);
+    }
+
+    /**
+     * Find by name
+     * @param uuid name substring of the Answer's uuid
+     * @return the list of AnswerResponseDTOs or 404 if none found
+     */
+    @GetMapping("/active/response/schoolyear/{id}/uuid")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByName(@PageableDefault() Pageable pageable,
+                                                              @PathVariable("id") String id,
+                                                              @RequestParam("uuid") String uuid) {
+        Page<Answer> answers = answerService.findAllByUuid(pageable, UUID.fromString(id), uuid);
+
+        if (answers.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(answers);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Find by form name
+     * @param formName name substring of the Answer's uuid
+     * @return the list of AnswerResponseDTOs or 404 if none found
+     */
+    @GetMapping("/active/response/schoolyear/{id}/name")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByFormName(@PageableDefault() Pageable pageable,
+                                                                    @PathVariable("id") String id,
+                                                                    @RequestParam("name") String formName) {
+        Page<Answer> answers = answerService.findAllByFormName(pageable, UUID.fromString(id), formName);
+
+        if (answers.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(answers);
+
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -101,6 +142,16 @@ public class AnswerController {
         if (result == null) return ResponseEntity.badRequest().build();
 
         Page<AnswerResponseDTO> response = result.map(answerService::mapToResponseDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("page/schoolyear/{id}")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> getAllAnswersBySchoolYear(@PageableDefault() Pageable pageable, @PathVariable("id") String id) {
+        Page<Answer> result = answerService.findAllBySchoolYear(UUID.fromString(id), pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(result);
         return ResponseEntity.ok(response);
     }
 
