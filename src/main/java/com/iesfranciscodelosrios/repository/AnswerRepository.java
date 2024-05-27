@@ -59,4 +59,7 @@ public interface AnswerRepository extends CrudRepository<Answer, UUID> {
     Page<Answer> findAllByFormAct(FormAct formAct, Pageable pageable) throws Exception;
 
     Page<Answer> findAllByFormAct_Form(Form form, Pageable pageable) throws Exception;
+
+    Page<Answer> findAllByFormAct_SchoolYear(SchoolYear schoolYear, Pageable pageable) throws Exception;
+
 }

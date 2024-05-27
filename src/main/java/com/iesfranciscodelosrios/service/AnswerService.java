@@ -2,9 +2,13 @@ package com.iesfranciscodelosrios.service;
 
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.answer.AnswerPrettyResponseDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.dto.output.OutputWithoutOwner;
-import com.iesfranciscodelosrios.model.entity.*;
+import com.iesfranciscodelosrios.model.entity.Answer;
+import com.iesfranciscodelosrios.model.entity.Form;
+import com.iesfranciscodelosrios.model.entity.FormAct;
+import com.iesfranciscodelosrios.model.entity.SchoolYear;
 import com.iesfranciscodelosrios.repository.AnswerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,6 +151,32 @@ public class AnswerService{
             );
         } catch (Exception e) {
             logger.error("Error al buscar todas las respuestas de un formulario: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    public Page<Answer> findAllBySchoolYear(UUID schoolyearId, Pageable pageable) {
+        try {
+
+            SchoolYear schoolYear = schoolYearService.findById(schoolyearId);
+            if (schoolYear == null) return null;
+
+            return answerRepository.findAllByFormAct_SchoolYear(
+                schoolYear,
+                PageRequest.of(
+                        pageable.getPageNumber() > 0
+                                ? pageable.getPageNumber()
+                                : 0,
+
+                        pageable.getPageSize() > 0
+                                ? pageable.getPageSize()
+                                : 10,
+
+                        pageable.getSort()
+                )
+            );
+        } catch (Exception e) {
+            logger.error("Error al buscar todas las respuestas de un curso: {}", e.getMessage());
             return null;
         }
     }
@@ -303,4 +333,47 @@ public class AnswerService{
                 throw new RuntimeException("Error al crear la response de la respuesta.\n" + e.getMessage());
             }
         }
+
+
+    /**
+     * Maps an Answer object to an AnswerPrettyResponseDTO object.
+     *
+     * @param answers The Answer list to map.
+     * @return The mapped Page<AnswerPrettyResponseDTO> object.
+     * @throws RuntimeException If an error occurs while creating the response DTO.
+     */
+    public Page<AnswerPrettyResponseDTO> mapToPrettyResponseDTO (Page<Answer> answers){
+        try {
+            logger.info("Creando la pretty response de {}", answers);
+
+            Form form;
+            FormAct formAct;
+
+            Page<AnswerPrettyResponseDTO> result = null;
+
+            if (answers.hasContent()) {
+                form = answers.getContent().get(0).getFormAct().getForm();
+                formAct = answers.getContent().get(0).getFormAct();
+
+                result = answers.map(
+                        answer -> {
+                            return AnswerPrettyResponseDTO.builder()
+                                    .id(answer.getId())
+                                    .response(answer.getResponse())
+                                    .date(answer.getDate())
+                                    .uuid(answer.getUuid())
+                                    .formName(form.getName())
+                                    .formActId(formAct.getId())
+                                    .build();
+                        }
+                );
+            }
+
+            return result;
+
+        } catch (Exception e) {
+            logger.error("Error al crear la pretty response de la respuesta: {}", e.getMessage());
+            throw new RuntimeException("Error al crear la pretty response de la respuesta.\n" + e.getMessage());
+        }
     }
+}

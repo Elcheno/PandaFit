@@ -2,6 +2,7 @@ package com.iesfranciscodelosrios.controller;
 
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.answer.AnswerPrettyResponseDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.service.AnswerService;
@@ -123,6 +124,16 @@ public class AnswerController {
         if (result == null) return ResponseEntity.badRequest().build();
 
         Page<AnswerResponseDTO> response = result.map(answerService::mapToResponseDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("page/schoolyear/{id}")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> getAllAnswersBySchoolYear(@PageableDefault() Pageable pageable, @PathVariable("id") String id) {
+        Page<Answer> result = answerService.findAllBySchoolYear(UUID.fromString(id), pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(result);
         return ResponseEntity.ok(response);
     }
 
