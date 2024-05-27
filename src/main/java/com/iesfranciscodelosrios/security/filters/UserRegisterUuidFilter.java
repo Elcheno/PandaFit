@@ -69,6 +69,7 @@ public class UserRegisterUuidFilter extends OncePerRequestFilter {
             request.setAttribute("email", email);
             request.setAttribute("uuid", uuid);
             request.setAttribute("id", usuario.getId());
+            request.setAttribute("institutionId", usuario.getInstitution().getId());
         }
 
         filterChain.doFilter(request, response);
