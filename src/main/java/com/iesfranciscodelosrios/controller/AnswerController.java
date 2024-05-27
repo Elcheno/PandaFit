@@ -47,7 +47,7 @@ public class AnswerController {
      * @return the list of AnswerResponseDTOs or 404 if none found
      */
     @GetMapping("/active/response/schoolyear/{id}/uuid")
-    public ResponseEntity<Page<AnswerResponseDTO>> findByName(@PageableDefault() Pageable pageable,
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByName(@PageableDefault() Pageable pageable,
                                                               @PathVariable("id") String id,
                                                               @RequestParam("uuid") String uuid) {
         Page<Answer> answers = answerService.findAllByUuid(pageable, UUID.fromString(id), uuid);
@@ -56,11 +56,9 @@ public class AnswerController {
             return ResponseEntity.notFound().build();
         }
 
-        Page<AnswerResponseDTO> responseDTOs = answers.stream()
-                .map(answerService::mapToResponseDTO)
-                .collect(Collectors.toList());
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(answers);
 
-        return ResponseEntity.ok(responseDTOs);
+        return ResponseEntity.ok(response);
     }
 
     /**
