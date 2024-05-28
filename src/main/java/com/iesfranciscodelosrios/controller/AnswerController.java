@@ -2,10 +2,12 @@ package com.iesfranciscodelosrios.controller;
 
 import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
+import com.iesfranciscodelosrios.model.dto.answer.AnswerPrettyResponseDTO;
 import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -13,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/active/response")
@@ -39,6 +43,87 @@ public class AnswerController {
             AnswerResponseDTO answerResponseDTO = answerService.mapToResponseDTO(answerEntity);
             return ResponseEntity.ok(answerResponseDTO);
     }
+
+    /**
+     * Find by name
+     * @param uuid name substring of the Answer's uuid
+     * @return the list of AnswerResponseDTOs or 404 if none found
+     */
+    @GetMapping("schoolyear/{id}/uuid")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByName(@PageableDefault() Pageable pageable,
+                                                              @PathVariable("id") String id,
+                                                              @RequestParam("uuid") String uuid) {
+        Page<Answer> result = answerService.findAllByUuid(pageable, UUID.fromString(id), uuid);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(result);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Find by form name
+     * @param formName name substring of the Answer's uuid
+     * @return the list of AnswerResponseDTOs or 404 if none found
+     */
+    @GetMapping("schoolyear/{id}/name")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByFormName(@PageableDefault() Pageable pageable,
+                                                                    @PathVariable("id") String id,
+                                                                    @RequestParam("name") String formName) {
+        Page<Answer> result = answerService.findAllByFormName(pageable, UUID.fromString(id), formName);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(result);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Retrieve all answers relative to a given date based on a before, after, or equal condition.
+     *
+     * @param pageable Pagination information.
+     * @param id The school year ID.
+     * @param answerDate The date in question.
+     * @param beforeOrAfter Condition to filter by (before, after, equal).
+     * @return ResponseEntity containing the page of AnswerResponseDTOs or a not found status.
+     */
+    @GetMapping("/schoolyear/{id}/date")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> getAllAnswersByDate(
+            @PageableDefault() Pageable pageable,
+            @PathVariable("id") String id,
+            @RequestParam("date") LocalDateTime answerDate,
+            @RequestParam("BeforeOrAfter") String beforeOrAfter) throws Exception {
+
+        Page<Answer> answerEntity;
+        UUID schoolYearId = UUID.fromString(id);
+
+        switch (beforeOrAfter.toLowerCase()) {
+            case "before":
+
+                LocalDateTime past = answerDate.minusYears(100);
+                answerEntity = answerService.findAllByDateBetween(past, answerDate, schoolYearId, pageable);
+                break;
+            case "after":
+
+                LocalDateTime now = LocalDateTime.now();
+                answerEntity = answerService.findAllByDateBetween(answerDate, now, schoolYearId, pageable);
+                break;
+            default:
+
+                LocalDateTime ahora = LocalDateTime.now();
+                answerEntity = answerService.findAllByDateBetween(answerDate, ahora, schoolYearId, pageable);
+        }
+
+        if (answerEntity == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(answerEntity);
+        return ResponseEntity.ok(response);
+    }
+
 
     /**
      * Retrieve an answer by its ID.
@@ -101,6 +186,16 @@ public class AnswerController {
         if (result == null) return ResponseEntity.badRequest().build();
 
         Page<AnswerResponseDTO> response = result.map(answerService::mapToResponseDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("page/schoolyear/{id}")
+    public ResponseEntity<Page<AnswerPrettyResponseDTO>> getAllAnswersBySchoolYear(@PageableDefault() Pageable pageable, @PathVariable("id") String id) {
+        Page<Answer> result = answerService.findAllBySchoolYear(UUID.fromString(id), pageable);
+
+        if (result == null) return ResponseEntity.badRequest().build();
+
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(result);
         return ResponseEntity.ok(response);
     }
 

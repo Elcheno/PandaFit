@@ -87,6 +87,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         httpResponse.put("email", user.getUsername());
         httpResponse.put("roles", user.getAuthorities());
         httpResponse.put("id", request.getAttribute("id").toString());
+        httpResponse.put("institutionId", request.getAttribute("institutionId").toString());
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
         response.setStatus(HttpStatus.OK.value());

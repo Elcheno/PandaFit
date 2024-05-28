@@ -13,14 +13,16 @@ import java.util.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "answer")
+@Table(name = "answer", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"formAct", "uuid"})
+})
 public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "date", unique = true)
+    @Column(name = "date")
     private LocalDateTime date;
 
     @ManyToOne
@@ -29,12 +31,17 @@ public class Answer {
     private FormAct formAct;
 
     //userId autogenerada por nosotros ejemplo: agutcru403
-    @Column(name = "uuid", unique = true)
+    @Column(name = "uuid")
     @NotBlank(message = "El campo UUID no puede estar en blanco")
     private String uuid;
 
     @Convert(converter = HashMapConverter.class)
+    @Column(columnDefinition = "VARCHAR")
     private Set<Object> response;
+
+    @Convert(converter = HashMapConverter.class)
+    @Column(columnDefinition = "VARCHAR")
+    private Set<Object> outputs;
 
     @Override
     public boolean equals(Object o) {
@@ -59,5 +66,4 @@ public class Answer {
                 ", uuid='" + uuid + '\'' +
                 '}';
     }
-
 }
