@@ -50,13 +50,11 @@ public class AnswerController {
     public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByName(@PageableDefault() Pageable pageable,
                                                               @PathVariable("id") String id,
                                                               @RequestParam("uuid") String uuid) {
-        Page<Answer> answers = answerService.findAllByUuid(pageable, UUID.fromString(id), uuid);
+        Page<Answer> result = answerService.findAllByUuid(pageable, UUID.fromString(id), uuid);
 
-        if (answers.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(answers);
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(result);
 
         return ResponseEntity.ok(response);
     }
@@ -70,13 +68,11 @@ public class AnswerController {
     public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByFormName(@PageableDefault() Pageable pageable,
                                                                     @PathVariable("id") String id,
                                                                     @RequestParam("name") String formName) {
-        Page<Answer> answers = answerService.findAllByFormName(pageable, UUID.fromString(id), formName);
+        Page<Answer> result = answerService.findAllByFormName(pageable, UUID.fromString(id), formName);
 
-        if (answers.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (result == null) return ResponseEntity.badRequest().build();
 
-        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(answers);
+        Page<AnswerPrettyResponseDTO> response = this.answerService.mapToPrettyResponseDTO(result);
 
         return ResponseEntity.ok(response);
     }
