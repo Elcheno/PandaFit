@@ -378,7 +378,7 @@ public class AnswerService{
 
             Page<AnswerPrettyResponseDTO> result = null;
 
-            if (answers.hasContent()) {
+
 
                 result = answers.map(
                         answer -> {
@@ -394,7 +394,7 @@ public class AnswerService{
                                     .build();
                         }
                 );
-            }
+
 
             return result;
 
