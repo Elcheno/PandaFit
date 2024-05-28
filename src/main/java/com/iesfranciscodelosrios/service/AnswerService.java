@@ -376,24 +376,21 @@ public class AnswerService{
         try {
             logger.info("Creando la pretty response de {}", answers);
 
-            Form form;
-            FormAct formAct;
-
             Page<AnswerPrettyResponseDTO> result = null;
 
             if (answers.hasContent()) {
-                form = answers.getContent().get(0).getFormAct().getForm();
-                formAct = answers.getContent().get(0).getFormAct();
 
                 result = answers.map(
                         answer -> {
+                            String formName = answer.getFormAct().getForm().getName();
+                            UUID formActId = answer.getFormAct().getId();
                             return AnswerPrettyResponseDTO.builder()
                                     .id(answer.getId())
                                     .response(answer.getResponse())
                                     .date(answer.getDate())
                                     .uuid(answer.getUuid())
-                                    .formName(form.getName())
-                                    .formActId(formAct.getId())
+                                    .formName(formName)
+                                    .formActId(formActId)
                                     .build();
                         }
                 );

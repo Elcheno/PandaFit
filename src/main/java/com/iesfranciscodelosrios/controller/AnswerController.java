@@ -46,7 +46,7 @@ public class AnswerController {
      * @param uuid name substring of the Answer's uuid
      * @return the list of AnswerResponseDTOs or 404 if none found
      */
-    @GetMapping("/active/response/schoolyear/{id}/uuid")
+    @GetMapping("schoolyear/{id}/uuid")
     public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByName(@PageableDefault() Pageable pageable,
                                                               @PathVariable("id") String id,
                                                               @RequestParam("uuid") String uuid) {
@@ -66,7 +66,7 @@ public class AnswerController {
      * @param formName name substring of the Answer's uuid
      * @return the list of AnswerResponseDTOs or 404 if none found
      */
-    @GetMapping("/active/response/schoolyear/{id}/name")
+    @GetMapping("schoolyear/{id}/name")
     public ResponseEntity<Page<AnswerPrettyResponseDTO>> findByFormName(@PageableDefault() Pageable pageable,
                                                                     @PathVariable("id") String id,
                                                                     @RequestParam("name") String formName) {
