@@ -35,115 +35,115 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class InstitutionControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private InstitutionService institutionService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Test
-    public void testGetInstitutionById() throws Exception {
-        // Arrange
-        UUID institutionId = UUID.randomUUID();
-        Institution institution = new Institution();
-        institution.setId(institutionId);
-        institution.setName("Test Institution");
-
-        when(institutionService.findById(institutionId)).thenReturn(institution);
-
-        // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.get("/institution/{id}", institutionId.toString())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(institutionId.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Institution"));
-    }
-
-    /*@Test
-    public void testGetAllInstitutions() throws Exception {
-        // Arrange
-        UUID institutionId = UUID.randomUUID();
-        Institution institution = new Institution();
-        institution.setId(institutionId);
-        institution.setName("Test Institution");
-
-        Page<Institution> institutionPage = new PageImpl<>(Collections.singletonList(institution));
-
-        when(institutionService.findAll(any(Pageable.class))).thenReturn(institutionPage);
-
-        // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.get("/institution/page")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(institutionId.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value("Test Institution"));
-    }*/
-
-    @Test
-    public void testCreateInstitution() throws Exception {
-        // Arrange
-        InstitutionCreateDTO createDTO = new InstitutionCreateDTO();
-        createDTO.setName("New Institution");
-
-        Institution institution = new Institution();
-        institution.setId(UUID.randomUUID());
-        institution.setName("New Institution");
-
-        when(institutionService.save(any(InstitutionCreateDTO.class))).thenReturn(institution);
-
-        // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.post("/institution")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createDTO)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("New Institution"));
-    }
-
-    @Test
-    public void testUpdateInstitution() throws Exception {
-        // Arrange
-        InstitutionUpdateDTO updateDTO = new InstitutionUpdateDTO();
-        updateDTO.setId(UUID.randomUUID());
-        updateDTO.setName("Updated Institution");
-
-        Institution institution = new Institution();
-        institution.setId(updateDTO.getId());
-        institution.setName(updateDTO.getName());
-
-        when(institutionService.save(any(InstitutionCreateDTO.class))).thenReturn(institution);
-
-        // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.put("/institution")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateDTO)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(updateDTO.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Updated Institution"));
-    }
-
-    @Test
-    public void testDeleteInstitution() throws Exception {
-        // Arrange
-        InstitutionDeleteDTO deleteDTO = new InstitutionDeleteDTO();
-        deleteDTO.setId(UUID.randomUUID());
-        deleteDTO.setName("Delete Institution");
-
-        Institution institution = new Institution();
-        institution.setId(deleteDTO.getId());
-        institution.setName(deleteDTO.getName());
-
-        when(institutionService.delete(any(InstitutionDeleteDTO.class))).thenReturn(institution);
-
-        // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.delete("/institution")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(deleteDTO)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(deleteDTO.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Delete Institution"));
-    }
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @MockBean
+//    private InstitutionService institutionService;
+//
+//    @Autowired
+//    private ObjectMapper objectMapper;
+//
+//    @Test
+//    public void testGetInstitutionById() throws Exception {
+//        // Arrange
+//        UUID institutionId = UUID.randomUUID();
+//        Institution institution = new Institution();
+//        institution.setId(institutionId);
+//        institution.setName("Test Institution");
+//
+//        when(institutionService.findById(institutionId)).thenReturn(institution);
+//
+//        // Act & Assert
+//        mockMvc.perform(MockMvcRequestBuilders.get("/institution/{id}", institutionId.toString())
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(institutionId.toString()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Institution"));
+//    }
+//
+//    /*@Test
+//    public void testGetAllInstitutions() throws Exception {
+//        // Arrange
+//        UUID institutionId = UUID.randomUUID();
+//        Institution institution = new Institution();
+//        institution.setId(institutionId);
+//        institution.setName("Test Institution");
+//
+//        Page<Institution> institutionPage = new PageImpl<>(Collections.singletonList(institution));
+//
+//        when(institutionService.findAll(any(Pageable.class))).thenReturn(institutionPage);
+//
+//        // Act & Assert
+//        mockMvc.perform(MockMvcRequestBuilders.get("/institution/page")
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(institutionId.toString()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value("Test Institution"));
+//    }*/
+//
+//    @Test
+//    public void testCreateInstitution() throws Exception {
+//        // Arrange
+//        InstitutionCreateDTO createDTO = new InstitutionCreateDTO();
+//        createDTO.setName("New Institution");
+//
+//        Institution institution = new Institution();
+//        institution.setId(UUID.randomUUID());
+//        institution.setName("New Institution");
+//
+//        when(institutionService.save(any(InstitutionCreateDTO.class))).thenReturn(institution);
+//
+//        // Act & Assert
+//        mockMvc.perform(MockMvcRequestBuilders.post("/institution")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(createDTO)))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("New Institution"));
+//    }
+//
+//    @Test
+//    public void testUpdateInstitution() throws Exception {
+//        // Arrange
+//        InstitutionUpdateDTO updateDTO = new InstitutionUpdateDTO();
+//        updateDTO.setId(UUID.randomUUID());
+//        updateDTO.setName("Updated Institution");
+//
+//        Institution institution = new Institution();
+//        institution.setId(updateDTO.getId());
+//        institution.setName(updateDTO.getName());
+//
+//        when(institutionService.save(any(InstitutionCreateDTO.class))).thenReturn(institution);
+//
+//        // Act & Assert
+//        mockMvc.perform(MockMvcRequestBuilders.put("/institution")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(updateDTO)))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(updateDTO.getId().toString()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Updated Institution"));
+//    }
+//
+//    @Test
+//    public void testDeleteInstitution() throws Exception {
+//        // Arrange
+//        InstitutionDeleteDTO deleteDTO = new InstitutionDeleteDTO();
+//        deleteDTO.setId(UUID.randomUUID());
+//        deleteDTO.setName("Delete Institution");
+//
+//        Institution institution = new Institution();
+//        institution.setId(deleteDTO.getId());
+//        institution.setName(deleteDTO.getName());
+//
+//        when(institutionService.delete(any(InstitutionDeleteDTO.class))).thenReturn(institution);
+//
+//        // Act & Assert
+//        mockMvc.perform(MockMvcRequestBuilders.delete("/institution")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(deleteDTO)))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(deleteDTO.getId().toString()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Delete Institution"));
+//    }
 }

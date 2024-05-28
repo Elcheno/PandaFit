@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    image: 'elcheno/pandafit-backend:0.1'
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=default
+      - POSTGRES_PASSWORD=default
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pandafit-db
+      - SPRING_DATASOURCE_USERNAME=default
+      - SPRING_DATASOURCE_PASSWORD=default
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "6868:8080"
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_USER=default
+      - POSTGRES_PASSWORD=default
+      - POSTGRES_DB=pandafit-db
+    ports:
+      - "5433:5432"
+
+  web:
+    image: 'elcheno/pandafit-frontend:0.1'
+    container_name: web
+    ports:
+      - "80:80"

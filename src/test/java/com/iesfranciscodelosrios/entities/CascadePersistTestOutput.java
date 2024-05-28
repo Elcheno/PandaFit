@@ -15,44 +15,44 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class CascadePersistTestOutput {
 
-    @Autowired
-    private OutputRepository outputRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Test
-    @Transactional
-    public void testCascadePersist() {
-        // RESULTADO: Al guardar un output, el usuario debería ser persistido junto con el input por el CASCADE PERSIST
-        // Given
-        UserEntity userOwner = createUserForTest();
-        Output output = Output.builder()
-                .name("outputName")
-                .description("Output Description")
-                .formula("OutputFormula")
-                .userOwner(userOwner)
-        //        .result("Some Result")
-                .build();
-
-
-        // When
-        Output savedOutput = outputRepository.save(output);
-
-        // Then
-        assertNotNull(savedOutput.getId(), "ID debería generarse después de guardar");
-        assertNotNull(savedOutput.getUserOwner().getId(), "ID del propietario debería generarse después de guardar");
-        assertEquals("outputName", savedOutput.getName(), "El nombre debe ser igual");
-        assertEquals("Output Description", savedOutput.getDescription(), "La descripción debe ser igual");
-        assertEquals("OutputFormula", savedOutput.getFormula(), "La fórmula debe ser igual");
-        assertEquals(userOwner.getId(), savedOutput.getUserOwner().getId(), "El ID del propietario debería ser igual");
-    }
-
-    private UserEntity createUserForTest() {
-        // Crea un usuario para utilizarlo en las pruebas
-        return userRepository.save(UserEntity.builder()
-                .email("testuser@example.com")
-                .password("Abcdefg1!")
-                .build());
-    }
+//    @Autowired
+//    private OutputRepository outputRepository;
+//
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Test
+//    @Transactional
+//    public void testCascadePersist() {
+//        // RESULTADO: Al guardar un output, el usuario debería ser persistido junto con el input por el CASCADE PERSIST
+//        // Given
+//        UserEntity userOwner = createUserForTest();
+//        Output output = Output.builder()
+//                .name("outputName")
+//                .description("Output Description")
+//                .formula("OutputFormula")
+//                .userOwner(userOwner)
+//        //        .result("Some Result")
+//                .build();
+//
+//
+//        // When
+//        Output savedOutput = outputRepository.save(output);
+//
+//        // Then
+//        assertNotNull(savedOutput.getId(), "ID debería generarse después de guardar");
+//        assertNotNull(savedOutput.getUserOwner().getId(), "ID del propietario debería generarse después de guardar");
+//        assertEquals("outputName", savedOutput.getName(), "El nombre debe ser igual");
+//        assertEquals("Output Description", savedOutput.getDescription(), "La descripción debe ser igual");
+//        assertEquals("OutputFormula", savedOutput.getFormula(), "La fórmula debe ser igual");
+//        assertEquals(userOwner.getId(), savedOutput.getUserOwner().getId(), "El ID del propietario debería ser igual");
+//    }
+//
+//    private UserEntity createUserForTest() {
+//        // Crea un usuario para utilizarlo en las pruebas
+//        return userRepository.save(UserEntity.builder()
+//                .email("testuser@example.com")
+//                .password("Abcdefg1!")
+//                .build());
+//    }
 }

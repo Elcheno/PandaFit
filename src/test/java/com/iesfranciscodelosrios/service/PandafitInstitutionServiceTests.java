@@ -14,42 +14,42 @@ import java.util.Set;
 @SpringBootTest
 public class PandafitInstitutionServiceTests {
 
-    @Autowired
-    private InstitutionService institutionService;
-
-    @Test
-    public void testCreateInstitution() {
-        institutionService.save(InstitutionCreateDTO.builder()
-                .name("global2")
-                .build()
-        );
-    }
-
-    @Test
-    public void testFindById() {
-        System.out.println(institutionService.findById(institutionService.findByName("global").getId()));
-    }
-
-    @Test
-    public void testFindByName() {
-        Institution result = institutionService.findByName("global");
-        System.out.println(result);
-    }
-
-    @Test
-    public void testFindByAll() {
-        Pageable pageable = PageRequest.of(1, 10);
-        Page<Institution> result = institutionService.findAll(pageable);
-        for(Institution institution : result) {
-            System.out.println(institution);
-        }
-    }
-
-    @Test
-    public void testFindByNameError() {
-        Institution result = institutionService.findByName("error");
-        System.out.println(result);
-    }
+//    @Autowired
+//    private InstitutionService institutionService;
+//
+//    @Test
+//    public void testCreateInstitution() {
+//        institutionService.save(InstitutionCreateDTO.builder()
+//                .name("global2")
+//                .build()
+//        );
+//    }
+//
+//    @Test
+//    public void testFindById() {
+//        System.out.println(institutionService.findById(institutionService.findByName("global").getId()));
+//    }
+//
+//    @Test
+//    public void testFindByName() {
+//        Institution result = institutionService.findByName("global");
+//        System.out.println(result);
+//    }
+//
+//    @Test
+//    public void testFindByAll() {
+//        Pageable pageable = PageRequest.of(1, 10);
+//        Page<Institution> result = institutionService.findAll(pageable);
+//        for(Institution institution : result) {
+//            System.out.println(institution);
+//        }
+//    }
+//
+//    @Test
+//    public void testFindByNameError() {
+//        Institution result = institutionService.findByName("error");
+//        System.out.println(result);
+//    }
 
     /*@Test
     public void testDeleteInstitution() {

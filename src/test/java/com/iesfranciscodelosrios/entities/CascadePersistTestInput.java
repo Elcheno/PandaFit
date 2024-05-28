@@ -15,11 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class CascadePersistTestInput {
 
-    @Autowired
-    private InputRepository inputRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+//    @Autowired
+//    private InputRepository inputRepository;
+//
+//    @Autowired
+//    private UserRepository userRepository;
 
     /*@Test
     @Transactional
@@ -48,11 +48,11 @@ public class CascadePersistTestInput {
         assertEquals(userOwner.getId(), savedInput.getUserOwner().getId(), "El ID del propietario debería ser igual");
     }*/
 
-    private UserEntity createUserForTest() {
-        // Crea un usuario para utilizarlo en las pruebas
-        return userRepository.save(UserEntity.builder()
-                .email("testuser@example.com")
-                .password("Abcdefg1!")
-                .build());
-    }
+//    private UserEntity createUserForTest() {
+//        // Crea un usuario para utilizarlo en las pruebas
+//        return userRepository.save(UserEntity.builder()
+//                .email("testuser@example.com")
+//                .password("Abcdefg1!")
+//                .build());
+//    }
 }

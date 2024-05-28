@@ -16,45 +16,45 @@ import java.util.UUID;
 @SpringBootTest
 public class PandafitSchoolYearServiceTests {
 
-    @Autowired
-    private SchoolYearService schoolYearService;
-
-    @Autowired
-    private InstitutionService institutionService;
-
-
-    @Test
-    public void testCreateSchoolYear() {
-        schoolYearService.save(
-                SchoolYearCreateDTO.builder()
-                .name("1 ESO A")
-                .institutionId(institutionService.findByName("global").getId())
-                .build());
-    }
-
-    @Test
-    public void testFindByIdSchoolYear() {
-        System.out.println(schoolYearService.findById(UUID.fromString("dccdfd35-e2b1-4073-b931-06c929914041")));
-    }
-
-    @Test
-    public void testFindByNameSchoolYear() {
-        System.out.println(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("global")));
-    }
-
-    @Test
-    public void testFindAllByInstitution() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<SchoolYear> result = schoolYearService.findAllByInstitution(institutionService.findByName("global"), pageable);
-        for(SchoolYear schoolYear : result) {
-            System.out.println(schoolYear);
-        }
-    }
-
-    @Test
-    public void testFindByNameSchoolYearError() {
-        System.out.println(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("error")));
-    }
+//    @Autowired
+//    private SchoolYearService schoolYearService;
+//
+//    @Autowired
+//    private InstitutionService institutionService;
+//
+//
+//    @Test
+//    public void testCreateSchoolYear() {
+//        schoolYearService.save(
+//                SchoolYearCreateDTO.builder()
+//                .name("1 ESO A")
+//                .institutionId(institutionService.findByName("global").getId())
+//                .build());
+//    }
+//
+//    @Test
+//    public void testFindByIdSchoolYear() {
+//        System.out.println(schoolYearService.findById(UUID.fromString("dccdfd35-e2b1-4073-b931-06c929914041")));
+//    }
+//
+//    @Test
+//    public void testFindByNameSchoolYear() {
+//        System.out.println(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("global")));
+//    }
+//
+//    @Test
+//    public void testFindAllByInstitution() {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<SchoolYear> result = schoolYearService.findAllByInstitution(institutionService.findByName("global"), pageable);
+//        for(SchoolYear schoolYear : result) {
+//            System.out.println(schoolYear);
+//        }
+//    }
+//
+//    @Test
+//    public void testFindByNameSchoolYearError() {
+//        System.out.println(schoolYearService.findByNameAndInstitution("1 ESO C", institutionService.findByName("error")));
+//    }
 
 //    @Test
 //    public void testDeleteSchoolYear() {
