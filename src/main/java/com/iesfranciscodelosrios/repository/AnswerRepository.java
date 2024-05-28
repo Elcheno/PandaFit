@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,6 +43,15 @@ public interface AnswerRepository extends CrudRepository<Answer, UUID> {
      */
     Page<Answer> findAllByFormAct_SchoolYearAndFormAct_FormNameContainingIgnoreCase(Pageable pageable, SchoolYear schoolYear, String name) throws Exception;
 
+    /**
+     *  Find all answers before or after a given date.
+     *
+     *  @param date The date to compare.
+     *  @param pageable The page of answers.
+     *  @return A list of answers.
+     *
+     */
+    Page<Answer> findAllByDateBetweenAndFormAct_SchoolYearId(LocalDateTime date, LocalDateTime date2, UUID schoolYear, Pageable pageable) throws Exception;
 
     /**
      * Deletes an answer forcefully by its ID.
