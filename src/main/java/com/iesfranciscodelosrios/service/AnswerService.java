@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -181,6 +182,14 @@ public class AnswerService{
         }
     }
 
+    /**
+     * Retrieve all answers before or after a given date.
+     *
+     *
+     */
+    public Page<Answer> findAllByDateBetween(LocalDateTime date, LocalDateTime date2, UUID schoolYearId, Pageable pageable) throws Exception {
+        return answerRepository.findAllByDateBetweenAndFormAct_SchoolYearId(date, date2, schoolYearId, pageable);
+    }
 
     /**
      * Retrieves an Answer based on the specified UUID identifier.
