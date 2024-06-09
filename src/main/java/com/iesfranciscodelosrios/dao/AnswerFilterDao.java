@@ -8,6 +8,8 @@ import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,82 +29,27 @@ public class AnswerFilterDao {
 
         answerQuery.forEach(query -> {
             String field = query.getField();
+            String type = query.getType();
             List<String> content = query.getBody();
 
-            // MULTIPLE
-            // FormAct filter query
-            if (field != null && field.equals("formAct")) {
-
-                if (content != null && !content.isEmpty()) {
+            if (field != null && content != null && !content.isEmpty()) {
+                // MULTIPLE
+                if (type.equals("multiple")) {
                     List<Predicate> predicateList = new ArrayList<>();
-
-                    content.forEach(value -> {
-                        Predicate result = findAllByFormAct(value, root);
-                        predicateList.add(result);
-                    });
-
-                    Predicate predicateForFormAct = criteriaBuilder.or(predicateList.toArray(new Predicate[0]));
-                    predicates.add(predicateForFormAct);
+                    content.forEach(value -> predicateList.add(handlerQuery(field, content, root)));
+                    predicates.add(criteriaBuilder.or(predicateList.toArray(new Predicate[0])));
                 }
 
-            }
-
-            // MULTIPLE
-            // FormName filter query
-            if (field != null && field.equals("formName")) {
-                if (content != null && !content.isEmpty()) {
-                    List<Predicate> predicateList = new ArrayList<>();
-
-                    content.forEach(value -> {
-                        Predicate result = findAllByFormName(value, root);
-                        predicateList.add(result);
-                    });
-
-                    Predicate predicateForFormName = criteriaBuilder.or(predicateList.toArray(new Predicate[0]));
-                    predicates.add(predicateForFormName);
+                // SINGLE
+                if (type.equals("unique")) {
+                    Predicate predicate = handlerQuery(field, content, root);
+                    predicates.add(predicate);
                 }
-            }
 
-            // MULTIPLE
-            // Institution filter query
-            if (field != null && field.equals("institution")) {
-
-                if (content != null && !content.isEmpty()) {
-                    List<Predicate> predicateList = new ArrayList<>();
-
-                    content.forEach(value -> {
-                        Predicate result = findAllByInstitution(value, root);
-                        predicateList.add(result);
-                    });
-
-                    Predicate predicateForInstitution = criteriaBuilder.or(predicateList.toArray(new Predicate[0]));
-                    predicates.add(predicateForInstitution);
-                }
-            }
-
-            // SINGLE
-            // UUID filter query
-            if (field != null && field.equals("uuid")) {
-                if (content != null && content.get(0) != null) {
-                    String value = content.get(0);
-                    Predicate result = findAllByUuid(value, root);
-                    predicates.add(result);
-                }
-            }
-
-            // RANGE
-            // Date filter query
-            if (field != null && field.equals("date")) {
-                if (content != null && !content.isEmpty()) {
-                    try {
-                        LocalDateTime startDate = LocalDateTime.parse(content.get(0));
-                        LocalDateTime endDate = LocalDateTime.parse(content.get(1));
-                        Predicate result = findAllByDateToDate(startDate, endDate, root);
-                        predicates.add(result);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw new RuntimeException("Error al filtrar por fecha");
-                    }
+                // RANGE
+                if (type.equals("range")) {
+                    Predicate predicate = handlerQuery(field, content, root);
+                    predicates.add(predicate);
                 }
             }
 
@@ -114,38 +61,49 @@ public class AnswerFilterDao {
         return query.getResultList();
     }
 
-    public Predicate findAllByFormAct (String formActId, Root root) {
+    public Predicate handlerQuery (String field, List<String> values, Root root) {
+        try {
+            Method method = this.getClass().getDeclaredMethod(field, List.class, Root.class);
+            return (Predicate) method.invoke(this, values, root);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Predicate formAct (List<String> formActId, Root root) throws Exception {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         Join<Answer, FormAct> answerFormActJoin = root.join("formAct");
-        Predicate formActPredicate = criteriaBuilder.equal(answerFormActJoin.get("id"), UUID.fromString(formActId));
+        Predicate formActPredicate = criteriaBuilder.equal(answerFormActJoin.get("id"), UUID.fromString(formActId.get(0)));
         return formActPredicate;
     }
 
-    public Predicate findAllByFormName (String formName, Root root) {
+    public Predicate formName (List<String> formName, Root root) throws Exception {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         Join<Answer, FormAct> answerFormActJoin = root.join("formAct");
         Join<FormAct, Form> formActFormJoin = answerFormActJoin.join("form");
-        Predicate formActFormPredicate = criteriaBuilder.equal(formActFormJoin.get("name"), formName);
+        Predicate formActFormPredicate = criteriaBuilder.equal(formActFormJoin.get("name"), formName.get(0));
         return formActFormPredicate;
     }
 
-    public Predicate findAllByInstitution (String institutionId, Root root) {
+    public Predicate institution (List<String> institutionId, Root root) throws Exception {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         Join<Answer, FormAct> answerFormActJoin = root.join("formAct");
         Join<FormAct, SchoolYear> formActSchoolYearJoin = answerFormActJoin.join("schoolYear");
         Join<SchoolYear, Institution> formActInstitutionJoin = formActSchoolYearJoin.join("institution");
-        Predicate formInstitutionPredicate = criteriaBuilder.equal(formActInstitutionJoin.get("id"), UUID.fromString(institutionId));
+        Predicate formInstitutionPredicate = criteriaBuilder.equal(formActInstitutionJoin.get("id"), UUID.fromString(institutionId.get(0)));
         return formInstitutionPredicate;
     }
 
-    public Predicate findAllByUuid (String uuid, Root root) {
+    public Predicate uuid (List<String> uuid, Root root) throws Exception {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        Predicate uuidPredicate = criteriaBuilder.equal(root.get("uuid"), uuid);
+        Predicate uuidPredicate = criteriaBuilder.equal(root.get("uuid"), uuid.get(0));
         return uuidPredicate;
     }
 
-    public Predicate findAllByDateToDate (LocalDateTime startDate, LocalDateTime endDate, Root root) {
+    public Predicate date (List<String> values, Root root) throws Exception {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        LocalDateTime startDate = LocalDateTime.parse(values.get(0));
+        LocalDateTime endDate = LocalDateTime.parse(values.get(1));
         Predicate datePredicate = criteriaBuilder.between(root.get("date"), startDate, endDate);
         return datePredicate;
     }
