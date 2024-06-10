@@ -426,22 +426,20 @@ public class AnswerService{
         }
     }
 
-    public List<AnswerPrettyResponseDTO> mapToQueryResponseDTO (List<Answer> answers) {
+    public List<AnswerPrettyQueryResponseDTO> mapToQueryResponseDTO (List<Answer> answers) {
         try {
             logger.info("Creando la query response de {}", answers);
 
-            List<AnswerPrettyResponseDTO> result = answers.stream()
+            List<AnswerPrettyQueryResponseDTO> result = answers.stream()
                     .map(
                             answer -> {
                                 String formName = answer.getFormAct().getForm().getName();
                                 UUID formActId = answer.getFormAct().getId();
-                                return AnswerPrettyResponseDTO.builder()
-                                        .id(answer.getId())
+                                return AnswerPrettyQueryResponseDTO.builder()
                                         .response(answer.getResponse())
                                         .date(answer.getDate())
                                         .uuid(answer.getUuid())
                                         .formName(formName)
-                                        .formActId(formActId)
                                         .build();
                             }
                     )

@@ -44,12 +44,12 @@ public class AnswerController {
      * @return
      */
     @PostMapping("/query")
-    public ResponseEntity<List<AnswerPrettyResponseDTO>> customQuery(@RequestBody List<AnswerQueryDTO> query) {
+    public ResponseEntity<List<AnswerPrettyQueryResponseDTO>> customQuery(@RequestBody List<AnswerQueryDTO> query) {
         List<Answer> result = this.answerService.handlerCustomQuery(query);
 
         if (result == null) return ResponseEntity.ok(Collections.emptyList());
 
-        List<AnswerPrettyResponseDTO> response = this.answerService.mapToQueryResponseDTO(result);
+        List<AnswerPrettyQueryResponseDTO> response = this.answerService.mapToQueryResponseDTO(result);
         return ResponseEntity.ok(response);
     }
 
