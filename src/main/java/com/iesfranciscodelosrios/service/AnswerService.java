@@ -1,9 +1,7 @@
 package com.iesfranciscodelosrios.service;
 
-import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
-import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
-import com.iesfranciscodelosrios.model.dto.answer.AnswerPrettyResponseDTO;
-import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
+import com.iesfranciscodelosrios.dao.AnswerFilterDao;
+import com.iesfranciscodelosrios.model.dto.answer.*;
 import com.iesfranciscodelosrios.model.dto.output.OutputWithoutOwner;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.model.entity.Form;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +36,25 @@ public class AnswerService{
     @Autowired
     SchoolYearService schoolYearService;
 
+    @Autowired
+    AnswerFilterDao answerFilterDao;
+
     private static final Logger logger = LoggerFactory.getLogger(AnswerService.class);
+
+    /**
+     * Method handler to resolve AnswerQuery
+     * @param answerQuery
+     * @return List<Answer>
+     */
+    public List<Answer> handlerCustomQuery(List<AnswerQueryDTO> answerQuery) {
+        try {
+            List<Answer> result = this.answerFilterDao.managerQuery(answerQuery);
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al realizar consulta personalizada: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Loads an Answer based on the specified date.
@@ -387,8 +402,6 @@ public class AnswerService{
 
             Page<AnswerPrettyResponseDTO> result = null;
 
-
-
                 result = answers.map(
                         answer -> {
                             String formName = answer.getFormAct().getForm().getName();
@@ -410,6 +423,35 @@ public class AnswerService{
         } catch (Exception e) {
             logger.error("Error al crear la pretty response de la respuesta: {}", e.getMessage());
             throw new RuntimeException("Error al crear la pretty response de la respuesta.\n" + e.getMessage());
+        }
+    }
+
+    public List<AnswerPrettyResponseDTO> mapToQueryResponseDTO (List<Answer> answers) {
+        try {
+            logger.info("Creando la query response de {}", answers);
+
+            List<AnswerPrettyResponseDTO> result = answers.stream()
+                    .map(
+                            answer -> {
+                                String formName = answer.getFormAct().getForm().getName();
+                                UUID formActId = answer.getFormAct().getId();
+                                return AnswerPrettyResponseDTO.builder()
+                                        .id(answer.getId())
+                                        .response(answer.getResponse())
+                                        .date(answer.getDate())
+                                        .uuid(answer.getUuid())
+                                        .formName(formName)
+                                        .formActId(formActId)
+                                        .build();
+                            }
+                    )
+                    .collect(Collectors.toList());
+
+            return result;
+
+        } catch (Exception e) {
+            logger.error("Error al crear la query response de la respuesta: {}", e.getMessage());
+            throw new RuntimeException("Error al crear la query response de la respuesta.\n" + e.getMessage());
         }
     }
 }

@@ -1,25 +1,19 @@
 package com.iesfranciscodelosrios.controller;
 
-import com.iesfranciscodelosrios.model.dto.answer.AnswerCreateDTO;
-import com.iesfranciscodelosrios.model.dto.answer.AnswerDeleteDTO;
-import com.iesfranciscodelosrios.model.dto.answer.AnswerPrettyResponseDTO;
-import com.iesfranciscodelosrios.model.dto.answer.AnswerResponseDTO;
+import com.iesfranciscodelosrios.model.dto.answer.*;
 import com.iesfranciscodelosrios.model.entity.Answer;
 import com.iesfranciscodelosrios.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/active/response")
@@ -42,6 +36,21 @@ public class AnswerController {
 
             AnswerResponseDTO answerResponseDTO = answerService.mapToResponseDTO(answerEntity);
             return ResponseEntity.ok(answerResponseDTO);
+    }
+
+    /**
+     *
+     * @param query
+     * @return
+     */
+    @PostMapping("/query")
+    public ResponseEntity<List<AnswerPrettyResponseDTO>> customQuery(@RequestBody List<AnswerQueryDTO> query) {
+        List<Answer> result = this.answerService.handlerCustomQuery(query);
+
+        if (result == null) return ResponseEntity.ok(Collections.emptyList());
+
+        List<AnswerPrettyResponseDTO> response = this.answerService.mapToQueryResponseDTO(result);
+        return ResponseEntity.ok(response);
     }
 
     /**
