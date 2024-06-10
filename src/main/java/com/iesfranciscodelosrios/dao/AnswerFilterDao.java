@@ -76,7 +76,7 @@ public class AnswerFilterDao {
                 throw new RuntimeException(e);
             }
         } catch (Exception e) {
-            logger.error("Fallo de ejecución se devuleve una lista vacia. Error: {}", e.getMessage());
+            logger.error("Fallo de ejecución se devuelve una lista vacia. Error: {}", e.getMessage());
             return Collections.emptyList();
         }
     }
@@ -99,16 +99,16 @@ public class AnswerFilterDao {
         return formActPredicate;
     }
 
-    public Predicate formName (List<String> formName, Root root) throws Exception {
-        logger.info("filtrando por formName: {}", formName);
+    public Predicate formularys (List<String> formId, Root root) throws Exception {
+        logger.info("filtrando por formName: {}", formId);
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         Join<Answer, FormAct> answerFormActJoin = root.join("formAct");
         Join<FormAct, Form> formActFormJoin = answerFormActJoin.join("form");
-        Predicate formActFormPredicate = criteriaBuilder.equal(formActFormJoin.get("name"), formName.get(0));
+        Predicate formActFormPredicate = criteriaBuilder.equal(formActFormJoin.get("id"), UUID.fromString(formId.get(0)));
         return formActFormPredicate;
     }
 
-    public Predicate institution (List<String> institutionId, Root root) throws Exception {
+    public Predicate institutions (List<String> institutionId, Root root) throws Exception {
         logger.info("filtrando por institutionId: {}", institutionId);
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         Join<Answer, FormAct> answerFormActJoin = root.join("formAct");
@@ -132,6 +132,15 @@ public class AnswerFilterDao {
         LocalDateTime endDate = LocalDateTime.parse(values.get(1));
         Predicate datePredicate = criteriaBuilder.between(root.get("date"), startDate, endDate);
         return datePredicate;
+    }
+
+    public Predicate schoolYears (List<String> values, Root root) throws Exception {
+        logger.info("filtrando por schoolyear: {}", values);
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        Join<Answer, FormAct> answerFormActJoin = root.join("formAct");
+        Join<FormAct, SchoolYear> formActSchoolYearJoin = answerFormActJoin.join("schoolYear");
+        Predicate schoolyearPredicate = criteriaBuilder.equal(formActSchoolYearJoin.get("id"), UUID.fromString(values.get(0)));
+        return schoolyearPredicate;
     }
 
 }
