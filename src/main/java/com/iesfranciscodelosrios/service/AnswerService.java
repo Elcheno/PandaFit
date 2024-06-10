@@ -47,8 +47,13 @@ public class AnswerService{
      * @return List<Answer>
      */
     public List<Answer> handlerCustomQuery(List<AnswerQueryDTO> answerQuery) {
-        List<Answer> result = this.answerFilterDao.managerQuery(answerQuery);
-        return result;
+        try {
+            List<Answer> result = this.answerFilterDao.managerQuery(answerQuery);
+            return result;
+        } catch (Exception e) {
+            logger.error("Error al realizar consulta personalizada: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     /**
